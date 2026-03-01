@@ -1,7 +1,7 @@
 class_name HandEvaluatorModel
 
 enum HandType {
-	HIGH_CARD,
+	HIGH_DIE,
 	ONE_PAIR,
 	TWO_PAIR,
 	THREE_OF_A_KIND,
@@ -90,7 +90,7 @@ static func evaluate(values: Array[int]) -> HandResult:
 				result.type = HandType.STRAIGHT
 				result.scoring_indices = _all_indices(values.size())
 			else:
-				result.type = HandType.HIGH_CARD
+				result.type = HandType.HIGH_DIE
 				result.scoring_indices = [_highest_index(values)]
 
 		_:
