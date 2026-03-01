@@ -1,9 +1,31 @@
 [gd_scene format=3 uid="uid://biptkm4ujpe6i"]
 
+[ext_resource type="Texture2D" uid="uid://cwpdpecr61tj2" path="res://assets/sprites/dice/1-6 Pip Style 1 (SpriteSheet).png" id="1_clpct"]
+
 [node name="Die" type="Control" unique_id=644122590]
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 0
+offset_right = 18.0
+offset_bottom = 18.0
+
+[node name="FaceSprite" type="Sprite2D" parent="." unique_id=788261950]
+texture_filter = 1
+position = Vector2(40, 40)
+scale = Vector2(5, 5)
+texture = ExtResource("1_clpct")
+hframes = 5
+vframes = 4
+
+[node name="HoldButton" type="Button" parent="." unique_id=388332510]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 0
+offset_right = 18.0
+offset_bottom = 18.0
+
+[node name="Highlight" type="ColorRect" parent="." unique_id=1384750471]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1098811615]

@@ -11,5 +11,5 @@ const BASE_REROLLS_PER_ROUND: int = 3
 
 static func get_hands_for_round(round_index: int) -> int:
 	var normalized_round: int = maxi(1, round_index)
-	var bonus_hands: int = int((normalized_round - 1) / HANDS_GAIN_EVERY_N_ROUNDS)
+	var bonus_hands: int = roundi(float(normalized_round - 1) / HANDS_GAIN_EVERY_N_ROUNDS)
 	return BASE_HANDS_PER_ROUND + bonus_hands
