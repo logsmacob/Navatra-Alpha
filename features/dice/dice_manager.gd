@@ -14,12 +14,24 @@ func _ready() -> void:
 		EventBus.roll_all_dice_requested.connect(roll_all)
 
 func roll_all() -> void:
+	# NOTE: First roll for a hand is free. Extra full rolls spend from round reroll budget.
+	if dice_set.all_rolled():
+		if not GameSessionService.spend_reroll():
+			return
 	DiceRollService.roll_all(dice_set)
 
 func evaluate() -> HandResult:
 	var result := HandEvaluatorModel.evaluate(dice_set.get_values())
 	EventBus.dice_evaluated.emit(result)
 	return result
+
+func evaluate_and_submit() -> int:
+	var result := evaluate()
+	if not result.is_complete:
+		return 0
+	var score := GameSessionService.submit_hand(result, dice_set.get_values())
+	dice_set.reset()
+	return score
 
 func reset_round() -> void:
 	# NOTE: Exposed for future round-state orchestration.

@@ -153,3 +153,22 @@ If you want to refine further, the next big balance levers to define are:
 - How many playable hands per round?
 - Does that number scale?
 - Do rerolls ever increase via trinkets?
+
+## Foundation Defaults (Implemented)
+
+To lock in a strong foundation, the project now has explicit runtime state and balance defaults:
+
+- **Run state** tracks current round and persistent trinkets.
+- **Round state** tracks quota, hands remaining, and rerolls remaining.
+- **Hand scoring table** provides base and additive multiplier values per hand type.
+- **Score calculator** applies:
+  - `Hand Base = HandType_Base + Sum(Scoring Dice Faces) + Trinket Base Bonuses`
+  - `Total Mult = 1 + HandType_Mult + Trinket Mult Bonuses`
+  - `Final Score = Hand Base × Total Mult`
+- **Quota scaling** defaults to exponential growth:
+  - `Quota_n = 100 × 1.45^(Round-1)`
+- **Hands per round** currently scale slowly:
+  - Base 4 hands, +1 hand every 3 rounds.
+- **Rerolls** default to 3 per round, with optional trinket-based increases.
+
+These defaults are intentionally centralized so they can be tuned without rewriting gameplay flow.
