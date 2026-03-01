@@ -10,8 +10,6 @@ func _ready() -> void:
 	$HoldButton.pressed.connect(_on_pressed)
 
 func _on_pressed() -> void:
-	# NOTE: Direct die roll for now. In future this should route through
-	# turn-state checks to prevent rolling at invalid times.
 	if model == null:
 		return
-	DiceRollService.roll_die(model)
+	model.toggle_hold()

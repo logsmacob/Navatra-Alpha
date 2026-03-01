@@ -9,9 +9,24 @@ func _ready() -> void:
 		var die: DieModel = DieModel.new([1, 2, 3, 4, 5, 6])
 		dice_set.add_die(die)
 
+	_bind_die_nodes()
+
 	# NOTE: EventBus integration keeps UI/input systems decoupled from dice logic.
 	if EventBus.roll_all_dice_requested.is_connected(roll_all) == false:
 		EventBus.roll_all_dice_requested.connect(roll_all)
+
+func _bind_die_nodes() -> void:
+	var die_nodes: Array[Node] = $HBoxContainer.get_children()
+	var limit: int = mini(die_nodes.size(), dice_set.dice.size())
+	for index in limit:
+		var die_node: Node = die_nodes[index]
+		var die_model: DieModel = dice_set.dice[index]
+		if die_node.has_method("bind"):
+			die_node.bind(die_model)
+		if die_node.has_node("FaceSprite"):
+			var face_sprite: Node = die_node.get_node("FaceSprite")
+			if face_sprite.has_method("bind"):
+				face_sprite.bind(die_model)
 
 func roll_all() -> void:
 	# NOTE: First roll for a hand is free. Extra full rolls spend from round reroll budget.
