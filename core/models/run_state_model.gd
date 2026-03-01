@@ -20,19 +20,19 @@ func add_trinket(trinket: TrinketModel) -> void:
 	trinkets.append(trinket)
 
 func get_total_multiplier_bonus() -> float:
-	var total := 0.0
+	var total: float = 0.0
 	for trinket in trinkets:
 		total += trinket.mult_bonus
 	return total
 
 func get_total_hand_base_bonus(hand_type: int) -> int:
-	var total := 0
+	var total: int = 0
 	for trinket in trinkets:
 		total += trinket.get_base_bonus_for(hand_type)
 	return total
 
 func get_extra_rerolls() -> int:
-	var total := 0
+	var total: int = 0
 	for trinket in trinkets:
 		total += trinket.extra_round_rerolls
 	return total

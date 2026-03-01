@@ -10,9 +10,9 @@ static func get_offer_pool() -> Array[TrinketModel]:
 	]
 
 static func get_random_offers(count: int) -> Array[TrinketModel]:
-	var pool := get_offer_pool()
+	var pool: Array[TrinketModel] = get_offer_pool()
 	pool.shuffle()
-	var to_take := mini(max(0, count), pool.size())
+	var to_take: int = mini(maxi(0, count), pool.size())
 	var offers: Array[TrinketModel] = []
 	for i in range(to_take):
 		offers.append(pool[i])

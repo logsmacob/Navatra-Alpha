@@ -18,7 +18,7 @@ config/icon="res://assets/sprites/icon.svg"
 
 EventBus="*uid://daxbdt73sgi6o"
 RandomService="*uid://c0fgr7t8bd3b7"
-GameSessionService="*uid://ccteod7tcu3ep"
+GameSessionService="*res://autoload/game_session_service.gd"
 
 [physics]
 
