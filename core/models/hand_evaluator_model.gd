@@ -8,28 +8,47 @@ enum HandType {
 	STRAIGHT,
 	FULL_HOUSE,
 	FOUR_OF_A_KIND,
-	FIVE_OF_A_KIND
+	FIVE_OF_A_KIND,
+	INVALID
 }
 
+# NOTE: Evaluates current dice values and returns a `HandResult`.
+# Values are expected to be positive dice faces (1..N). Value `0` means unrolled.
 static func evaluate(values: Array[int]) -> HandResult:
 	var result := HandResult.new()
 
+	if values.is_empty():
+		result.type = HandType.INVALID
+		result.is_complete = false
+		result.note = "Cannot evaluate an empty hand."
+		return result
+
+	for value in values:
+		if value <= 0:
+			result.type = HandType.INVALID
+			result.is_complete = false
+			result.note = "Cannot evaluate hand with unrolled/invalid dice values."
+			return result
+
+	result.is_complete = true
+
 	var value_to_indices: Dictionary = {}
 
-	# Build value -> indices map
+	# NOTE: Build value -> indices map for frequency-based patterns.
 	for i in range(values.size()):
 		var v := values[i]
 		if not value_to_indices.has(v):
 			value_to_indices[v] = []
 		value_to_indices[v].append(i)
 
-	# Collect frequencies
+	# NOTE: Collect and sort frequencies to identify pattern shape.
 	var freqs: Array[int] = []
 	for indices in value_to_indices.values():
 		freqs.append(indices.size())
 	freqs.sort()
 
-	# Check straight
+	# NOTE: Straight check uses sorted unique values and strict +1 progression.
+	# For standard 1..6 dice this detects 1-2-3-4-5 and 2-3-4-5-6 naturally.
 	var sorted_vals := values.duplicate()
 	sorted_vals.sort()
 
@@ -39,7 +58,7 @@ static func evaluate(values: Array[int]) -> HandResult:
 			is_straight = false
 			break
 
-	# Evaluate
+	# NOTE: Frequency-shape matching for hand classification.
 	match freqs:
 		[5]:
 			result.type = HandType.FIVE_OF_A_KIND
@@ -61,6 +80,11 @@ static func evaluate(values: Array[int]) -> HandResult:
 			result.type = HandType.TWO_PAIR
 			result.scoring_indices = _all_groups_of_size(value_to_indices, 2)
 
+		[1, 1, 1, 2]:
+			# NOTE: Explicit one-pair handling (previously missing).
+			result.type = HandType.ONE_PAIR
+			result.scoring_indices = _all_groups_of_size(value_to_indices, 2)
+
 		[1, 1, 1, 1, 1]:
 			if is_straight:
 				result.type = HandType.STRAIGHT
@@ -69,7 +93,13 @@ static func evaluate(values: Array[int]) -> HandResult:
 				result.type = HandType.HIGH_CARD
 				result.scoring_indices = [_highest_index(values)]
 
+		_:
+			result.type = HandType.INVALID
+			result.note = "Unrecognized frequency pattern."
+
 	result.counts = value_to_indices
+	if result.note.is_empty():
+		result.note = "Evaluation completed successfully."
 	return result
 
 

@@ -1,5 +1,9 @@
 extends Node
-# Note: I need to fix these warnings
- 
+
+# NOTE: Global signal hub for decoupled feature communication.
+
+# Emitted when any system requests a full dice roll.
 signal roll_all_dice_requested
-signal dice_evaluated(result)
+
+# Emitted after hand evaluation is complete.
+signal dice_evaluated(result: HandResult)
