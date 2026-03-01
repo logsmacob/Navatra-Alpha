@@ -1,5 +1,8 @@
 [gd_scene format=3 uid="uid://cif8j4s2bass1"]
 
+[ext_resource type="Script" uid="uid://nj4fho46v7nd" path="res://features/dice/dice_manager.gd" id="1_jwj3k"]
+[ext_resource type="PackedScene" uid="uid://biptkm4ujpe6i" path="res://features/dice/die/die.tscn" id="2_rwtj8"]
+
 [node name="DiceUi" type="Control" unique_id=539209822]
 layout_mode = 3
 anchors_preset = 15
@@ -7,3 +10,24 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_jwj3k")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=399586644]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Die" parent="HBoxContainer" unique_id=644122590 instance=ExtResource("2_rwtj8")]
+layout_mode = 2
+
+[node name="Die2" parent="HBoxContainer" unique_id=1550956755 instance=ExtResource("2_rwtj8")]
+layout_mode = 2
+
+[node name="Die3" parent="HBoxContainer" unique_id=1231871867 instance=ExtResource("2_rwtj8")]
+layout_mode = 2
+
+[node name="Die4" parent="HBoxContainer" unique_id=589929845 instance=ExtResource("2_rwtj8")]
+layout_mode = 2
+
+[node name="Die5" parent="HBoxContainer" unique_id=2089584753 instance=ExtResource("2_rwtj8")]
+layout_mode = 2

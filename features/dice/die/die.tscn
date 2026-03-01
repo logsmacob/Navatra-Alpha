@@ -1,35 +1,41 @@
 [gd_scene format=3 uid="uid://biptkm4ujpe6i"]
 
 [ext_resource type="Texture2D" uid="uid://cwpdpecr61tj2" path="res://assets/sprites/dice/1-6 Pip Style 1 (SpriteSheet).png" id="1_clpct"]
-[ext_resource type="Script" path="res://features/dice/die/die_controller.gd" id="2_b7hop"]
-[ext_resource type="Script" path="res://features/dice/die/die_view.gd" id="3_jpvqg"]
+[ext_resource type="Script" uid="uid://b4esrmhreawkv" path="res://features/dice/die/die_controller.gd" id="2_b7hop"]
+[ext_resource type="Script" uid="uid://ce3qutxj3x3pe" path="res://features/dice/die/die_view.gd" id="3_jpvqg"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_os8ub"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_os8ub"]
+bg_color = Color(0, 0, 0, 0.16862746)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="Die" type="Control" unique_id=644122590]
-script = ExtResource("2_b7hop")
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 18.0
 offset_bottom = 18.0
+script = ExtResource("2_b7hop")
 
 [node name="FaceSprite" type="Sprite2D" parent="." unique_id=788261950]
-script = ExtResource("3_jpvqg")
 texture_filter = 1
 position = Vector2(40, 40)
 scale = Vector2(5, 5)
 texture = ExtResource("1_clpct")
 hframes = 5
 vframes = 4
+script = ExtResource("3_jpvqg")
 
 [node name="HoldButton" type="Button" parent="." unique_id=388332510]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 0
-offset_right = 18.0
-offset_bottom = 18.0
-
-[node name="Highlight" type="ColorRect" parent="." unique_id=1384750471]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 80.0
+offset_bottom = 80.0
+theme_override_styles/normal = SubResource("StyleBoxEmpty_os8ub")
+theme_override_styles/hover = SubResource("StyleBoxFlat_os8ub")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1098811615]
