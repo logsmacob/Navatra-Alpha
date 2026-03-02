@@ -1,36 +1,29 @@
 class_name DieModel
+extends RefCounted
 
-signal value_changed(new_value: int)
+signal rolled(value: int)
+signal faces_changed(new_faces: Array[int])
+signal die_selected(selected: bool)
 
-var faces: Array[int]
-var current_index: int = -1
+var faces: Array[int] = [1, 2, 3, 4, 5, 6]
+var current_value: int = 1
+var is_selected: bool = false
 
-func _init(face_values: Array[int]) -> void:
-	# NOTE: A die without faces can never roll. We keep the array empty,
-	# but downstream services should handle this gracefully.
-	faces = face_values.duplicate()
+func select():
+	is_selected = !is_selected
+	die_selected.emit(is_selected)
 
-func roll_to(index: int) -> void:
-	# NOTE: Ignore invalid indices instead of crashing game flow.
-	if index < 0 or index >= faces.size():
-		return
-	current_index = index
-	value_changed.emit(get_value())
+func roll() -> int:
+	if !is_selected:
+		current_value = faces.pick_random()
+		rolled.emit(current_value)
+	return current_value
 
-func get_value() -> int:
-	# NOTE: Value `0` is reserved for "not rolled yet".
-	if current_index == -1:
-		return 0
-	return faces[current_index]
+func set_all_faces(value: int):
+	for i in faces.size():
+		faces[i] = value
+	faces_changed.emit(faces)
 
-func get_face_count() -> int:
-	return faces.size()
-
-func has_value() -> bool:
-	# NOTE: `true` means the die has been rolled at least once this round.
-	return current_index != -1
-
-func reset() -> void:
-	# NOTE: Round reset clears the roll state and notifies listeners.
-	current_index = -1
-	value_changed.emit(0)
+func set_faces(new_faces: Array[int]):
+	faces = new_faces.duplicate()
+	faces_changed.emit(faces)

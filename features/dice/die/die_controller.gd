@@ -1,17 +1,20 @@
 extends Node
 
-# NOTE: Handles die-specific player input.
-var model: DieModel
+@export var die_visuals: Node
+@export var select_button: Button
 
-func bind(die_model: DieModel) -> void:
-	model = die_model
+var model := DieModel.new()
 
-func _ready() -> void:
-	$HoldButton.pressed.connect(_on_pressed)
+func _ready():
+	select_button.pressed.connect(_on_select_pressed)
+	model.rolled.connect(_on_dice_rolled)
+	model.die_selected.connect(_on_is_selected)
 
-func _on_pressed() -> void:
-	# NOTE: Direct die roll for now. In future this should route through
-	# turn-state checks to prevent rolling at invalid times.
-	if model == null:
-		return
-	DiceRollService.roll_die(model)
+func _on_select_pressed():
+	model.select()
+
+func _on_dice_rolled(value: int):
+	die_visuals.show_value(value)
+
+func _on_is_selected(is_selected: bool):
+	die_visuals.show_selected(is_selected)
