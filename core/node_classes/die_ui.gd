@@ -10,6 +10,7 @@ class_name DieUI
 ## Emitted when a roll happens from this UI control.
 ## [param face] is the rolled face.
 signal die_rolled(face: FaceData)
+signal die_selected(die_ui: DieUI)
 
 @onready var _face_label: Label = $Panel/FaceLabel
 @onready var _select_button: Button = $Panel/SelectButton
@@ -57,3 +58,4 @@ func roll_if_not_selected() -> FaceData:
 ## Toggles hold/select state for this die.
 func _on_select_pressed() -> void:
 	is_selected = !is_selected
+	die_selected.emit(self)

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://biptkm4ujpe6i"]
 
-[ext_resource type="Script" uid="uid://55rde0afeujc" path="res://features/dice/die/die_ui.gd" id="1_clpct"]
+[ext_resource type="Script" uid="uid://55rde0afeujc" path="res://core/node_classes/die_ui.gd" id="1_clpct"]
+[ext_resource type="Script" uid="uid://cynddjhf8ac5m" path="res://features/dice/die/die_animator.gd" id="2_b27w3"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b27w3"]
 bg_color = Color(1, 1, 1, 1)
@@ -20,6 +21,12 @@ shadow_size = 1
 font_size = 48
 font_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_clpct"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b27w3"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_os8ub"]
+
 [node name="Die" type="Control" unique_id=644122590]
 custom_minimum_size = Vector2(80, 80)
 layout_mode = 3
@@ -27,6 +34,10 @@ anchors_preset = 0
 offset_right = 18.0
 offset_bottom = 18.0
 script = ExtResource("1_clpct")
+
+[node name="DieAnimator" type="Node" parent="." unique_id=537555383 node_paths=PackedStringArray("panel")]
+script = ExtResource("2_b27w3")
+panel = NodePath("../Panel")
 
 [node name="Panel" type="Panel" parent="." unique_id=1223442461]
 layout_mode = 1
@@ -62,5 +73,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_clpct")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_b27w3")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_os8ub")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1098811615]
+
+[connection signal="die_selected" from="." to="DieAnimator" method="_on_die_die_selected"]

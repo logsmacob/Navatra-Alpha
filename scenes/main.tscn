@@ -11,11 +11,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_0wfyh")
+die_ui_scene = ExtResource("2_sugp2")
 
-[node name="Die" parent="." unique_id=644122590 instance=ExtResource("2_sugp2")]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=243989740]
 layout_mode = 0
-offset_right = 80.0
-offset_bottom = 80.0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="Button" type="Button" parent="." unique_id=203766284]
 custom_minimum_size = Vector2(100, 100)
@@ -24,5 +25,6 @@ offset_left = 197.0
 offset_top = 159.0
 offset_right = 297.0
 offset_bottom = 259.0
+text = "Re-Roll"
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

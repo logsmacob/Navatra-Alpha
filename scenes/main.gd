@@ -1,15 +1,22 @@
 extends Control
 
-## Example scene wiring for one DieUI control.
-var die_ui: DieUI
+@onready var hand = $HBoxContainer
+@export var die_ui_scene: PackedScene
+
+var dice : Array[DieUI] = []
 
 
 func _ready() -> void:
-	die_ui = $Die
-	# Quick-start path: create a standard d6 and bind it to the UI control.
-	die_ui.set_die(DieInstance.create_standard_d6())
+	for i in range(5):
+		var die_ui : DieUI = die_ui_scene.instantiate()
+		hand.add_child(die_ui)
+
+		die_ui.set_die(DieInstance.create_standard_d6())
+		die_ui.roll_if_not_selected()
+
+		dice.append(die_ui)
 
 
 func _on_button_pressed() -> void:
-	# Rolls only if the die is not currently selected/held.
-	die_ui.roll_if_not_selected()
+	for die in dice:
+		die.roll_if_not_selected()
