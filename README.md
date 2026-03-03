@@ -172,3 +172,19 @@ To lock in a strong foundation, the project now has explicit runtime state and b
 - **Rerolls** default to 3 per round, with optional trinket-based increases.
 
 These defaults are intentionally centralized so they can be tuned without rewriting gameplay flow.
+
+## Developer API Notes (Dice)
+
+To make scripting simpler while building, use this flow:
+
+1. Create a die with `DieInstance.create_standard_d6()`.
+2. Assign it to UI with `DieUI.set_die(die)`.
+3. Roll through `DieUI.roll_if_not_selected()` so hold/selection state is respected.
+
+Helpful APIs:
+- `DieInstance.configure_with_sequential_faces(face_count)`: builds an N-sided die with values `1..N`.
+- `DieInstance.set_face_values(values)`: custom face values (array size must match face count).
+- `DieInstance.roll()`: returns `FaceData` and emits `rolled(face)`.
+- `DieUI.die_rolled(face)`: UI-level signal emitted after successful rolls.
+
+This gives you a clean default path while still allowing custom dice behavior when needed.
