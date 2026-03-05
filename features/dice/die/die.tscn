@@ -1,31 +1,8 @@
 [gd_scene format=3 uid="uid://biptkm4ujpe6i"]
 
-[ext_resource type="Script" uid="uid://55rde0afeujc" path="res://core/node_classes/die_ui.gd" id="1_clpct"]
+[ext_resource type="Script" uid="uid://55rde0afeujc" path="res://features/dice/die/die_ui.gd" id="1_clpct"]
+[ext_resource type="Theme" uid="uid://uigveapmlifl" path="res://assets/UI/style_boxes/die_theme.tres" id="1_os8ub"]
 [ext_resource type="Script" uid="uid://cynddjhf8ac5m" path="res://features/dice/die/die_animator.gd" id="2_b27w3"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b27w3"]
-bg_color = Color(1, 1, 1, 1)
-border_width_left = 5
-border_width_top = 5
-border_width_right = 5
-border_width_bottom = 5
-border_color = Color(0.5132329, 0.51323295, 0.51323265, 1)
-border_blend = true
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_size = 1
-
-[sub_resource type="LabelSettings" id="LabelSettings_os8ub"]
-font_size = 48
-font_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_clpct"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b27w3"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_os8ub"]
 
 [sub_resource type="Animation" id="Animation_b27w3"]
 resource_name = "roll"
@@ -35,60 +12,27 @@ _data = {
 &"roll": SubResource("Animation_b27w3")
 }
 
-[node name="Die" type="Control" unique_id=644122590]
+[node name="Die" type="Button" unique_id=1113772375]
 custom_minimum_size = Vector2(80, 80)
-layout_mode = 3
-anchors_preset = 0
-offset_right = 18.0
-offset_bottom = 18.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1072.0
+offset_bottom = -568.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_os8ub")
+toggle_mode = true
+text = "1"
 script = ExtResource("1_clpct")
 
-[node name="DieAnimator" type="Node" parent="." unique_id=537555383 node_paths=PackedStringArray("panel", "animator", "die")]
+[node name="DieAnimator" type="Node" parent="." unique_id=537555383 node_paths=PackedStringArray("animator", "die")]
 script = ExtResource("2_b27w3")
-panel = NodePath("../Panel")
 animator = NodePath("../AnimationPlayer")
 die = NodePath("..")
-
-[node name="Panel" type="Panel" parent="." unique_id=1223442461]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_b27w3")
-
-[node name="FaceLabel" type="Label" parent="Panel" unique_id=433392411]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
-grow_horizontal = 2
-grow_vertical = 2
-text = "1"
-label_settings = SubResource("LabelSettings_os8ub")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="SelectButton" type="Button" parent="Panel" unique_id=1459248187]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/normal = SubResource("StyleBoxEmpty_clpct")
-theme_override_styles/pressed = SubResource("StyleBoxEmpty_b27w3")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_os8ub")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1098811615]
 libraries/ = SubResource("AnimationLibrary_os8ub")
 
-[connection signal="die_selected" from="." to="DieAnimator" method="_on_die_die_selected"]
+[connection signal="toggled" from="." to="." method="_on_toggled"]
 [connection signal="animation_finished" from="AnimationPlayer" to="DieAnimator" method="_on_animation_player_animation_finished"]

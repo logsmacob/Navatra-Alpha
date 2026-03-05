@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://jf2sov4k6y2t"]
+
+[ext_resource type="Script" uid="uid://chlhkvbcylr2v" path="res://features/dice/hand/hand.gd" id="1_2i24d"]
+[ext_resource type="PackedScene" uid="uid://biptkm4ujpe6i" path="res://features/dice/die/die.tscn" id="2_pxmyb"]
+[ext_resource type="Script" uid="uid://dqvho5iajwwdb" path="res://features/dice/hand/hand_animator.gd" id="3_7n5xe"]
+[ext_resource type="Theme" uid="uid://uigveapmlifl" path="res://assets/UI/style_boxes/die_theme.tres" id="3_oslr0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7n5xe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oslr0"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0.31764707)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[node name="Hand" type="PanelContainer" unique_id=649644491]
+offset_right = 304.0
+offset_bottom = 100.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_7n5xe")
+script = ExtResource("1_2i24d")
+die_ui_scene = ExtResource("2_pxmyb")
+
+[node name="HandAnimator" type="Node" parent="." unique_id=308743313]
+script = ExtResource("3_7n5xe")
+
+[node name="HBoxContainer" type="VBoxContainer" parent="." unique_id=2047717781]
+layout_mode = 2
+alignment = 1
+
+[node name="Panel" type="PanelContainer" parent="HBoxContainer" unique_id=419737567]
+layout_mode = 2
+size_flags_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_oslr0")
+
+[node name="HandContainer" type="HBoxContainer" parent="HBoxContainer/Panel" unique_id=1119469658]
+layout_mode = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="ButtonContainer" type="HBoxContainer" parent="HBoxContainer" unique_id=184635535]
+layout_mode = 2
+alignment = 1
+
+[node name="play" type="Button" parent="HBoxContainer/ButtonContainer" unique_id=1941616311]
+modulate = Color(1, 0.41000003, 0.41000003, 1)
+custom_minimum_size = Vector2(150, 80)
+layout_mode = 2
+theme = ExtResource("3_oslr0")
+text = "Play"
+
+[node name="roll" type="Button" parent="HBoxContainer/ButtonContainer" unique_id=702813512]
+modulate = Color(1, 0.73333335, 0, 1)
+custom_minimum_size = Vector2(150, 80)
+layout_mode = 2
+theme = ExtResource("3_oslr0")
+text = "Roll"
+
+[connection signal="played_hand_finished" from="." to="HandAnimator" method="_on_hand_played_hand_finished"]
+[connection signal="setup_complete" from="." to="HandAnimator" method="_on_hand_setup_complete"]
+[connection signal="play_animation_finished" from="HandAnimator" to="." method="_on_hand_animator_play_animation_finished"]
+[connection signal="pressed" from="HBoxContainer/ButtonContainer/play" to="HandAnimator" method="_on_play_pressed"]
+[connection signal="pressed" from="HBoxContainer/ButtonContainer/roll" to="." method="_on_roll_pressed"]

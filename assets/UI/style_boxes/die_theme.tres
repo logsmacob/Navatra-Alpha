@@ -1,0 +1,29 @@
+[gd_resource type="Theme" format=3 uid="uid://uigveapmlifl"]
+
+[ext_resource type="StyleBox" uid="uid://b7h1k73psdiwa" path="res://assets/UI/style_boxes/die_face_disabled.tres" id="1_078h4"]
+[ext_resource type="StyleBox" uid="uid://xclnd7i7fqsy" path="res://assets/UI/style_boxes/die_face_focus.tres" id="2_fh73k"]
+[ext_resource type="StyleBox" uid="uid://cb1sijhlkgjq5" path="res://assets/UI/style_boxes/die_face_hover.tres" id="3_1gkr3"]
+[ext_resource type="StyleBox" uid="uid://pv3w8c3aemjf" path="res://assets/UI/style_boxes/die_face_normal.tres" id="4_f7juk"]
+[ext_resource type="StyleBox" uid="uid://bblhd1k16yxvt" path="res://assets/UI/style_boxes/die_face_pressed.tres" id="5_cjawd"]
+
+[resource]
+/colors/back = Color(1, 0, 0, 1)
+Button/colors/font_color = Color(0, 0, 0, 1)
+Button/colors/font_focus_color = Color(0, 0, 0, 1)
+Button/colors/font_hover_color = Color(0, 0, 0, 1)
+Button/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+Button/colors/font_pressed_color = Color(0, 0, 0, 1)
+Button/font_sizes/font_size = 42
+Button/styles/disabled = ExtResource("1_078h4")
+Button/styles/focus = ExtResource("2_fh73k")
+Button/styles/hover = ExtResource("3_1gkr3")
+Button/styles/hover_pressed = ExtResource("3_1gkr3")
+Button/styles/normal = ExtResource("4_f7juk")
+Button/styles/pressed = ExtResource("4_f7juk")
+CheckButton/font_sizes/font_size = 16
+CheckButton/styles/disabled = ExtResource("1_078h4")
+CheckButton/styles/focus = ExtResource("2_fh73k")
+CheckButton/styles/hover = ExtResource("3_1gkr3")
+CheckButton/styles/hover_pressed = ExtResource("5_cjawd")
+CheckButton/styles/normal = ExtResource("4_f7juk")
+CheckButton/styles/pressed = ExtResource("5_cjawd")

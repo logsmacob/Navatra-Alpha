@@ -1,4 +1,4 @@
-extends Control
+extends Button
 ## Visual/controller wrapper for a single [DieInstance].
 ##
 ## Responsibilities:
@@ -12,25 +12,17 @@ class_name DieUI
 signal die_rolled(face: FaceData)
 signal die_selected(die_ui: DieUI)
 
-@onready var _face_label: Label = $Panel/FaceLabel
-@onready var _select_button: Button = $Panel/SelectButton
-
 ## Runtime die backing this control.
 var die: DieInstance
 ## If true, the die is "held" and should not roll.
 var is_selected: bool = false
-
-
-func _ready() -> void:
-	_select_button.pressed.connect(_on_select_pressed)
-
 
 ## Assigns the die used by this UI.
 ## If the die already has a current face, the label is immediately updated.
 func set_die(new_die: DieInstance) -> void:
 	die = new_die
 	if die.current_face != null:
-		_face_label.text = str(die.current_face.face_value)
+		text = str(die.current_face.face_value)
 
 
 ## Rolls only when this die is not selected/held.
@@ -50,12 +42,11 @@ func roll_if_not_selected() -> FaceData:
 	if roll_face == null:
 		return null
 
-	_face_label.text = str(roll_face.value)
+	text = str(roll_face.value)
 	die_rolled.emit(roll_face)
 	return roll_face
 
-
 ## Toggles hold/select state for this die.
-func _on_select_pressed() -> void:
-	is_selected = !is_selected
+func _on_toggled(selected: bool) -> void:
+	is_selected = selected
 	die_selected.emit(self)
