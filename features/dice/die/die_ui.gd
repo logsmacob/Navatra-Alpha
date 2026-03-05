@@ -22,7 +22,7 @@ var is_selected: bool = false
 func set_die(new_die: DieInstance) -> void:
 	die = new_die
 	if die.current_face != null:
-		text = str(die.current_face.face_value)
+		text = str(die.current_face.value)
 
 
 ## Rolls only when this die is not selected/held.
@@ -44,9 +44,11 @@ func roll_if_not_selected() -> FaceData:
 
 	text = str(roll_face.value)
 	die_rolled.emit(roll_face)
+	EventBus.roll_die.emit(self)
 	return roll_face
 
 ## Toggles hold/select state for this die.
 func _on_toggled(selected: bool) -> void:
 	is_selected = selected
 	die_selected.emit(self)
+	EventBus.select_die.emit(self)
