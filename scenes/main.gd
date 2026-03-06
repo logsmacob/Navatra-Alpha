@@ -25,7 +25,9 @@ func _on_played_hand_ready(dice: Array[DieUI]) -> void:
 		return
 
 	score_manager.play_hand()
+	var played_hand_name := _get_played_hand_name()
 	var applied_score := score_manager.commit_played_hand()
+	print("Played hand: %s | points=%d" % [played_hand_name, applied_score])
 	GameState.apply_score_to_quota(applied_score)
 	GameState.consume_hand()
 
@@ -38,6 +40,10 @@ func _extract_dice_values(dice: Array[DieUI]) -> Array[int]:
 		if die.die != null and die.die.current_face != null:
 			values.append(die.die.current_face.value)
 	return values
+
+func _get_played_hand_name() -> String:
+	var breakdown := score_manager.get_last_breakdown()
+	return str(breakdown.get("hand_name", "Unknown"))
 
 func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -> void:
 	print("Round %d started | quota=%d hands=%d rerolls=%d" % [round_index, quota, hands, rerolls])
