@@ -206,6 +206,6 @@ When adding a mechanic, use this order:
 1. Add/adjust rules in `autoload/game_state.gd`.
 2. Add cross-feature signals in `autoload/event_bus.gd` only if needed.
 3. Keep scene scripts thin (UI + signal wiring).
-4. Keep scoring/evaluation logic in one place (currently `scenes/main.gd`, can be moved to a dedicated scorer next).
+4. Keep scoring/evaluation logic centralized in `core/node_classes/score_manager.gd`, and keep scene scripts focused on orchestration/UI wiring.
 
 This makes balancing and new features (shop, trinkets, custom dice) easier without rewriting UI code.
