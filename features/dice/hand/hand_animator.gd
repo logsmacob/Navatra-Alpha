@@ -17,10 +17,18 @@ func _on_die_selected(die_ui: DieUI):
 		tween.tween_property(die_ui, "position:y", 0, 0.2)
 
 func _on_play_pressed() -> void:
-	for die : DieUI in hand.dice:
+	var tweens: Array[Tween] = []
+
+	for die: DieUI in hand.dice:
 		var tween = create_tween()
 		tween.tween_property(die, "position:y", -200, 0.2)
+		tweens.append(tween)
+		
+	for tween in tweens:
+		await tween.finished
+	
 	play_animation_finished.emit()
+
 
 func _on_hand_played_hand_finished() -> void:
 	for die : DieUI in hand.dice:

@@ -13,6 +13,7 @@ func _on_played_hand_ready(dice: Array[DieUI]) -> void:
 	var score := _calculate_hand_score(dice)
 	GameState.apply_score_to_quota(score)
 	GameState.consume_hand()
+	await get_tree().create_timer(1).timeout
 	hand._on_played_hand_finish()
 
 func _calculate_hand_score(dice: Array[DieUI]) -> int:
