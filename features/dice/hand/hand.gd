@@ -33,6 +33,8 @@ func _on_roll_pressed() -> void:
 		EventBus.roll_all_dice_requested.emit()
 
 func _on_hand_animator_play_animation_finished() -> void:
+	for die in dice:
+		die.is_selected = false
 	played_hand_ready.emit(dice)
 
 func _on_played_hand_finish() -> void:

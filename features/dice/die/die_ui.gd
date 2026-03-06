@@ -47,8 +47,7 @@ func roll_if_not_selected() -> FaceData:
 	EventBus.roll_die.emit(self)
 	return roll_face
 
-## Toggles hold/select state for this die.
-func _on_toggled(selected: bool) -> void:
-	is_selected = selected
+func _on_pressed() -> void:
+	is_selected = !is_selected
 	die_selected.emit(self)
 	EventBus.select_die.emit(self)
