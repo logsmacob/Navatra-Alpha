@@ -19,7 +19,9 @@ func _ready() -> void:
 	GameState.round_completed.connect(_on_round_completed)
 	GameState.run_failed.connect(_on_run_failed)
 	GameState.round_state_changed.connect(_on_round_state_changed)
-	
+	EventBus.score_calculated.connect(_on_score_calculated)
+
+	ui_update()
 	
 
 func _on_played_hand_ready(hand_data: DiceHand) -> void:
@@ -57,7 +59,22 @@ func _on_run_failed(round_index: int) -> void:
 
 func _on_round_state_changed(state: Dictionary) -> void:
 	print("State: ", state)
+	ui_update(state)
 
-func ui_update():
-	#update  all the label vars
-	pass
+func _on_score_calculated(_details: HandDetails, _type_total: int, _breakdown: Dictionary) -> void:
+	ui_update()
+
+func ui_update(state: Dictionary = {}) -> void:
+	if state.is_empty():
+		state = GameState.get_round_state()
+
+	var breakdown := score_manager.get_last_breakdown()
+	var hand_name := str(breakdown.get("hand_name", "-"))
+	var type_total := int(breakdown.get("type_total", 0))
+
+	quota_label.text = "Quota: %d" % int(state.get("quota_remaining", 0))
+	current_hand_points_label.text = "Current Hand Points: %d" % type_total
+	hand_type_label.text = "Hand Type: %s" % hand_name
+	hand_type_value_label.text = "Hand Type Value: %d" % type_total
+	hands_left_leabel.text = "Hands Left: %d" % int(state.get("hands_remaining", 0))
+	rolls_left_label.text = "Rolls Left: %d" % int(state.get("rerolls_remaining", 0))
