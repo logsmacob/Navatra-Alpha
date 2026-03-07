@@ -88,10 +88,11 @@ func ui_update(state: Dictionary = {}) -> void:
 	var breakdown := score_manager.get_last_breakdown()
 	var hand_name := str(breakdown.get("hand_name", "-"))
 	var type_total := int(breakdown.get("type_total", 0))
+	var final_score := int(breakdown.get("final_score", 0))
 	
 	round_index_label.text = "Round %d" % state.get("round_index", 0)
 	quota_label.text = "Quota: %d" % int(state.get("quota_remaining", 0))
-	current_hand_points_label.text = "Current Hand Points: %d" % type_total
+	current_hand_points_label.text = "Current Hand Points: %d" % final_score
 	hand_type_label.text = "Hand Type: %s" % hand_name
 	hand_type_value_label.text = "Hand Type Value: %d" % type_total
 	hands_left_leabel.text = "Hands Left: %d" % int(state.get("hands_remaining", 0))
