@@ -1,4 +1,5 @@
-extends Node
+extends RefCounted
+class_name HandEvaluatorService
 
 enum HandType {
 	HIGH_DIE,
@@ -11,9 +12,8 @@ enum HandType {
 	FIVE_OF_A_KIND
 }
 
-# NOTE: Handles evaluate hand.
 func evaluate_hand(hand: Array[int]) -> HandType:
-	if hand.size() == 0:
+	if hand.is_empty():
 		return HandType.HIGH_DIE
 
 	var counts := {}
@@ -28,19 +28,14 @@ func evaluate_hand(hand: Array[int]) -> HandType:
 
 	if values == [5]:
 		return HandType.FIVE_OF_A_KIND
-
 	if values == [1, 4]:
 		return HandType.FOUR_OF_A_KIND
-
 	if values == [2, 3]:
 		return HandType.FULL_HOUSE
-
 	if values == [1, 1, 3]:
 		return HandType.THREE_OF_A_KIND
-
 	if values == [1, 2, 2]:
 		return HandType.TWO_PAIR
-
 	if values == [1, 1, 1, 2]:
 		return HandType.ONE_PAIR
 
@@ -50,12 +45,9 @@ func evaluate_hand(hand: Array[int]) -> HandType:
 
 	return HandType.HIGH_DIE
 
-
-# NOTE: Handles get hand details.
 func get_hand_details(hand: Array[int]) -> HandDetails:
 	var result := HandDetails.new(evaluate_hand(hand), [])
-
-	if hand.size() == 0:
+	if hand.is_empty():
 		return result
 
 	var counts := {}
@@ -72,31 +64,31 @@ func get_hand_details(hand: Array[int]) -> HandDetails:
 			var highest_value = sorted_hand[-1]
 			result.groups.append({"high_die": [highest_value]})
 		HandType.ONE_PAIR:
-			for k in keys:
-				if counts[k] == 2:
-					result.groups.append({"pair": [k, k]})
+			for key in keys:
+				if counts[key] == 2:
+					result.groups.append({"pair": [key, key]})
 		HandType.TWO_PAIR:
-			for k in keys:
-				if counts[k] == 2:
-					result.groups.append({"pair": [k, k]})
+			for key in keys:
+				if counts[key] == 2:
+					result.groups.append({"pair": [key, key]})
 		HandType.THREE_OF_A_KIND:
-			for k in keys:
-				if counts[k] == 3:
-					result.groups.append({"three_of_a_kind": [k, k, k]})
+			for key in keys:
+				if counts[key] == 3:
+					result.groups.append({"three_of_a_kind": [key, key, key]})
 		HandType.FOUR_OF_A_KIND:
-			for k in keys:
-				if counts[k] == 4:
-					result.groups.append({"four_of_a_kind": [k, k, k, k]})
+			for key in keys:
+				if counts[key] == 4:
+					result.groups.append({"four_of_a_kind": [key, key, key, key]})
 		HandType.FIVE_OF_A_KIND:
-			for k in keys:
-				if counts[k] == 5:
-					result.groups.append({"five_of_a_kind": [k, k, k, k, k]})
+			for key in keys:
+				if counts[key] == 5:
+					result.groups.append({"five_of_a_kind": [key, key, key, key, key]})
 		HandType.FULL_HOUSE:
-			for k in keys:
-				if counts[k] == 3:
-					result.groups.append({"three_of_a_kind": [k, k, k]})
-				elif counts[k] == 2:
-					result.groups.append({"pair": [k, k]})
+			for key in keys:
+				if counts[key] == 3:
+					result.groups.append({"three_of_a_kind": [key, key, key]})
+				elif counts[key] == 2:
+					result.groups.append({"pair": [key, key]})
 		HandType.STRAIGHT:
 			var sorted_straight := hand.duplicate()
 			sorted_straight.sort()
@@ -104,20 +96,6 @@ func get_hand_details(hand: Array[int]) -> HandDetails:
 
 	return result
 
-
-# NOTE: Handles get hand type name.
 func get_hand_type_name(hand: Array[int]) -> String:
-	var type = evaluate_hand(hand)
-	return HandType.keys()[type]
-
-
-# NOTE: Handles get group dice values.
-func get_group_dice_values(hand: Array[int]) -> Array[int]:
-	var details := get_hand_details(hand)
-	var dice_values: Array[int] = []
-
-	for group in details.groups:
-		var values: Array = group.values()[0]
-		dice_values.append_array(values)
-
-	return dice_values
+	var hand_type := evaluate_hand(hand)
+	return HandType.keys()[hand_type]

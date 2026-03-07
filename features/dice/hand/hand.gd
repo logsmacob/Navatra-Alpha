@@ -5,7 +5,7 @@ extends Control
 @export var dice_per_hand: int = 5
 
 signal setup_complete
-signal played_hand_ready(dice: Array[DieUI])
+signal played_hand_ready(hand: DiceHand)
 signal played_hand_finished
 
 var dice: Array[DieUI] = []
@@ -17,7 +17,7 @@ func _ready() -> void:
 	setup_complete.emit()
 
 func _build_hand(dice_count: int) -> void:
-	for i in range(dice_count):
+	for _i in range(dice_count):
 		var die_ui: DieUI = die_ui_scene.instantiate()
 		hand_container.add_child(die_ui)
 		die_ui.set_die(DieInstance.create_standard_d6())
@@ -35,7 +35,14 @@ func _on_roll_pressed() -> void:
 func _on_hand_animator_play_animation_finished() -> void:
 	for die in dice:
 		die.is_selected = false
-	played_hand_ready.emit(dice)
+	played_hand_ready.emit(_build_dice_hand())
+
+func _build_dice_hand() -> DiceHand:
+	var values: Array[int] = []
+	for die_ui in dice:
+		if die_ui.die != null and die_ui.die.current_face != null:
+			values.append(die_ui.die.current_face.value)
+	return DiceHand.new(values)
 
 func _on_played_hand_finish() -> void:
 	played_hand_finished.emit()

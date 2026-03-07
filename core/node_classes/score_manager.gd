@@ -8,11 +8,14 @@ var last_details: HandDetails = null
 var last_breakdown: Dictionary = {}
 var play_pending: bool = false
 var score_system := ScoreSystem.new()
+var hand_evaluator: HandEvaluatorService = HandEvaluatorService.new()
 
+func configure(evaluator: HandEvaluatorService) -> void:
+	hand_evaluator = evaluator
 
 # NOTE: Handles preview hand.
 func preview_hand(hand: Array[int]) -> void:
-	last_details = HandEvaluator.get_hand_details(hand)
+	last_details = hand_evaluator.get_hand_details(hand)
 
 	if last_details.groups.is_empty():
 		last_roll_score = 0
@@ -25,7 +28,7 @@ func preview_hand(hand: Array[int]) -> void:
 	last_type_total = score_system.get_type_only_total(last_details)
 	last_breakdown = score_system.get_score_breakdown(last_details)
 	last_breakdown["type_total"] = last_type_total
-	last_breakdown["hand_name"] = HandEvaluator.HandType.keys()[last_details.type]
+	last_breakdown["hand_name"] = HandEvaluatorService.HandType.keys()[last_details.type]
 
 	EventBus.hand_evaluated.emit(last_details)
 	EventBus.score_calculated.emit(last_details, last_type_total, last_breakdown)

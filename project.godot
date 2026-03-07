@@ -18,7 +18,6 @@ config/icon="res://assets/sprites/icon.svg"
 
 EventBus="*uid://daxbdt73sgi6o"
 GameState="*uid://dfqimhsbn8a45"
-HandEvaluator="*uid://pgmjjyx5iuwo"
 
 [physics]
 

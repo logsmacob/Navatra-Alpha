@@ -195,7 +195,8 @@ To keep future changes safe and readable, the project now follows this split:
 
 - `GameState` (autoload): owns round/run rules and mutable gameplay state.
 - `EventBus` (autoload): global decoupled events between feature modules.
-- `Hand` scene: owns only hand-level UI behavior (spawn dice, reroll interactions, play hand).
+- `HandEvaluatorService` (instanced class): hand evaluation logic (not global).
+- `Hand` scene: owns hand-level UI behavior and emits `DiceHand` model data.
 - `DieUI`: owns single-die interaction state (held vs not held) and view updates.
 - `Main` scene script: orchestration layer that reacts to hand events and updates game state.
 
@@ -203,9 +204,9 @@ To keep future changes safe and readable, the project now follows this split:
 
 When adding a mechanic, use this order:
 
-1. Add/adjust rules in `autoload/game_state.gd`.
-2. Add cross-feature signals in `autoload/event_bus.gd` only if needed.
-3. Keep scene scripts thin (UI + signal wiring).
-4. Keep scoring/evaluation logic centralized in `core/node_classes/score_manager.gd`, and keep scene scripts focused on orchestration/UI wiring.
+1. Add/adjust round rules in `autoload/game_state.gd`.
+2. Add cross-feature signals in `autoload/event_bus.gd` only when needed.
+3. Keep evaluation/scoring in service/runtime classes (`core/services` and `core/node_classes`).
+4. Keep scene scripts thin (UI + signal wiring).
 
 This makes balancing and new features (shop, trinkets, custom dice) easier without rewriting UI code.

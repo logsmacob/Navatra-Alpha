@@ -14,9 +14,8 @@ func _ready() -> void:
 	GameState.run_failed.connect(_on_run_failed)
 	GameState.round_state_changed.connect(_on_round_state_changed)
 
-func _on_played_hand_ready(dice: Array[DieUI]) -> void:
-	var hand_values := _extract_dice_values(dice)
-	score_manager.preview_hand(hand_values)
+func _on_played_hand_ready(hand_data: DiceHand) -> void:
+	score_manager.preview_hand(hand_data.to_array())
 
 	if not score_manager.can_play_hand():
 		GameState.consume_hand()
@@ -33,13 +32,6 @@ func _on_played_hand_ready(dice: Array[DieUI]) -> void:
 
 	await get_tree().create_timer(1).timeout
 	hand._on_played_hand_finish()
-
-func _extract_dice_values(dice: Array[DieUI]) -> Array[int]:
-	var values: Array[int] = []
-	for die in dice:
-		if die.die != null and die.die.current_face != null:
-			values.append(die.die.current_face.value)
-	return values
 
 func _get_played_hand_name() -> String:
 	var breakdown := score_manager.get_last_breakdown()
