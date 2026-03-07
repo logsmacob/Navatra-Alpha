@@ -45,6 +45,10 @@ func _build_dice_hand() -> DiceHand:
 			values.append(die_ui.die.current_face.value)
 	return DiceHand.new(values)
 
+
+func get_current_hand() -> DiceHand:
+	return _build_dice_hand()
+
 func _on_played_hand_finish() -> void:
 	played_hand_finished.emit()
 

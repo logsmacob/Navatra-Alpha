@@ -1,6 +1,6 @@
 extends Control
 
-@onready var hand: Control = $MarginContainer/Hand
+@onready var hand: Node = $MarginContainer/Hand
 @onready var round_index_label: Label = $VBoxContainer/RoundIndex
 @onready var quota_label: Label = $VBoxContainer/Quota
 @onready var current_hand_points_label: Label = $VBoxContainer/CurrentHandPoints
@@ -21,6 +21,8 @@ func _ready() -> void:
 	GameState.run_failed.connect(_on_run_failed)
 	GameState.round_state_changed.connect(_on_round_state_changed)
 	EventBus.roll_all_dice_requested.connect(_on_roll_all_dice_requested)
+
+	_refresh_hand_preview()
 	ui_update()
 	
 
@@ -61,8 +63,23 @@ func _on_round_state_changed(state: Dictionary) -> void:
 	print("State: ", state)
 	ui_update(state)
 
-func _on_roll_all_dice_requested():
+func _on_roll_all_dice_requested() -> void:
+	_refresh_hand_preview()
 	ui_update()
+
+
+func _refresh_hand_preview() -> void:
+	if hand == null or score_manager == null:
+		return
+
+	if not hand.has_method("get_current_hand"):
+		return
+
+	var current_hand: DiceHand = hand.call("get_current_hand")
+	if current_hand == null:
+		return
+
+	score_manager.preview_hand(current_hand.to_array())
 
 func ui_update(state: Dictionary = {}) -> void:
 	if state.is_empty():
