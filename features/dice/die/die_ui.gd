@@ -44,6 +44,7 @@ func roll_if_not_selected() -> FaceData:
 
 	text = str(roll_face.value)
 	die_rolled.emit(roll_face)
+	$DieAnimator.play_roll_animation()
 	EventBus.roll_die.emit(self)
 	return roll_face
 
