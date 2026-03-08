@@ -66,4 +66,3 @@ text = "Roll"
 
 [connection signal="played_hand_finished" from="." to="HandAnimator" method="_on_hand_played_hand_finished"]
 [connection signal="setup_complete" from="." to="HandAnimator" method="_on_hand_setup_complete"]
-[connection signal="hand_reset_ready" from="HandAnimator" to="." method="_on_hand_animator_hand_reset_ready"]

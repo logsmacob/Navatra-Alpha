@@ -25,7 +25,9 @@ func _ready() -> void:
 		roll_button.pressed.connect(_on_roll_pressed)
 	if play_button != null and not play_button.pressed.is_connected(_on_play_pressed):
 		play_button.pressed.connect(_on_play_pressed)
-
+	if hand_animator != null and not hand_animator.hand_reset_ready.is_connected(_on_hand_reset_ready):
+		hand_animator.hand_reset_ready.connect(_on_hand_reset_ready)
+	
 	setup_complete.emit()
 	is_hand_ready = true
 
@@ -123,6 +125,6 @@ func get_current_hand() -> DiceHand:
 func _on_played_hand_finish() -> void:
 	played_hand_finished.emit()
 
-func _on_hand_animator_hand_reset_ready() -> void:
+func _on_hand_reset_ready() -> void:
 	EventBus.roll_all_dice_requested.emit()
 	is_hand_ready = true
