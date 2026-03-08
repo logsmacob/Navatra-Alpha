@@ -67,5 +67,3 @@ text = "Roll"
 [connection signal="played_hand_finished" from="." to="HandAnimator" method="_on_hand_played_hand_finished"]
 [connection signal="setup_complete" from="." to="HandAnimator" method="_on_hand_setup_complete"]
 [connection signal="hand_reset_ready" from="HandAnimator" to="." method="_on_hand_animator_hand_reset_ready"]
-[connection signal="play_animation_finished" from="HandAnimator" to="." method="_on_hand_animator_play_animation_finished"]
-[connection signal="pressed" from="HBoxContainer/ButtonContainer/play" to="HandAnimator" method="_on_play_pressed"]
