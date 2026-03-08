@@ -58,6 +58,7 @@ func _on_round_completed(round_index: int) -> void:
 
 func _on_run_failed(round_index: int) -> void:
 	print("Run failed on round %d" % round_index)
+	GameState.start_new_run()
 
 func _on_round_state_changed(state: Dictionary) -> void:
 	print("State: ", state)
