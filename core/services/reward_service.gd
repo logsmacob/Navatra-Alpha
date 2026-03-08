@@ -14,7 +14,7 @@ func generate_rewards(count: int) -> Array[RewardDefinition]:
 	available_rewards.shuffle()
 
 	var picked_rewards: Array[RewardDefinition] = []
-	var pick_count := min(count, available_rewards.size())
+	var pick_count: int = mini(count, available_rewards.size())
 	for i in range(pick_count):
 		picked_rewards.append(available_rewards[i])
 
