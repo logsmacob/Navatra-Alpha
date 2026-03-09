@@ -7,16 +7,8 @@ signal play_animation_finished
 signal hand_reset_ready
 
 func _on_hand_setup_complete() -> void:
-	for die: DieUI in hand.dice:
-		die.die_selected.connect(_on_die_selected)
-
-func _on_die_selected(die_ui: DieUI) -> void:
-	animate_die_selection(die_ui)
-
-func animate_die_selection(die_ui: DieUI) -> void:
-	var target_y := -100 if die_ui.is_selected else 0
-	var tween := create_tween()
-	tween.tween_property(die_ui, "position:y", target_y, 0.2)
+	#any logic that is needed after hand is made
+	pass
 
 func play_hand(target_dice: Array[DieUI]) -> void:
 	var tweens: Array[Tween] = []

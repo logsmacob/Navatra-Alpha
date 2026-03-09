@@ -1,4 +1,4 @@
-extends Button
+extends Control
 ## Visual/controller wrapper for a single [DieInstance].
 ##
 ## Responsibilities:
@@ -10,7 +10,8 @@ class_name DieUI
 ## Emitted when a roll happens from this UI control.
 ## [param face] is the rolled face.
 signal die_rolled(face: FaceData)
-signal die_selected(die_ui: DieUI)
+## Emitted when die is pressed and returns [param is_selected] is function.
+signal die_selected(selected: bool)
 
 ## Runtime die backing this control.
 var die: DieInstance
@@ -22,7 +23,7 @@ var is_selected: bool = false
 func set_die(new_die: DieInstance) -> void:
 	die = new_die
 	if die.current_face != null:
-		text = str(die.current_face.value)
+		$DieFace.frame = die.current_face.value - 1
 
 
 ## Rolls only when this die is not selected/held.
@@ -41,14 +42,11 @@ func roll_if_not_selected() -> FaceData:
 	var roll_face := die.roll()
 	if roll_face == null:
 		return null
-
-	text = str(roll_face.value)
+		
+	$DieVisuals.play_roll_animation()
 	die_rolled.emit(roll_face)
-	$DieAnimator.play_roll_animation()
-	EventBus.roll_die.emit(self)
 	return roll_face
 
 func _on_pressed() -> void:
 	is_selected = !is_selected
 	die_selected.emit(self)
-	EventBus.select_die.emit(self)
