@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://55rde0afeujc" path="res://features/dice/die/die_ui.gd" id="1_clpct"]
 [ext_resource type="Theme" uid="uid://uigveapmlifl" path="res://assets/UI/style_boxes/die_theme.tres" id="1_os8ub"]
 [ext_resource type="Script" uid="uid://cynddjhf8ac5m" path="res://features/dice/die/die_animator.gd" id="2_b27w3"]
+[ext_resource type="Script" path="res://features/dice/die/die_logic.gd" id="3_logic"]
 [ext_resource type="Texture2D" uid="uid://d3yt4s6o26qdu" path="res://assets/sprites/Die.png" id="4_giyrb"]
 [ext_resource type="Texture2D" uid="uid://ca5hsdmvgqcdn" path="res://assets/sprites/Face Values.png" id="5_7lnrr"]
 
@@ -63,6 +64,9 @@ animator = NodePath("../AnimationPlayer")
 die = NodePath("..")
 die_face_sprite = NodePath("../DieFace")
 die_material_sprite = NodePath("../DieMaterial")
+
+[node name="DieLogic" type="Node" parent="." unique_id=111781122]
+script = ExtResource("3_logic")
 
 [node name="DieMaterial" type="Sprite2D" parent="." unique_id=1668521514]
 texture_filter = 1

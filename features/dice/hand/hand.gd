@@ -2,13 +2,13 @@ extends Control
 
 @onready var hand_container = $HBoxContainer/Panel/HandContainer
 @onready var hand_animator: Node = $HandAnimator
+@onready var hand_scoring_selector: HandScoringSelector = $HandScoringSelector
 @export var die_ui_scene: PackedScene
 @export var dice_per_hand: int = 5
 @export var play_button: Button
 @export var roll_button: Button
 
 var is_hand_ready: bool = false
-var hand_evaluator := HandEvaluatorService.new()
 
 signal setup_complete
 signal played_hand_ready(hand: DiceHand)
@@ -61,66 +61,13 @@ func _on_play_pressed() -> void:
 		is_hand_ready = true
 		return
 
-	await animator.play_hand(_get_scoring_dice())
+	await animator.play_hand(hand_scoring_selector.get_scoring_dice(dice))
 	for die in dice:
 		die.is_selected = false
-	played_hand_ready.emit(_build_dice_hand())
-
-func _get_scoring_dice() -> Array[DieUI]:
-	if dice.is_empty():
-		return []
-
-	var values: Array[int] = []
-	for die: DieUI in dice:
-		if die.die == null or die.die.current_face == null:
-			continue
-		values.append(die.die.current_face.value)
-
-	if values.size() != dice.size():
-		return dice.duplicate()
-
-	var details := hand_evaluator.get_hand_details(values)
-	if details == null or details.groups.is_empty():
-		return dice.duplicate()
-
-	var counts_needed := _get_counts_needed(details)
-	if counts_needed.is_empty():
-		return dice.duplicate()
-
-	var scoring_dice: Array[DieUI] = []
-	for die: DieUI in dice:
-		if die.die == null or die.die.current_face == null:
-			continue
-		var value := die.die.current_face.value
-		var remaining := int(counts_needed.get(value, 0))
-		if remaining > 0:
-			scoring_dice.append(die)
-			counts_needed[value] = remaining - 1
-
-	if scoring_dice.is_empty():
-		return dice.duplicate()
-
-	return scoring_dice
-
-func _get_counts_needed(details: HandDetails) -> Dictionary:
-	var counts_needed := {}
-	for group_data in details.groups:
-		for group_name in group_data.keys():
-			var group_values: Array = group_data[group_name]
-			for value in group_values:
-				counts_needed[value] = int(counts_needed.get(value, 0)) + 1
-	return counts_needed
-
-
-func _build_dice_hand() -> DiceHand:
-	var values: Array[int] = []
-	for die_ui in dice:
-		if die_ui.die != null and die_ui.die.current_face != null:
-			values.append(die_ui.die.current_face.value)
-	return DiceHand.new(values)
+	played_hand_ready.emit(hand_scoring_selector.build_dice_hand(dice))
 
 func get_current_hand() -> DiceHand:
-	return _build_dice_hand()
+	return hand_scoring_selector.build_dice_hand(dice)
 
 func _on_played_hand_finish() -> void:
 	played_hand_finished.emit()

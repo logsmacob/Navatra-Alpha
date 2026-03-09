@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://biptkm4ujpe6i" path="res://features/dice/die/die.tscn" id="2_pxmyb"]
 [ext_resource type="Script" uid="uid://dqvho5iajwwdb" path="res://features/dice/hand/hand_animator.gd" id="3_7n5xe"]
 [ext_resource type="Theme" uid="uid://uigveapmlifl" path="res://assets/UI/style_boxes/die_theme.tres" id="3_oslr0"]
+[ext_resource type="Script" path="res://features/dice/hand/hand_scoring_selector.gd" id="4_selector"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7n5xe"]
 
@@ -31,6 +32,9 @@ roll_button = NodePath("HBoxContainer/ButtonContainer/roll")
 
 [node name="HandAnimator" type="Node" parent="." unique_id=308743313]
 script = ExtResource("3_7n5xe")
+
+[node name="HandScoringSelector" type="Node" parent="." unique_id=309901144]
+script = ExtResource("4_selector")
 
 [node name="HBoxContainer" type="VBoxContainer" parent="." unique_id=2047717781]
 layout_mode = 2

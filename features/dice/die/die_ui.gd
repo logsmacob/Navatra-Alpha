@@ -1,52 +1,49 @@
 extends Control
 ## Visual/controller wrapper for a single [DieInstance].
-##
-## Responsibilities:
-## - hold/select state for reroll behavior
-## - show the current face value in UI
-## - expose a safe roll entry point for scene scripts
 class_name DieUI
 
-## Emitted when a roll happens from this UI control.
-## [param face] is the rolled face.
 signal die_rolled(face: FaceData)
-## Emitted when die is pressed and returns [param is_selected] is function.
 signal die_selected(selected: bool)
 
-## Runtime die backing this control.
-var die: DieInstance
-## If true, the die is "held" and should not roll.
-var is_selected: bool = false
+@onready var die_logic: DieLogic = $DieLogic
 
-## Assigns the die used by this UI.
-## If the die already has a current face, the label is immediately updated.
+var die: DieInstance:
+	get:
+		return die_logic.die
+	set(value):
+		die_logic.set_die(value)
+
+var is_selected: bool:
+	get:
+		return die_logic.is_selected
+	set(value):
+		die_logic.is_selected = value
+
+func _ready() -> void:
+	if not die_logic.die_rolled.is_connected(_on_logic_die_rolled):
+		die_logic.die_rolled.connect(_on_logic_die_rolled)
+	if not die_logic.die_selected.is_connected(_on_logic_die_selected):
+		die_logic.die_selected.connect(_on_logic_die_selected)
+
 func set_die(new_die: DieInstance) -> void:
-	die = new_die
-	if die.current_face != null:
+	die_logic.set_die(new_die)
+	if die != null and die.current_face != null:
 		$DieFace.frame = die.current_face.value - 1
 
-
-## Rolls only when this die is not selected/held.
-##
-## Returns:
-## - [FaceData] when a roll succeeds
-## - `null` when held, unassigned, or die config is invalid
 func roll_if_not_selected() -> FaceData:
-	if is_selected:
-		return null
-
-	if die == null:
-		push_error("DieUI has no DieInstance assigned.")
-		return null
-
-	var roll_face := die.roll()
+	var roll_face := die_logic.roll_if_not_selected()
 	if roll_face == null:
 		return null
-		
+
+	$DieFace.frame = roll_face.value - 1
 	$DieVisuals.play_roll_animation()
-	die_rolled.emit(roll_face)
 	return roll_face
 
 func _on_pressed() -> void:
-	is_selected = !is_selected
-	die_selected.emit(self)
+	die_logic.toggle_selected()
+
+func _on_logic_die_rolled(face: FaceData) -> void:
+	die_rolled.emit(face)
+
+func _on_logic_die_selected(selected: bool) -> void:
+	die_selected.emit(selected)
