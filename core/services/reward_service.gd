@@ -26,17 +26,17 @@ func apply_reward(reward: RewardDefinition, game_state: Node) -> void:
 
 	match reward.type:
 		RewardDefinition.RewardType.ADD_HAND:
-			if game_state.has_method("add_next_round_hands_bonus"):
-				game_state.call("add_next_round_hands_bonus", int(reward.value))
+			_apply_game_state_bonus(game_state, "add_next_round_hands_bonus", int(reward.value))
 		RewardDefinition.RewardType.ADD_REROLL:
-			if game_state.has_method("add_next_round_rerolls_bonus"):
-				game_state.call("add_next_round_rerolls_bonus", int(reward.value))
+			_apply_game_state_bonus(game_state, "add_next_round_rerolls_bonus", int(reward.value))
 		RewardDefinition.RewardType.ADD_SCORE:
-			if game_state.has_method("add_next_round_quota_reduction"):
-				game_state.call("add_next_round_quota_reduction", int(reward.value))
+			_apply_game_state_bonus(game_state, "add_next_round_quota_reduction", int(reward.value))
 		RewardDefinition.RewardType.SCORE_MULT:
-			if game_state.has_method("add_next_round_score_multiplier_bonus"):
-				game_state.call("add_next_round_score_multiplier_bonus", reward.value)
+			_apply_game_state_bonus(game_state, "add_next_round_score_multiplier_bonus", reward.value)
+
+func _apply_game_state_bonus(game_state: Node, method_name: StringName, amount: Variant) -> void:
+	if game_state.has_method(method_name):
+		game_state.call(method_name, amount)
 
 func _build_default_reward_pool() -> void:
 	_reward_pool.clear()
