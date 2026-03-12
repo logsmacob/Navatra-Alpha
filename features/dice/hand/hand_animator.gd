@@ -6,15 +6,22 @@ class_name HandAnimator
 signal play_animation_finished
 signal hand_reset_ready
 
-func _on_hand_setup_complete() -> void:
-	#any logic that is needed after hand is made
-	pass
+var is_roll_finished: bool = true
+
+func roll_hand():
+	is_roll_finished = false
+	var duration :float = .5
+	for die: DieUI in hand.dice:
+		die.roll_if_not_selected(duration)
+		duration += .25
+	await get_tree().create_timer(duration).timeout
+	is_roll_finished = true
 
 func play_hand(target_dice: Array[DieUI]) -> void:
 	var tweens: Array[Tween] = []
 	for die: DieUI in target_dice:
 		var tween := create_tween()
-		tween.tween_property(die, "position:y", -200, 0.2)
+		tween.tween_property(die, "position:y", -die.size.y * 2, 0.2)
 		tweens.append(tween)
 
 	for tween in tweens:

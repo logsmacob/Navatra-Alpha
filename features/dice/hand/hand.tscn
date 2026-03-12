@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://biptkm4ujpe6i" path="res://features/dice/die/die.tscn" id="2_pxmyb"]
 [ext_resource type="Script" uid="uid://dqvho5iajwwdb" path="res://features/dice/hand/hand_animator.gd" id="3_7n5xe"]
 [ext_resource type="Theme" uid="uid://uigveapmlifl" path="res://assets/UI/style_boxes/die_theme.tres" id="3_oslr0"]
-[ext_resource type="Script" path="res://features/dice/hand/hand_scoring_selector.gd" id="4_selector"]
+[ext_resource type="Script" uid="uid://bfnmm4nlmtgcs" path="res://features/dice/hand/hand_scoring_selector.gd" id="4_selector"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7n5xe"]
 
@@ -19,7 +19,46 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
-[node name="Hand" type="PanelContainer" unique_id=649644491 node_paths=PackedStringArray("play_button", "roll_button")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2dtau"]
+bg_color = Color(0.07, 0.07, 0.07, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.24695039, 0.2469503, 0.24695012, 1)
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mukpv"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.24695039, 0.2469503, 0.24695012, 1)
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qgc13"]
+bg_color = Color(0.12, 0.12, 0.12, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.3529412, 0.3529412, 0.3529412, 1)
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="Hand" type="PanelContainer" unique_id=649644491]
 offset_right = 304.0
 offset_bottom = 100.0
 size_flags_horizontal = 3
@@ -27,8 +66,6 @@ size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_7n5xe")
 script = ExtResource("1_2i24d")
 die_ui_scene = ExtResource("2_pxmyb")
-play_button = NodePath("HBoxContainer/ButtonContainer/play")
-roll_button = NodePath("HBoxContainer/ButtonContainer/roll")
 
 [node name="HandAnimator" type="Node" parent="." unique_id=308743313]
 script = ExtResource("3_7n5xe")
@@ -55,18 +92,27 @@ layout_mode = 2
 alignment = 1
 
 [node name="play" type="Button" parent="HBoxContainer/ButtonContainer" unique_id=1941616311]
-modulate = Color(1, 0.41000003, 0.41000003, 1)
-custom_minimum_size = Vector2(150, 80)
+custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
 theme = ExtResource("3_oslr0")
 text = "Play"
 
 [node name="roll" type="Button" parent="HBoxContainer/ButtonContainer" unique_id=702813512]
-modulate = Color(1, 0.73333335, 0, 1)
-custom_minimum_size = Vector2(150, 80)
+custom_minimum_size = Vector2(300, 120)
 layout_mode = 2
 theme = ExtResource("3_oslr0")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_2dtau")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_mukpv")
+theme_override_styles/hover = SubResource("StyleBoxFlat_qgc13")
 text = "Roll"
 
 [connection signal="played_hand_finished" from="." to="HandAnimator" method="_on_hand_played_hand_finished"]
 [connection signal="setup_complete" from="." to="HandAnimator" method="_on_hand_setup_complete"]
+[connection signal="hand_reset_ready" from="HandAnimator" to="." method="_on_hand_reset_ready"]
+[connection signal="pressed" from="HBoxContainer/ButtonContainer/play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="HBoxContainer/ButtonContainer/roll" to="." method="_on_roll_pressed"]

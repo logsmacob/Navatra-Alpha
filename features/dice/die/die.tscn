@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://55rde0afeujc" path="res://features/dice/die/die_ui.gd" id="1_clpct"]
 [ext_resource type="Theme" uid="uid://uigveapmlifl" path="res://assets/UI/style_boxes/die_theme.tres" id="1_os8ub"]
 [ext_resource type="Script" uid="uid://cynddjhf8ac5m" path="res://features/dice/die/die_animator.gd" id="2_b27w3"]
-[ext_resource type="Script" path="res://features/dice/die/die_logic.gd" id="3_logic"]
-[ext_resource type="Texture2D" uid="uid://d3yt4s6o26qdu" path="res://assets/sprites/Die.png" id="4_giyrb"]
+[ext_resource type="Script" uid="uid://brrp8tdcnjjox" path="res://features/dice/die/die_logic.gd" id="3_logic"]
+[ext_resource type="Texture2D" uid="uid://cqanecxpnjd0j" path="res://assets/sprites/Die anime.png" id="5_0ek5x"]
 [ext_resource type="Texture2D" uid="uid://ca5hsdmvgqcdn" path="res://assets/sprites/Face Values.png" id="5_7lnrr"]
 
 [sub_resource type="Animation" id="Animation_os8ub"]
@@ -12,30 +12,56 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
+tracks/0/path = NodePath("DieMaterial:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("DieFace:frame_coords")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_b27w3"]
 resource_name = "roll"
-length = 0.5
+length = 0.4
+loop_mode = 1
+step = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath(".:rotation")
+tracks/0/path = NodePath("DieMaterial:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [0.0, 6.2831855]
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("DieFace:frame_coords")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 0), Vector2i(0, 3), Vector2i(0, 2), Vector2i(0, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_os8ub"]
@@ -45,42 +71,44 @@ _data = {
 }
 
 [node name="Die" type="Control" unique_id=1358261884]
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -1072.0
-offset_bottom = -568.0
+offset_right = -1800.0
+offset_bottom = -960.0
 grow_horizontal = 2
 grow_vertical = 2
+rotation = 6.2831855
 pivot_offset = Vector2(40, 40)
 theme = ExtResource("1_os8ub")
 script = ExtResource("1_clpct")
 
-[node name="DieVisuals" type="Node" parent="." unique_id=537555383 node_paths=PackedStringArray("animator", "die", "die_face_sprite", "die_material_sprite")]
-script = ExtResource("2_b27w3")
-animator = NodePath("../AnimationPlayer")
-die = NodePath("..")
-die_face_sprite = NodePath("../DieFace")
-die_material_sprite = NodePath("../DieMaterial")
-
 [node name="DieLogic" type="Node" parent="." unique_id=111781122]
 script = ExtResource("3_logic")
 
+[node name="DieVisuals" type="Node" parent="." unique_id=537555383 node_paths=PackedStringArray("animator", "die", "face_sprite", "material_sprite")]
+script = ExtResource("2_b27w3")
+animator = NodePath("../AnimationPlayer")
+die = NodePath("..")
+face_sprite = NodePath("../DieFace")
+material_sprite = NodePath("../DieMaterial")
+
 [node name="DieMaterial" type="Sprite2D" parent="." unique_id=1668521514]
 texture_filter = 1
-position = Vector2(40, 40)
-scale = Vector2(2.25, 2.25)
-texture = ExtResource("4_giyrb")
+position = Vector2(60, 60)
+scale = Vector2(3.3, 3.3)
+texture = ExtResource("5_0ek5x")
+hframes = 4
 
 [node name="DieFace" type="Sprite2D" parent="." unique_id=725643448]
 texture_filter = 1
-position = Vector2(40, 40)
-scale = Vector2(2.25, 2.25)
+position = Vector2(60, 60)
+scale = Vector2(3.3, 3.3)
 texture = ExtResource("5_7lnrr")
-hframes = 6
-frame = 1
+hframes = 8
+vframes = 4
 
 [node name="Button" type="Button" parent="." unique_id=692544193]
 layout_mode = 1
@@ -95,9 +123,10 @@ flat = true
 libraries/ = SubResource("AnimationLibrary_os8ub")
 
 [connection signal="die_rolled" from="." to="DieVisuals" method="_on_die_die_rolled"]
-[connection signal="button_up" from="Button" to="DieVisuals" method="_on_button_button_up"]
+[connection signal="die_rolled" from="DieLogic" to="." method="_on_logic_die_rolled"]
+[connection signal="die_selected" from="DieLogic" to="." method="_on_logic_die_selected"]
+[connection signal="anim_roll_finished" from="DieVisuals" to="." method="_on_die_visuals_anim_roll_finished"]
 [connection signal="mouse_entered" from="Button" to="DieVisuals" method="_on_button_mouse_entered"]
 [connection signal="mouse_exited" from="Button" to="DieVisuals" method="_on_button_mouse_exited"]
 [connection signal="pressed" from="Button" to="." method="_on_pressed"]
 [connection signal="pressed" from="Button" to="DieVisuals" method="_on_button_pressed"]
-[connection signal="animation_finished" from="AnimationPlayer" to="DieVisuals" method="_on_animation_player_animation_finished"]

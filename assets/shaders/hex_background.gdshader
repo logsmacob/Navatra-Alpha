@@ -2,12 +2,16 @@ shader_type canvas_item;
 
 uniform vec4 color_a : source_color = vec4(0.1, 0.3, 0.8, 1.0);
 uniform vec4 color_b : source_color = vec4(0.9, 0.2, 0.5, 1.0);
+uniform vec4 edge_color : source_color = vec4(0.5, 0.3, 0.9, 1.0);
 
 uniform float hexes_across : hint_range(5.0, 80.0) = 50.0;
-uniform float speed : hint_range(0.1, 5.0) = 3.0;
+uniform float speed : hint_range(0.1, 5.0) = 2.5;
 
-uniform float ripple_frequency : hint_range(0.5, 5.0) = 1.5;
-uniform float randomness : hint_range(0.0, 1.0) = 0.4;
+uniform float ripple_frequency : hint_range(0.5, 5.0) = 1.8;
+uniform float randomness : hint_range(0.0, 1.0) = 0.35;
+
+uniform float edge_thickness : hint_range(0.0, 0.2) = 0.05;
+uniform float edge_softness : hint_range(0.0, 0.1) = 0.01;
 
 
 // -------- Hex Math --------
@@ -53,7 +57,6 @@ void fragment() {
 
     vec2 pos = FRAGCOORD.xy;
 
-    // Stable grid
     vec3 hex = pixel_to_hex(pos, hex_size);
     vec3 rounded = cube_round(hex);
 
@@ -64,10 +67,8 @@ void fragment() {
 
     vec2 screen_center = viewport_size * 0.5;
 
-    // Radial ripple from screen center
     float radial = length(center - screen_center) / hex_size;
 
-    // Stable per-hex randomness
     float random_offset = fract(
         sin(dot(rounded.xy, vec2(12.9898, 78.233))) * 43758.5453
     );
@@ -79,21 +80,25 @@ void fragment() {
     );
 
     float t = (wave + 1.0) * 0.5;
-    t = clamp(t, 0.0, 1.0);
 
     vec4 col = mix(color_a, color_b, t);
 
-    // Soft hex edges
-    float mask = smoothstep(1.0, 0.92, dist);
+    // -------- Edge Band --------
+    float outer = smoothstep(1.0, 1.0 - edge_softness, dist);
+    float inner = smoothstep(1.0 - edge_thickness, 1.0 - edge_thickness - edge_softness, dist);
 
-    // Very subtle vignette depth
+    float edge = outer - inner;
+
+    col = mix(col, edge_color, edge);
+
+    // Subtle vignette
     float vignette = smoothstep(
         1.3,
         0.2,
         length(pos - screen_center) / viewport_size.x
     );
 
-    col *= vignette * 0.15 + 0.85;
+    col *= vignette * 0.25 + 0.75;
 
-    COLOR = col * mask;
+    COLOR = col;
 }
