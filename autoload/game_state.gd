@@ -28,12 +28,14 @@ var _next_round_hands_bonus: int = 0
 var _next_round_rerolls_bonus: int = 0
 var _next_round_quota_reduction: int = 0
 var _next_round_score_multiplier_bonus: float = 0.0
+var hand_type_upgrades: Dictionary = {}
 
 func _ready() -> void:
 	start_new_run()
 
 func start_new_run() -> void:
 	round_index = 1
+	hand_type_upgrades.clear()
 	_clear_pending_reward_bonuses()
 	run_started.emit(round_index)
 	start_round(round_index)
@@ -62,6 +64,21 @@ func add_next_round_quota_reduction(amount: int) -> void:
 
 func add_next_round_score_multiplier_bonus(amount: float) -> void:
 	_next_round_score_multiplier_bonus += max(amount, 0.0)
+
+
+func add_hand_type_upgrade(hand_type: int, base_bonus: int, mult_bonus: int) -> void:
+	if not hand_type_upgrades.has(hand_type):
+		hand_type_upgrades[hand_type] = {"base": 0, "mult": 0}
+
+	var upgrade_data: Dictionary = hand_type_upgrades[hand_type]
+	upgrade_data["base"] = int(upgrade_data.get("base", 0)) + max(base_bonus, 0)
+	upgrade_data["mult"] = int(upgrade_data.get("mult", 0)) + max(mult_bonus, 0)
+	hand_type_upgrades[hand_type] = upgrade_data
+
+func get_hand_type_upgrade(hand_type: int) -> Dictionary:
+	if not hand_type_upgrades.has(hand_type):
+		return {"base": 0, "mult": 0}
+	return hand_type_upgrades[hand_type].duplicate()
 
 func consume_reroll() -> bool:
 	if rerolls_remaining <= 0:

@@ -1,20 +1,20 @@
 [gd_scene format=3 uid="uid://7f2vbrrbfiba"]
 
-[ext_resource type="Script" uid="uid://b15ejutmd7ef5" path="res://features/shop/reward_shop.gd" id="1_h8c6r"]
-[ext_resource type="Shader" uid="uid://batbn873bu8tu" path="res://features/shop/blur.gdshader" id="2_kc0r1"]
+[ext_resource type="Script" uid="uid://b15ejutmd7ef5" path="res://features/hand_type_upgrades/hand_type_upgrades.gd" id="1_8k6x7"]
+[ext_resource type="Shader" uid="uid://batbn873bu8tu" path="res://features/hand_type_upgrades/blur.gdshader" id="2_r1jep"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qb506"]
-shader = ExtResource("2_kc0r1")
+shader = ExtResource("2_r1jep")
 shader_parameter/radius = 20.0
 
-[node name="RewardShop" type="Control" unique_id=980821348]
+[node name="HandTypeUpgrades" type="Control" unique_id=980821348]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_h8c6r")
+script = ExtResource("1_8k6x7")
 
 [node name="Panel" type="Panel" parent="." unique_id=568504620]
 material = SubResource("ShaderMaterial_qb506")
@@ -34,4 +34,12 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="UpgradeList" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
 theme_override_constants/separation = 8
+
+[node name="RerollButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Reroll"

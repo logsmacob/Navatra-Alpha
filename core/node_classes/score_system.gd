@@ -96,8 +96,9 @@ func calculate_score(details: HandDetails) -> int:
 		return 0
 
 	# Retrieve scoring data for this hand
-	var base: int = HAND_VALUES[hand_type]["base"]
-	var mult: int = HAND_VALUES[hand_type]["mult"]
+	var scoring_values := _get_scoring_values(hand_type)
+	var base: int = int(scoring_values.get("base", 0))
+	var mult: int = int(scoring_values.get("mult", 0))
 
 	# Sum values from all groups (pairs, kickers, etc.)
 	var group_total := _sum_groups(details.groups)
@@ -164,8 +165,9 @@ func get_score_breakdown(details: HandDetails) -> Dictionary:
 
 	var hand_type: int = details.type
 
-	var base: int = HAND_VALUES[hand_type]["base"]
-	var mult: int = HAND_VALUES[hand_type]["mult"]
+	var scoring_values := _get_scoring_values(hand_type)
+	var base: int = int(scoring_values.get("base", 0))
+	var mult: int = int(scoring_values.get("mult", 0))
 
 	var group_total: int = _sum_groups(details.groups)
 
@@ -205,7 +207,21 @@ func get_type_only_total(details: HandDetails) -> int:
 	if not HAND_VALUES.has(hand_type):
 		return 0
 
-	var base: int = HAND_VALUES[hand_type]["base"]
-	var mult: int = HAND_VALUES[hand_type]["mult"]
+	var scoring_values := _get_scoring_values(hand_type)
+	var base: int = int(scoring_values.get("base", 0))
+	var mult: int = int(scoring_values.get("mult", 0))
 
 	return base * mult
+
+
+func _get_scoring_values(hand_type: int) -> Dictionary:
+	var values: Dictionary = HAND_VALUES.get(hand_type, {"base": 0, "mult": 0})
+	var base_value: int = int(values.get("base", 0))
+	var mult_value: int = int(values.get("mult", 0))
+
+	if GameState != null and GameState.has_method("get_hand_type_upgrade"):
+		var upgrade: Dictionary = GameState.get_hand_type_upgrade(hand_type)
+		base_value += int(upgrade.get("base", 0))
+		mult_value += int(upgrade.get("mult", 0))
+
+	return {"base": base_value, "mult": mult_value}
