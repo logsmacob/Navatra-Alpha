@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_linear_mipmap;
-uniform float radius = 3.0;
+uniform float radius = 100.0;
 
 void fragment() {
     vec2 texel = 1.0 / vec2(textureSize(SCREEN_TEXTURE, 0));
