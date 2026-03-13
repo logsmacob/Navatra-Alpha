@@ -12,15 +12,20 @@ func _ready() -> void:
 	reroll_button.pressed.connect(_on_reroll_pressed)
 
 func show_upgrades(upgrades: Array[HandTypeUpgradeDefinition]) -> void:
+	for button in buttons:
+		button.visible = false
+		for connection in button.pressed.get_connections():
+			button.pressed.disconnect(connection.callable)
 
 	var i = 0
 	for upgrade in upgrades:
-		if upgrade == null:
+		if upgrade == null or i >= buttons.size():
 			continue
 
 		var button := buttons[i]
 		i += 1
 		button.text = "%s\n%s" % [upgrade.get_title(), upgrade.get_description()]
+		button.visible = true
 		button.pressed.connect(_on_upgrade_pressed.bind(upgrade))
 
 	visible = true
