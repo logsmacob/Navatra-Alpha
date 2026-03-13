@@ -20,6 +20,10 @@ text = "Quota"
 layout_mode = 2
 text = "Current Hand Points"
 
+[node name="CurrentHandPointsMath" type="Label" parent="." unique_id=2033114964]
+layout_mode = 2
+text = "Current Hand Points"
+
 [node name="HandType" type="Label" parent="." unique_id=301125834]
 layout_mode = 2
 text = "Hand Type"

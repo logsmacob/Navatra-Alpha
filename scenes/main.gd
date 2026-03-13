@@ -42,6 +42,8 @@ func _on_played_hand_ready(hand_data: DiceHand) -> void:
 func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -> void:
 	print("Round %d started | quota=%d hands=%d rerolls=%d" % [round_index, quota, hands, rerolls])
 	hand_type_upgrades.visible = false
+	_refresh_hand_preview()
+	score_bar.update_state()
 
 func _on_round_completed(round_index: int) -> void:
 	print("Round %d complete" % round_index)
