@@ -4,8 +4,8 @@ uniform vec4 color_a : source_color = vec4(0.1, 0.3, 0.8, 1.0);
 uniform vec4 color_b : source_color = vec4(0.9, 0.2, 0.5, 1.0);
 uniform vec4 edge_color : source_color = vec4(0.5, 0.3, 0.9, 1.0);
 
-uniform float hexes_across : hint_range(5.0, 80.0) = 50.0;
-uniform float speed : hint_range(0.1, 5.0) = 2.5;
+uniform float hexes_across : hint_range(5.0, 80.0) = 60.0;
+uniform float speed : hint_range(0.1, 5.0) = 0.9;
 
 uniform float ripple_frequency : hint_range(0.5, 5.0) = 1.8;
 uniform float randomness : hint_range(0.0, 1.0) = 0.35;

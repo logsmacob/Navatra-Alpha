@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="Navatra"
-run/main_scene="uid://cm12csulyq6hw"
+run/main_scene="uid://bea22x3ksr3ov"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://assets/sprites/icon.svg"
+config/icon="uid://b15xaclrmafje"
 
 [autoload]
 

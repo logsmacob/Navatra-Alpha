@@ -1,17 +1,18 @@
 [gd_scene format=3 uid="uid://bea22x3ksr3ov"]
 
-[ext_resource type="Shader" uid="uid://64giuyue21qd" path="res://assets/shaders/hex_background.gdshader" id="1_sa3yf"]
+[ext_resource type="Script" uid="uid://dynomwkv5gwgk" path="res://scenes/title_screen.gd" id="1_mgrm8"]
+[ext_resource type="Shader" uid="uid://c8ll2ltq82btw" path="res://assets/shaders/swirl.gdshader" id="2_mgrm8"]
 [ext_resource type="Texture2D" uid="uid://b15xaclrmafje" path="res://assets/sprites/Navatra Icon.png" id="2_s4lrb"]
+[ext_resource type="Theme" uid="uid://uigveapmlifl" path="res://assets/UI/style_boxes/die_theme.tres" id="3_s4lrb"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mgrm8"]
-shader = ExtResource("1_sa3yf")
-shader_parameter/color_a = Color(0.6379327, 0.8333348, 0.7374917, 1)
-shader_parameter/color_b = Color(0.11276857, 0.22883987, 0.28030887, 1)
+shader = ExtResource("2_mgrm8")
+shader_parameter/color_a = Color(0.016, 0.031, 0.161, 1)
+shader_parameter/color_b = Color(0.101960786, 0.16470589, 0.3529412, 1)
 shader_parameter/edge_color = Color(0, 0, 0, 1)
 shader_parameter/hexes_across = 60.0000026125
-shader_parameter/speed = 0.90400003968012
-shader_parameter/ripple_frequency = 5.0
-shader_parameter/randomness = 0.0
+shader_parameter/swirl_speed = 1.0000000475
+shader_parameter/swirl_scale = 0.10000000149012
 shader_parameter/edge_thickness = 0.10000000475
 shader_parameter/edge_softness = 0.10000000149012
 
@@ -20,13 +21,17 @@ font_size = 200
 font_color = Color(0, 0, 0, 1)
 outline_size = 32
 
-[node name="Title Screen" type="Control" unique_id=888533972]
+[node name="Title Screen" type="Control" unique_id=888533972 node_paths=PackedStringArray("play", "discord", "quit")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_mgrm8")
+play = NodePath("MarginContainer/VBoxContainer/Play")
+discord = NodePath("MarginContainer/VBoxContainer/Discord")
+quit = NodePath("MarginContainer/VBoxContainer/Quit")
 
 [node name="HexBackground" type="ColorRect" parent="." unique_id=247558148]
 material = SubResource("ShaderMaterial_mgrm8")
@@ -46,13 +51,21 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_top = 75
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1164578214]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1208704647]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=1908743137]
+layout_mode = 2
+theme_override_constants/margin_bottom = 128
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/MarginContainer" unique_id=1164578214]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_constants/separation = 16
 
-[node name="TextureRect" type="TextureRect" parent="MarginContainer/HBoxContainer" unique_id=1371732126]
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=1371732126]
 texture_filter = 1
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
@@ -60,7 +73,31 @@ texture = ExtResource("2_s4lrb")
 expand_mode = 3
 stretch_mode = 4
 
-[node name="Label" type="Label" parent="MarginContainer/HBoxContainer" unique_id=400921160]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MarginContainer/HBoxContainer" unique_id=400921160]
 layout_mode = 2
 text = "AVATRA"
 label_settings = SubResource("LabelSettings_dc4i4")
+
+[node name="Play" type="Button" parent="MarginContainer/VBoxContainer" unique_id=638329468]
+custom_minimum_size = Vector2(500, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_s4lrb")
+theme_override_font_sizes/font_size = 56
+text = "Play"
+
+[node name="Discord" type="Button" parent="MarginContainer/VBoxContainer" unique_id=2051456430]
+custom_minimum_size = Vector2(500, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_s4lrb")
+theme_override_font_sizes/font_size = 56
+text = "Discord"
+
+[node name="Quit" type="Button" parent="MarginContainer/VBoxContainer" unique_id=324282020]
+custom_minimum_size = Vector2(500, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_s4lrb")
+theme_override_font_sizes/font_size = 56
+text = "Quit"
