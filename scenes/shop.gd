@@ -69,7 +69,7 @@ func _on_buy_material_pressed() -> void:
 		return
 
 	var die_index := material_die_option.get_selected_id()
-	var selected_material_index := max(material_option.selected, 0)
+	var selected_material_index: int = maxi(material_option.selected, 0)
 	var material := str(material_option.get_item_metadata(selected_material_index))
 	var cost := int(MATERIAL_COSTS.get(material, 999))
 
@@ -108,7 +108,7 @@ func _refresh_view() -> void:
 	hand_summary_label.text = "\n".join(lines)
 
 	buy_face_button.text = "Buy Face Upgrade (%d)" % FACE_UPGRADE_COST
-	var selected_material_index := max(material_option.selected, 0)
+	var selected_material_index: int = maxi(material_option.selected, 0)
 	var selected_material := str(material_option.get_item_metadata(selected_material_index))
 	buy_material_button.text = "Buy Material (%d)" % int(MATERIAL_COSTS.get(selected_material, 0))
 
