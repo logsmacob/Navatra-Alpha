@@ -32,7 +32,6 @@ func show_upgrades(upgrades: Array[HandTypeUpgradeDefinition]) -> void:
 
 func _on_upgrade_pressed(upgrade: HandTypeUpgradeDefinition) -> void:
 	upgrade_selected.emit(upgrade)
-	get_tree().change_scene_to_file("res://scenes/shop.tscn")
 
 func _on_reroll_pressed() -> void:
 	reroll_requested.emit()

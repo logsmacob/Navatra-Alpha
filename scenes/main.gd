@@ -15,6 +15,7 @@ func _ready() -> void:
 	GameState.reward_phase_started.connect(_on_reward_phase_started)
 	GameState.run_failed.connect(_on_run_failed)
 	GameState.round_state_changed.connect(_on_round_state_changed)
+	GameState.currency_changed.connect(_on_currency_changed)
 	EventBus.roll_all_dice_requested.connect(_on_roll_all_dice_requested)
 	hand_type_upgrades.upgrade_selected.connect(_on_upgrade_selected)
 	hand_type_upgrades.reroll_requested.connect(_on_upgrade_reroll_requested)
@@ -34,6 +35,8 @@ func _on_played_hand_ready(hand_data: DiceHand) -> void:
 	var play_result = score_bar.play_previewed_hand()
 	print("Played hand: %s | points=%d" % [play_result.get("hand_name", "Unknown"), int(play_result.get("applied_score", 0))])
 	GameState.apply_score_to_quota(int(play_result.get("applied_score", 0)))
+	var hand_currency_bonus := 1 + GameState.get_currency_bonus_for_hand_play()
+	GameState.add_currency(hand_currency_bonus)
 	GameState.consume_hand()
 
 	await get_tree().create_timer(1).timeout
@@ -49,7 +52,7 @@ func _on_round_completed(round_index: int) -> void:
 	print("Round %d complete" % round_index)
 
 func _on_reward_phase_started() -> void:
-	_refresh_upgrade_options()
+	get_tree().change_scene_to_file("res://scenes/shop.tscn")
 
 func _on_upgrade_selected(upgrade: HandTypeUpgradeDefinition) -> void:
 	hand_type_upgrade_service.apply_upgrade(upgrade, GameState)
@@ -85,3 +88,6 @@ func _refresh_hand_preview() -> void:
 func _refresh_upgrade_options() -> void:
 	var upgrades := hand_type_upgrade_service.generate_upgrades(4)
 	hand_type_upgrades.show_upgrades(upgrades)
+
+func _on_currency_changed(_amount: int) -> void:
+	score_bar.update_state()

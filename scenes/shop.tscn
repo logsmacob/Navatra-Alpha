@@ -16,7 +16,7 @@ shader_parameter/randomness = 0.0
 shader_parameter/edge_thickness = 0.10000000475
 shader_parameter/edge_softness = 0.10000000149012
 
-[node name="Title Screen" type="Control" unique_id=888533972 node_paths=PackedStringArray("shop")]
+[node name="Shop" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,9 +24,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_1l46r")
-shop = NodePath("Button")
 
-[node name="HexBackground2" type="ColorRect" parent="." unique_id=120036044]
+[node name="HexBackground2" type="ColorRect" parent="."]
 material = SubResource("ShaderMaterial_mgrm8")
 layout_mode = 1
 anchors_preset = 15
@@ -35,20 +34,87 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Button" type="Button" parent="." unique_id=1086088980]
-custom_minimum_size = Vector2(750, 250)
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -4.0
-offset_top = -4.0
-offset_right = 4.0
-offset_bottom = 4.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 44
+text = "Shop"
+
+[node name="CurrencyLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Currency: 0"
+
+[node name="FaceUpgradePanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
 theme = ExtResource("4_ajxib")
-theme_override_font_sizes/font_size = 64
-text = "Shop Comming Soon"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/FaceUpgradePanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="Label" parent="MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Die Face Upgrade (set any face value to 1..6)"
+
+[node name="DieOption" type="OptionButton" parent="MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="FaceOption" type="OptionButton" parent="MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ValueOption" type="OptionButton" parent="MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="BuyFaceButton" type="Button" parent="MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer"]
+layout_mode = 2
+text = "Buy Face Upgrade"
+
+[node name="MaterialUpgradePanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("4_ajxib")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MaterialUpgradePanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="Label" parent="MarginContainer/VBoxContainer/MaterialUpgradePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+text = "Die Material Upgrade (global die modifiers)"
+
+[node name="DieOption" type="OptionButton" parent="MarginContainer/VBoxContainer/MaterialUpgradePanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="MaterialOption" type="OptionButton" parent="MarginContainer/VBoxContainer/MaterialUpgradePanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="BuyMaterialButton" type="Button" parent="MarginContainer/VBoxContainer/MaterialUpgradePanel/VBoxContainer"]
+layout_mode = 2
+text = "Buy Material"
+
+[node name="HandSummaryLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = ""
+autowrap_mode = 2
+
+[node name="ContinueButton" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Continue to Next Round"
