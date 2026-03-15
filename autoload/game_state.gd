@@ -1,8 +1,8 @@
 extends Node
-## Centralized, runtime-only game state.
+## Centralized, runtime-only game state coordinator.
 ##
-## Runtime coordination stays here while hand mutation and round formulas
-## are delegated to dedicated services to avoid a god-script singleton.
+## High-level orchestration stays in this autoload while specialized managers
+## own player/dice state and run progression state.
 
 signal run_started(round_index: int)
 signal round_started(round_index: int, quota: int, hands: int, rerolls: int)
@@ -16,217 +16,157 @@ signal player_hand_changed(hand_state: Array)
 
 const BASE_DICE_PER_HAND: int = 5
 const BASE_DIE_FACE_COUNT: int = 6
-const MAX_ROUNDS: int = 18
+const MAX_ROUNDS: int = GameStateRunManager.MAX_ROUNDS
 
-const DIE_MATERIAL_STANDARD := PlayerHandService.DIE_MATERIAL_STANDARD
-const DIE_MATERIAL_GOLDEN := PlayerHandService.DIE_MATERIAL_GOLDEN
-const DIE_MATERIAL_STEEL := PlayerHandService.DIE_MATERIAL_STEEL
-const MATERIAL_CURRENCY_BONUS := PlayerHandService.MATERIAL_CURRENCY_BONUS
+const DIE_MATERIAL_STANDARD := GameStatePlayerManager.DIE_MATERIAL_STANDARD
+const DIE_MATERIAL_GOLDEN := GameStatePlayerManager.DIE_MATERIAL_GOLDEN
+const DIE_MATERIAL_STEEL := GameStatePlayerManager.DIE_MATERIAL_STEEL
+const MATERIAL_CURRENCY_BONUS := GameStatePlayerManager.MATERIAL_CURRENCY_BONUS
 
-var round_index: int = 1
-var quota_remaining: int = 0
-var hands_remaining: int = 0
-var rerolls_remaining: int = 0
-var round_score_multiplier: float = 1.0
-var currency: int = 0
-var hand_type_upgrades: Dictionary = {}
-var total_score: int = 0
-var total_hands_played: int = 0
-var total_rerolls_used: int = 0
-var total_currency_earned: int = 0
-var rounds_cleared: int = 0
+var round_index: int:
+	get:
+		return _run_manager.round_index
 
-var _next_round_hands_bonus: int = 0
-var _next_round_rerolls_bonus: int = 0
-var _next_round_quota_reduction: int = 0
-var _next_round_score_multiplier_bonus: float = 0.0
+var quota_remaining: int:
+	get:
+		return _run_manager.quota_remaining
 
-var _player_hand_service: PlayerHandService = PlayerHandService.new()
-var _round_progression_service: RoundProgressionService = RoundProgressionService.new()
+var hands_remaining: int:
+	get:
+		return _run_manager.hands_remaining
+
+var rerolls_remaining: int:
+	get:
+		return _run_manager.rerolls_remaining
+
+var round_score_multiplier: float:
+	get:
+		return _run_manager.round_score_multiplier
+
+var currency: int:
+	get:
+		return _run_manager.currency
+
+var hand_type_upgrades: Dictionary:
+	get:
+		return _player_manager.hand_type_upgrades
+
+var _player_manager: GameStatePlayerManager = GameStatePlayerManager.new()
+var _run_manager: GameStateRunManager = GameStateRunManager.new()
 
 func _ready() -> void:
 	start_new_run()
 
 func start_new_run() -> void:
-	round_index = 1
-	currency = 0
-	total_score = 0
-	total_hands_played = 0
-	total_rerolls_used = 0
-	total_currency_earned = 0
-	rounds_cleared = 0
-	hand_type_upgrades.clear()
+	_run_manager.reset_run()
+	_player_manager.clear_hand_type_upgrades()
 	initialize_player_hand(BASE_DICE_PER_HAND, BASE_DIE_FACE_COUNT)
-	_clear_pending_reward_bonuses()
 	currency_changed.emit(currency)
 	run_started.emit(round_index)
 	start_round(round_index)
 
 func start_next_round() -> void:
-	if round_index >= MAX_ROUNDS:
+	if not _run_manager.advance_to_next_round():
 		return
-	round_index += 1
 	start_round(round_index)
 
 func start_round(target_round: int) -> void:
-	var round_setup := _round_progression_service.build_round_state(target_round, _get_pending_bonus_state())
-	quota_remaining = int(round_setup.get("quota_remaining", 0))
-	hands_remaining = int(round_setup.get("hands_remaining", 0))
-	rerolls_remaining = int(round_setup.get("rerolls_remaining", 0))
-	round_score_multiplier = float(round_setup.get("round_score_multiplier", 1.0))
-	_clear_pending_reward_bonuses()
-	round_started.emit(target_round, quota_remaining, hands_remaining, rerolls_remaining)
+	var round_state := _run_manager.start_round(target_round)
+	round_started.emit(
+		target_round,
+		int(round_state.get("quota_remaining", 0)),
+		int(round_state.get("hands_remaining", 0)),
+		int(round_state.get("rerolls_remaining", 0))
+	)
 	_emit_round_state()
 
 func add_currency(amount: int) -> void:
-	if amount <= 0:
+	if not _run_manager.add_currency(amount):
 		return
-	currency += amount
-	total_currency_earned += amount
 	currency_changed.emit(currency)
 
 func spend_currency(amount: int) -> bool:
-	if amount <= 0:
-		return true
-	if currency < amount:
-		return false
-	currency -= amount
-	currency_changed.emit(currency)
-	return true
+	var spent := _run_manager.spend_currency(amount)
+	if spent:
+		currency_changed.emit(currency)
+	return spent
 
 func initialize_player_hand(dice_count: int = BASE_DICE_PER_HAND, face_count: int = BASE_DIE_FACE_COUNT) -> void:
-	_player_hand_service.initialize(dice_count, face_count)
+	_player_manager.initialize_player_hand(dice_count, face_count)
 	player_hand_changed.emit(get_player_hand())
 
 func get_player_hand() -> Array[Dictionary]:
-	return _player_hand_service.get_hand_copy()
+	return _player_manager.get_player_hand()
 
 func set_die_face_value(die_index: int, face_index: int, new_value: int) -> bool:
-	var updated := _player_hand_service.set_die_face_value(die_index, face_index, new_value)
+	var updated := _player_manager.set_die_face_value(die_index, face_index, new_value)
 	if updated:
 		player_hand_changed.emit(get_player_hand())
 	return updated
 
 func set_die_material(die_index: int, material: String) -> bool:
-	var updated := _player_hand_service.set_die_material(die_index, material)
+	var updated := _player_manager.set_die_material(die_index, material)
 	if updated:
 		player_hand_changed.emit(get_player_hand())
 	return updated
 
 func get_currency_bonus_for_hand_play() -> int:
-	return _player_hand_service.get_currency_bonus_for_hand_play()
+	return _player_manager.get_currency_bonus_for_hand_play()
 
 func add_next_round_hands_bonus(amount: int) -> void:
-	_next_round_hands_bonus += max(amount, 0)
+	_run_manager.add_next_round_hands_bonus(amount)
 
 func add_next_round_rerolls_bonus(amount: int) -> void:
-	_next_round_rerolls_bonus += max(amount, 0)
+	_run_manager.add_next_round_rerolls_bonus(amount)
 
 func add_next_round_quota_reduction(amount: int) -> void:
-	_next_round_quota_reduction += max(amount, 0)
+	_run_manager.add_next_round_quota_reduction(amount)
 
 func add_next_round_score_multiplier_bonus(amount: float) -> void:
-	_next_round_score_multiplier_bonus += max(amount, 0.0)
+	_run_manager.add_next_round_score_multiplier_bonus(amount)
 
 func add_hand_type_upgrade(hand_type: int, base_bonus: int, mult_bonus: int) -> void:
-	if not hand_type_upgrades.has(hand_type):
-		hand_type_upgrades[hand_type] = {"base": 0, "mult": 0}
-
-	var upgrade_data: Dictionary = hand_type_upgrades[hand_type]
-	upgrade_data["base"] = int(upgrade_data.get("base", 0)) + max(base_bonus, 0)
-	upgrade_data["mult"] = int(upgrade_data.get("mult", 0)) + max(mult_bonus, 0)
-	hand_type_upgrades[hand_type] = upgrade_data
+	_player_manager.add_hand_type_upgrade(hand_type, base_bonus, mult_bonus)
 
 func get_hand_type_upgrade(hand_type: int) -> Dictionary:
-	if not hand_type_upgrades.has(hand_type):
-		return {"base": 0, "mult": 0}
-	return hand_type_upgrades[hand_type].duplicate()
+	return _player_manager.get_hand_type_upgrade(hand_type)
 
 func consume_reroll() -> bool:
-	if rerolls_remaining <= 0:
+	if not _run_manager.consume_reroll():
 		return false
-	rerolls_remaining -= 1
-	total_rerolls_used += 1
 	_emit_round_state()
 	return true
 
 func process_played_hand(score: int) -> void:
-	var safe_score: int = maxi(score, 0)
-	var quota_before := quota_remaining
-	quota_remaining = max(quota_remaining - safe_score, 0)
-	total_score += safe_score
-	total_hands_played += 1
-	hands_remaining = max(hands_remaining - 1, 0)
+	var result := _run_manager.process_played_hand(score)
 	_emit_round_state()
 
-	if quota_remaining <= 0:
-		rounds_cleared += 1
-		var overflow_points: int = maxi(safe_score - quota_before, 0)
-		var round_reward := _calculate_round_reward(overflow_points)
-		add_currency(round_reward)
-
-		if round_index >= MAX_ROUNDS:
+	if bool(result.get("round_cleared", false)):
+		add_currency(int(result.get("round_reward", 0)))
+		if bool(result.get("run_won", false)):
 			run_won.emit(round_index, get_run_stats())
 			return
-
 		round_completed.emit(round_index)
 		reward_phase_started.emit()
 		return
 
-	if hands_remaining <= 0:
+	if bool(result.get("run_failed", false)):
 		run_failed.emit(round_index)
 
 func consume_hand() -> void:
 	process_played_hand(0)
 
 func is_round_complete() -> bool:
-	return quota_remaining <= 0
+	return _run_manager.is_round_complete()
 
 func can_continue_round() -> bool:
-	return quota_remaining > 0 and hands_remaining > 0
+	return _run_manager.can_continue_round()
 
 func get_round_state() -> Dictionary:
-	return {
-		"round_index": round_index,
-		"quota_remaining": quota_remaining,
-		"hands_remaining": hands_remaining,
-		"rerolls_remaining": rerolls_remaining,
-		"round_score_multiplier": round_score_multiplier,
-		"currency": currency,
-	}
+	return _run_manager.get_round_state()
 
 func _emit_round_state() -> void:
 	round_state_changed.emit(get_round_state())
 
 func get_run_stats() -> Dictionary:
-	return {
-		"final_round": round_index,
-		"max_round": MAX_ROUNDS,
-		"rounds_cleared": rounds_cleared,
-		"total_score": total_score,
-		"total_hands_played": total_hands_played,
-		"total_rerolls_used": total_rerolls_used,
-		"currency_earned": total_currency_earned,
-		"currency_remaining": currency,
-	}
-
-func _calculate_round_reward(overflow_points: int) -> int:
-	var overflow_currency := int(floor(float(overflow_points) / 85.0))
-	var hands_bonus := hands_remaining * 2
-	var rerolls_bonus := rerolls_remaining * 2
-	var progression_bonus := 2 + int(float(round_index - 1) / 3)
-	return maxi(overflow_currency + hands_bonus + rerolls_bonus + progression_bonus, 1)
-
-func _get_pending_bonus_state() -> Dictionary:
-	return {
-		"hands_bonus": _next_round_hands_bonus,
-		"rerolls_bonus": _next_round_rerolls_bonus,
-		"quota_reduction": _next_round_quota_reduction,
-		"score_multiplier_bonus": _next_round_score_multiplier_bonus,
-	}
-
-func _clear_pending_reward_bonuses() -> void:
-	_next_round_hands_bonus = 0
-	_next_round_rerolls_bonus = 0
-	_next_round_quota_reduction = 0
-	_next_round_score_multiplier_bonus = 0.0
+	return _run_manager.get_run_stats()
