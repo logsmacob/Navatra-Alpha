@@ -1,11 +1,15 @@
 [gd_scene format=3 uid="uid://cm12csulyq6hw"]
 
 [ext_resource type="Script" uid="uid://xsuucb46yeha" path="res://scenes/main/main.gd" id="1_0wfyh"]
+[ext_resource type="Script" path="res://scenes/main/controllers/main_gameplay_controller.gd" id="1_sx4yn"]
+[ext_resource type="Script" path="res://scenes/main/controllers/main_round_flow_controller.gd" id="1_te5ag"]
+[ext_resource type="Script" path="res://scenes/main/controllers/main_run_end_controller.gd" id="1_5mfj2"]
 [ext_resource type="PackedScene" uid="uid://jf2sov4k6y2t" path="res://features/dice/hand/hand.tscn" id="2_0wfyh"]
 [ext_resource type="Shader" uid="uid://64giuyue21qd" path="res://assets/shaders/hex_background.gdshader" id="2_sugp2"]
 [ext_resource type="PackedScene" uid="uid://7f2vbrrbfiba" path="res://features/hand_type_upgrades/hand_type_upgrades.tscn" id="4_qh0eg"]
 [ext_resource type="PackedScene" uid="uid://bgl7d1v3bo6c4" path="res://features/score_bar/score_bar.tscn" id="4_tbgi4"]
 [ext_resource type="Shader" uid="uid://batbn873bu8tu" path="res://features/hand_type_upgrades/blur.gdshader" id="5_blur"]
+[ext_resource type="PackedScene" uid="uid://d3y3lp5ch2l3q" path="res://scenes/lose screen/lose_screen.tscn" id="6_wxrqo"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jyhfs"]
 shader = ExtResource("2_sugp2")
@@ -67,6 +71,17 @@ size_flags_vertical = 0
 visible = false
 layout_mode = 1
 
+[node name="Controllers" type="Node" parent="."]
+
+[node name="GameplayController" type="Node" parent="Controllers"]
+script = ExtResource("1_sx4yn")
+
+[node name="RoundFlowController" type="Node" parent="Controllers"]
+script = ExtResource("1_te5ag")
+
+[node name="RunEndController" type="Node" parent="Controllers"]
+script = ExtResource("1_5mfj2")
+
 [node name="WinScreen" type="Control" parent="." unique_id=194001001]
 visible = false
 layout_mode = 1
@@ -114,3 +129,7 @@ horizontal_alignment = 1
 [node name="BackToTitle" type="Button" parent="WinScreen/CenterContainer/VBoxContainer" unique_id=194001007]
 layout_mode = 2
 text = "Back to Title Screen"
+
+[node name="LoseScreen" parent="." instance=ExtResource("6_wxrqo")]
+visible = false
+layout_mode = 1
