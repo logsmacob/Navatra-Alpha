@@ -2,9 +2,9 @@ extends RefCounted
 class_name HandTypeUpgradeService
 
 const RARITY_BONUSES := {
-	HandTypeUpgradeDefinition.UpgradeRarity.COMMON: {"base": 5, "mult": 1},
-	HandTypeUpgradeDefinition.UpgradeRarity.RARE: {"base": 12, "mult": 2},
-	HandTypeUpgradeDefinition.UpgradeRarity.EPIC: {"base": 24, "mult": 4},
+	HandTypeUpgradeDefinition.UpgradeRarity.COMMON: {"base": 4, "mult": 1},
+	HandTypeUpgradeDefinition.UpgradeRarity.RARE: {"base": 9, "mult": 2},
+	HandTypeUpgradeDefinition.UpgradeRarity.EPIC: {"base": 16, "mult": 3},
 }
 
 func generate_upgrades(count: int) -> Array[HandTypeUpgradeDefinition]:

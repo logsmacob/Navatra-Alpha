@@ -14,10 +14,10 @@ extends Control
 
 @export var continue_button: Button
 
-const FACE_UPGRADE_COST: int = 4
+const FACE_UPGRADE_COST: int = 7
 const MATERIAL_COSTS := {
-	GameState.DIE_MATERIAL_STEEL: 6,
-	GameState.DIE_MATERIAL_GOLDEN: 10,
+	GameState.DIE_MATERIAL_STEEL: 12,
+	GameState.DIE_MATERIAL_GOLDEN: 18,
 }
 
 func _ready() -> void:
@@ -48,9 +48,9 @@ func _populate_options() -> void:
 		face_index_option.add_item("Face %d" % (i + 1), i)
 		face_value_option.add_item(str(i + 1), i + 1)
 
-	material_option.add_item("Steel (+1 currency / hand)", 0)
+	material_option.add_item("Steel (high-value material)", 0)
 	material_option.set_item_metadata(0, GameState.DIE_MATERIAL_STEEL)
-	material_option.add_item("Golden (+2 currency / hand)", 1)
+	material_option.add_item("Golden (premium material)", 1)
 	material_option.set_item_metadata(1, GameState.DIE_MATERIAL_GOLDEN)
 
 func _on_buy_face_pressed() -> void:

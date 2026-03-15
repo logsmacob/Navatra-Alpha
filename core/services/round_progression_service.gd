@@ -1,11 +1,11 @@
 extends RefCounted
 class_name RoundProgressionService
 
-const BASE_QUOTA: int = 300
-const QUOTA_GROWTH: float = 1.45
+const BASE_QUOTA: int = 260
+const QUOTA_GROWTH: float = 1.26
 const BASE_HANDS_PER_ROUND: int = 3
-const HANDS_SCALING_INTERVAL: int = 3
-const BASE_REROLLS_PER_ROUND: int = 3
+const HANDS_SCALING_INTERVAL: int = 6
+const BASE_REROLLS_PER_ROUND: int = 2
 
 func build_round_state(target_round: int, bonuses: Dictionary) -> Dictionary:
 	var quota_reduction := int(bonuses.get("quota_reduction", 0))
