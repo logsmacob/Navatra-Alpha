@@ -1,18 +1,18 @@
 extends Control
 
-@onready var currency_label: Label = $MarginContainer/VBoxContainer/CurrencyLabel
-@onready var hand_summary_label: Label = $MarginContainer/VBoxContainer/HandSummaryLabel
+@export var currency_label: Label
+@export var hand_summary_label: Label
 
-@onready var face_die_option: OptionButton = $MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer/DieOption
-@onready var face_index_option: OptionButton = $MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer/FaceOption
-@onready var face_value_option: OptionButton = $MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer/ValueOption
-@onready var buy_face_button: Button = $MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer/BuyFaceButton
+@export var face_die_option: OptionButton
+@export var face_index_option: OptionButton
+@export var face_value_option: OptionButton
+@export var buy_face_button: Button
 
-@onready var material_die_option: OptionButton = $MarginContainer/VBoxContainer/MaterialUpgradePanel/VBoxContainer/DieOption
-@onready var material_option: OptionButton = $MarginContainer/VBoxContainer/MaterialUpgradePanel/VBoxContainer/MaterialOption
-@onready var buy_material_button: Button = $MarginContainer/VBoxContainer/MaterialUpgradePanel/VBoxContainer/BuyMaterialButton
+@export var material_die_option: OptionButton
+@export var material_option: OptionButton
+@export var buy_material_button: Button
 
-@onready var continue_button: Button = $MarginContainer/VBoxContainer/ContinueButton
+@export var continue_button: Button
 
 const FACE_UPGRADE_COST: int = 4
 const MATERIAL_COSTS := {
