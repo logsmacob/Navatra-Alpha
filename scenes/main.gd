@@ -25,10 +25,14 @@ func _ready() -> void:
 
 func _on_played_hand_ready(hand_data: DiceHand) -> void:
 	score_bar.preview_hand(hand_data)
+	var scene_tree := get_tree()
+	if scene_tree == null:
+		hand._on_played_hand_finish()
+		return
 
 	if not score_bar.can_play_previewed_hand():
 		GameState.consume_hand()
-		await get_tree().create_timer(1).timeout
+		await scene_tree.create_timer(1).timeout
 		hand._on_played_hand_finish()
 		return
 
@@ -39,7 +43,7 @@ func _on_played_hand_ready(hand_data: DiceHand) -> void:
 	GameState.add_currency(hand_currency_bonus)
 	GameState.consume_hand()
 
-	await get_tree().create_timer(1).timeout
+	await scene_tree.create_timer(1).timeout
 	hand._on_played_hand_finish()
 
 func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -> void:
