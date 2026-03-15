@@ -161,7 +161,7 @@ func process_played_hand(score: int) -> void:
 
 	if quota_remaining <= 0:
 		rounds_cleared += 1
-		var overflow_points := max(safe_score - quota_before, 0)
+		var overflow_points: int = maxi(safe_score - quota_before, 0)
 		var round_reward := _calculate_round_reward(overflow_points)
 		add_currency(round_reward)
 
@@ -215,7 +215,7 @@ func _calculate_round_reward(overflow_points: int) -> int:
 	var hands_bonus := hands_remaining * 2
 	var rerolls_bonus := rerolls_remaining * 2
 	var progression_bonus := 2 + int((round_index - 1) / 3)
-	return max(overflow_currency + hands_bonus + rerolls_bonus + progression_bonus, 1)
+	return maxi(overflow_currency + hands_bonus + rerolls_bonus + progression_bonus, 1)
 
 func _get_pending_bonus_state() -> Dictionary:
 	return {
