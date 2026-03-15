@@ -1,10 +1,8 @@
 extends Node
 ## Centralized, runtime-only game state.
 ##
-## Why this exists:
-## - keeps round/run rules in one place
-## - avoids scattering "magic numbers" through scene scripts
-## - makes feature additions (shop, trinkets, scaling tweaks) safer
+## Runtime coordination stays here while hand mutation and round formulas
+## are delegated to dedicated services to avoid a god-script singleton.
 
 signal run_started(round_index: int)
 signal round_started(round_index: int, quota: int, hands: int, rerolls: int)
@@ -15,23 +13,13 @@ signal run_failed(round_index: int)
 signal currency_changed(amount: int)
 signal player_hand_changed(hand_state: Array)
 
-const BASE_QUOTA: int = 300
-const QUOTA_GROWTH: float = 1.45
-const BASE_HANDS_PER_ROUND: int = 3
-const HANDS_SCALING_INTERVAL: int = 3
-const BASE_REROLLS_PER_ROUND: int = 3
 const BASE_DICE_PER_HAND: int = 5
 const BASE_DIE_FACE_COUNT: int = 6
 
-const DIE_MATERIAL_STANDARD := "standard"
-const DIE_MATERIAL_GOLDEN := "golden"
-const DIE_MATERIAL_STEEL := "steel"
-
-const MATERIAL_CURRENCY_BONUS := {
-	DIE_MATERIAL_STANDARD: 0,
-	DIE_MATERIAL_GOLDEN: 2,
-	DIE_MATERIAL_STEEL: 1,
-}
+const DIE_MATERIAL_STANDARD := PlayerHandService.DIE_MATERIAL_STANDARD
+const DIE_MATERIAL_GOLDEN := PlayerHandService.DIE_MATERIAL_GOLDEN
+const DIE_MATERIAL_STEEL := PlayerHandService.DIE_MATERIAL_STEEL
+const MATERIAL_CURRENCY_BONUS := PlayerHandService.MATERIAL_CURRENCY_BONUS
 
 var round_index: int = 1
 var quota_remaining: int = 0
@@ -39,12 +27,15 @@ var hands_remaining: int = 0
 var rerolls_remaining: int = 0
 var round_score_multiplier: float = 1.0
 var currency: int = 0
-var player_hand: Array[Dictionary] = []
+var hand_type_upgrades: Dictionary = {}
+
 var _next_round_hands_bonus: int = 0
 var _next_round_rerolls_bonus: int = 0
 var _next_round_quota_reduction: int = 0
 var _next_round_score_multiplier_bonus: float = 0.0
-var hand_type_upgrades: Dictionary = {}
+
+var _player_hand_service: PlayerHandService = PlayerHandService.new()
+var _round_progression_service: RoundProgressionService = RoundProgressionService.new()
 
 func _ready() -> void:
 	start_new_run()
@@ -64,10 +55,11 @@ func start_next_round() -> void:
 	start_round(round_index)
 
 func start_round(target_round: int) -> void:
-	quota_remaining = max(_calculate_quota(target_round) - _next_round_quota_reduction, 0)
-	hands_remaining = _calculate_hands(target_round) + _next_round_hands_bonus
-	rerolls_remaining = BASE_REROLLS_PER_ROUND + _next_round_rerolls_bonus
-	round_score_multiplier = 1.0 + _next_round_score_multiplier_bonus
+	var round_setup := _round_progression_service.build_round_state(target_round, _get_pending_bonus_state())
+	quota_remaining = int(round_setup.get("quota_remaining", 0))
+	hands_remaining = int(round_setup.get("hands_remaining", 0))
+	rerolls_remaining = int(round_setup.get("rerolls_remaining", 0))
+	round_score_multiplier = float(round_setup.get("round_score_multiplier", 1.0))
 	_clear_pending_reward_bonuses()
 	round_started.emit(target_round, quota_remaining, hands_remaining, rerolls_remaining)
 	_emit_round_state()
@@ -88,61 +80,26 @@ func spend_currency(amount: int) -> bool:
 	return true
 
 func initialize_player_hand(dice_count: int = BASE_DICE_PER_HAND, face_count: int = BASE_DIE_FACE_COUNT) -> void:
-	player_hand.clear()
-	for _i in range(max(dice_count, 0)):
-		var faces: Array[int] = []
-		for value in range(1, max(face_count, 0) + 1):
-			faces.append(value)
-		player_hand.append({
-			"faces": faces,
-			"material": DIE_MATERIAL_STANDARD,
-		})
+	_player_hand_service.initialize(dice_count, face_count)
 	player_hand_changed.emit(get_player_hand())
 
 func get_player_hand() -> Array[Dictionary]:
-	var copy: Array[Dictionary] = []
-	for die_data in player_hand:
-		copy.append({
-			"faces": (die_data.get("faces", []) as Array).duplicate(),
-			"material": str(die_data.get("material", DIE_MATERIAL_STANDARD)),
-		})
-	return copy
+	return _player_hand_service.get_hand_copy()
 
 func set_die_face_value(die_index: int, face_index: int, new_value: int) -> bool:
-	if not _is_valid_die_index(die_index):
-		return false
-	if new_value < 1 or new_value > 6:
-		return false
-
-	var die_data := player_hand[die_index]
-	var faces: Array = die_data.get("faces", [])
-	if face_index < 0 or face_index >= faces.size():
-		return false
-
-	faces[face_index] = new_value
-	die_data["faces"] = faces
-	player_hand[die_index] = die_data
-	player_hand_changed.emit(get_player_hand())
-	return true
+	var updated := _player_hand_service.set_die_face_value(die_index, face_index, new_value)
+	if updated:
+		player_hand_changed.emit(get_player_hand())
+	return updated
 
 func set_die_material(die_index: int, material: String) -> bool:
-	if not _is_valid_die_index(die_index):
-		return false
-	if not MATERIAL_CURRENCY_BONUS.has(material):
-		return false
-
-	var die_data := player_hand[die_index]
-	die_data["material"] = material
-	player_hand[die_index] = die_data
-	player_hand_changed.emit(get_player_hand())
-	return true
+	var updated := _player_hand_service.set_die_material(die_index, material)
+	if updated:
+		player_hand_changed.emit(get_player_hand())
+	return updated
 
 func get_currency_bonus_for_hand_play() -> int:
-	var bonus: int = 0
-	for die_data in player_hand:
-		var material := str(die_data.get("material", DIE_MATERIAL_STANDARD))
-		bonus += int(MATERIAL_CURRENCY_BONUS.get(material, 0))
-	return bonus
+	return _player_hand_service.get_currency_bonus_for_hand_play()
 
 func add_next_round_hands_bonus(amount: int) -> void:
 	_next_round_hands_bonus += max(amount, 0)
@@ -155,7 +112,6 @@ func add_next_round_quota_reduction(amount: int) -> void:
 
 func add_next_round_score_multiplier_bonus(amount: float) -> void:
 	_next_round_score_multiplier_bonus += max(amount, 0.0)
-
 
 func add_hand_type_upgrade(hand_type: int, base_bonus: int, mult_bonus: int) -> void:
 	if not hand_type_upgrades.has(hand_type):
@@ -193,15 +149,6 @@ func is_round_complete() -> bool:
 func can_continue_round() -> bool:
 	return quota_remaining > 0 and hands_remaining > 0
 
-func _calculate_quota(target_round: int) -> int:
-	return int(round(BASE_QUOTA * pow(QUOTA_GROWTH, target_round - 1)))
-
-func _calculate_hands(target_round: int) -> int:
-	return BASE_HANDS_PER_ROUND + int((target_round - 1) / float(HANDS_SCALING_INTERVAL))
-
-func _emit_round_state() -> void:
-	round_state_changed.emit(get_round_state())
-
 func get_round_state() -> Dictionary:
 	return {
 		"round_index": round_index,
@@ -212,6 +159,9 @@ func get_round_state() -> Dictionary:
 		"currency": currency,
 	}
 
+func _emit_round_state() -> void:
+	round_state_changed.emit(get_round_state())
+
 func _evaluate_round_outcome() -> void:
 	if is_round_complete():
 		round_completed.emit(round_index)
@@ -221,11 +171,16 @@ func _evaluate_round_outcome() -> void:
 	if hands_remaining <= 0:
 		run_failed.emit(round_index)
 
+func _get_pending_bonus_state() -> Dictionary:
+	return {
+		"hands_bonus": _next_round_hands_bonus,
+		"rerolls_bonus": _next_round_rerolls_bonus,
+		"quota_reduction": _next_round_quota_reduction,
+		"score_multiplier_bonus": _next_round_score_multiplier_bonus,
+	}
+
 func _clear_pending_reward_bonuses() -> void:
 	_next_round_hands_bonus = 0
 	_next_round_rerolls_bonus = 0
 	_next_round_quota_reduction = 0
 	_next_round_score_multiplier_bonus = 0.0
-
-func _is_valid_die_index(die_index: int) -> bool:
-	return die_index >= 0 and die_index < player_hand.size()

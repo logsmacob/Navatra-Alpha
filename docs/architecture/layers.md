@@ -16,8 +16,12 @@ This project uses layered scripts to keep data flow explicit and keep systems de
   - `Hand` scene emits `played_hand_ready(hand: DiceHand)` so game flow receives data models instead of UI nodes.
   - `Main` orchestrates round flow and delegates logic to runtime classes.
 - **Global services** (`autoload/**`)
-  - `GameState` owns single-instance run/round state.
+  - `GameState` owns singleton orchestration and delegates domain logic to services.
   - `EventBus` exposes app-wide signals only.
+- **Domain services** (`core/services`)
+  - `RoundProgressionService` computes per-round quota/hand/reroll setup.
+  - `PlayerHandService` owns mutable player die definitions.
+  - `HandScoreRulesService` provides hand score tables + upgrade-aware values.
 
 ## Ownership rules
 
