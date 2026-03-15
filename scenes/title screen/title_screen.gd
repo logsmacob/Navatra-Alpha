@@ -11,7 +11,7 @@ func _ready() -> void:
 
 func play_pressed():
 	# change to your game scene
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	get_tree().change_scene_to_file("res://scenes/main/main.tscn")
 
 func discord_pressed():
 	# open discord invite in browser

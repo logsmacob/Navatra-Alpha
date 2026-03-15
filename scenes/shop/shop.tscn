@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b6uq5mc6daglp" path="res://scenes/shop/shop.gd" id="1_1l46r"]
 [ext_resource type="Shader" uid="uid://64giuyue21qd" path="res://assets/shaders/hex_background.gdshader" id="2_2fc2m"]
+[ext_resource type="Shader" uid="uid://batbn873bu8tu" path="res://features/hand_type_upgrades/blur.gdshader" id="3_ge4d2"]
 [ext_resource type="StyleBox" uid="uid://bgk6mwns3t3qv" path="res://assets/UI/style_boxes/die_face_black_normal.tres" id="4_8r1wq"]
 [ext_resource type="Theme" uid="uid://uigveapmlifl" path="res://assets/UI/style_boxes/die_theme.tres" id="4_ajxib"]
 [ext_resource type="StyleBox" uid="uid://dmbq6yypnrj4o" path="res://assets/UI/style_boxes/die_face_black_pressed.tres" id="5_ajxib"]
@@ -19,8 +20,16 @@ shader_parameter/randomness = 0.0
 shader_parameter/edge_thickness = 0.10000000475
 shader_parameter/edge_softness = 0.10000000149012
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xcdpw"]
+shader = ExtResource("3_ge4d2")
+shader_parameter/radius = 0.0
+
 [sub_resource type="LabelSettings" id="LabelSettings_1l46r"]
 font_size = 64
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tp26b"]
+shader = ExtResource("3_ge4d2")
+shader_parameter/radius = 0.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_032fp"]
 font_size = 64
@@ -82,6 +91,7 @@ theme_override_font_sizes/font_size = 30
 text = "Currency: 0"
 
 [node name="FaceUpgradePanel" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=430811049]
+material = SubResource("ShaderMaterial_xcdpw")
 layout_mode = 2
 theme = ExtResource("4_ajxib")
 
@@ -102,11 +112,13 @@ alignment = 1
 [node name="DieOption" type="OptionButton" parent="MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer/HBoxContainer" unique_id=1450846253]
 custom_minimum_size = Vector2(150, 100)
 layout_mode = 2
+size_flags_horizontal = 3
 alignment = 1
 
 [node name="FaceOption" type="OptionButton" parent="MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer/HBoxContainer" unique_id=342125001]
 custom_minimum_size = Vector2(150, 100)
 layout_mode = 2
+size_flags_horizontal = 3
 alignment = 1
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer/HBoxContainer" unique_id=740279683]
@@ -117,6 +129,7 @@ label_settings = SubResource("LabelSettings_1l46r")
 [node name="ValueOption" type="OptionButton" parent="MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer/HBoxContainer" unique_id=71282904]
 custom_minimum_size = Vector2(150, 100)
 layout_mode = 2
+size_flags_horizontal = 3
 alignment = 1
 
 [node name="BuyFaceButton" type="Button" parent="MarginContainer/VBoxContainer/FaceUpgradePanel/VBoxContainer" unique_id=1701404706]
@@ -133,6 +146,7 @@ theme_override_styles/hover = ExtResource("6_y6sft")
 text = "Buy Face Upgrade"
 
 [node name="MaterialUpgradePanel" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=341549778]
+material = SubResource("ShaderMaterial_tp26b")
 layout_mode = 2
 theme = ExtResource("4_ajxib")
 

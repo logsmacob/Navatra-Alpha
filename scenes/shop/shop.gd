@@ -81,7 +81,7 @@ func _on_buy_material_pressed() -> void:
 
 func _on_continue_pressed() -> void:
 	GameState.start_next_round()
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	get_tree().change_scene_to_file("res://scenes/main/main.tscn")
 
 func _on_currency_changed(_amount: int) -> void:
 	_refresh_view()
