@@ -56,12 +56,13 @@ func _on_round_completed(round_index: int) -> void:
 	print("Round %d complete" % round_index)
 
 func _on_reward_phase_started() -> void:
-	get_tree().change_scene_to_file("res://scenes/shop.tscn")
+	_refresh_upgrade_options()
+	hand_type_upgrades.visible = true
 
 func _on_upgrade_selected(upgrade: HandTypeUpgradeDefinition) -> void:
 	hand_type_upgrade_service.apply_upgrade(upgrade, GameState)
 	hand_type_upgrades.visible = false
-	GameState.start_next_round()
+	get_tree().change_scene_to_file("res://scenes/shop.tscn")
 
 func _on_upgrade_reroll_requested() -> void:
 	_refresh_upgrade_options()
