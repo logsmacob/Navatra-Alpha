@@ -151,7 +151,7 @@ func consume_reroll() -> bool:
 	return true
 
 func process_played_hand(score: int) -> void:
-	var safe_score := max(score, 0)
+	var safe_score: int = maxi(score, 0)
 	var quota_before := quota_remaining
 	quota_remaining = max(quota_remaining - safe_score, 0)
 	total_score += safe_score
