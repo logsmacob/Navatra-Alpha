@@ -26,13 +26,28 @@ var _rng := RandomNumberGenerator.new()
 var _offers: Array[Dictionary] = []
 
 func _ready() -> void:
+	_bind_nodes()
 	_rng.randomize()
 	_roll_offers()
 	_refresh_view()
 
-	reroll_button.pressed.connect(_on_reroll_pressed)
-	continue_button.pressed.connect(_on_continue_pressed)
+	if reroll_button:
+		reroll_button.pressed.connect(_on_reroll_pressed)
+	if continue_button:
+		continue_button.pressed.connect(_on_continue_pressed)
 	GameState.currency_changed.connect(_on_currency_changed)
+
+func _bind_nodes() -> void:
+	if currency_label == null:
+		currency_label = get_node_or_null("Margin/VBox/Currency")
+	if inventory_label == null:
+		inventory_label = get_node_or_null("Margin/VBox/Inventory")
+	if offers_container == null:
+		offers_container = get_node_or_null("Margin/VBox/Offers")
+	if reroll_button == null:
+		reroll_button = get_node_or_null("Margin/VBox/RerollButton")
+	if continue_button == null:
+		continue_button = get_node_or_null("Margin/VBox/ContinueButton")
 
 func _roll_offers() -> void:
 	_offers.clear()
@@ -45,6 +60,8 @@ func _roll_offers() -> void:
 	_rebuild_offer_buttons()
 
 func _rebuild_offer_buttons() -> void:
+	if offers_container == null:
+		return
 	for child in offers_container.get_children():
 		child.queue_free()
 
@@ -106,12 +123,15 @@ func _on_currency_changed(_amount: int) -> void:
 	_refresh_view()
 
 func _refresh_view() -> void:
-	currency_label.text = "Currency: %d" % GameState.currency
-	reroll_button.text = "Reroll offers (%d)" % REROLL_COST
+	if currency_label:
+		currency_label.text = "Currency: %d" % GameState.currency
+	if reroll_button:
+		reroll_button.text = "Reroll offers (%d)" % REROLL_COST
 	var item_counts: Dictionary = GameState.get_shop_item_counts()
 	var lines: Array[String] = ["Owned synergy items:"]
 	for key in item_counts.keys():
 		lines.append("- %s x%d" % [str(key), int(item_counts[key])])
 	if item_counts.is_empty():
 		lines.append("- none")
-	inventory_label.text = "\n".join(lines)
+	if inventory_label:
+		inventory_label.text = "\n".join(lines)

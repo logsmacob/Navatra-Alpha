@@ -12,12 +12,31 @@ const ECONOMY_COST: int = 10
 const TEMPO_COST: int = 12
 
 func _ready() -> void:
+	_bind_nodes()
 	_refresh_view()
-	precision_button.pressed.connect(_on_precision_pressed)
-	economy_button.pressed.connect(_on_economy_pressed)
-	tempo_button.pressed.connect(_on_tempo_pressed)
-	continue_button.pressed.connect(_on_continue_pressed)
+	if precision_button:
+		precision_button.pressed.connect(_on_precision_pressed)
+	if economy_button:
+		economy_button.pressed.connect(_on_economy_pressed)
+	if tempo_button:
+		tempo_button.pressed.connect(_on_tempo_pressed)
+	if continue_button:
+		continue_button.pressed.connect(_on_continue_pressed)
 	GameState.currency_changed.connect(_on_currency_changed)
+
+func _bind_nodes() -> void:
+	if currency_label == null:
+		currency_label = get_node_or_null("Margin/VBox/Currency")
+	if info_label == null:
+		info_label = get_node_or_null("Margin/VBox/Info")
+	if precision_button == null:
+		precision_button = get_node_or_null("Margin/VBox/PrecisionButton")
+	if economy_button == null:
+		economy_button = get_node_or_null("Margin/VBox/EconomyButton")
+	if tempo_button == null:
+		tempo_button = get_node_or_null("Margin/VBox/TempoButton")
+	if continue_button == null:
+		continue_button = get_node_or_null("Margin/VBox/ContinueButton")
 
 func _on_precision_pressed() -> void:
 	if not GameState.spend_currency(PRECISION_COST):
@@ -48,8 +67,13 @@ func _on_currency_changed(_amount: int) -> void:
 	_refresh_view()
 
 func _refresh_view(message: String = "Pick a package build for this round.") -> void:
-	currency_label.text = "Currency: %d" % GameState.currency
-	precision_button.text = "Buy Precision Pack (%d)" % PRECISION_COST
-	economy_button.text = "Buy Economy Pack (%d)" % ECONOMY_COST
-	tempo_button.text = "Buy Tempo Pack (%d)" % TEMPO_COST
-	info_label.text = message
+	if currency_label:
+		currency_label.text = "Currency: %d" % GameState.currency
+	if precision_button:
+		precision_button.text = "Buy Precision Pack (%d)" % PRECISION_COST
+	if economy_button:
+		economy_button.text = "Buy Economy Pack (%d)" % ECONOMY_COST
+	if tempo_button:
+		tempo_button.text = "Buy Tempo Pack (%d)" % TEMPO_COST
+	if info_label:
+		info_label.text = message
