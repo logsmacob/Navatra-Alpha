@@ -1,4 +1,6 @@
 extends RefCounted
+
+## Round progression service script: coordinates this part of the game's behavior.
 class_name RoundProgressionService
 
 const BASE_QUOTA: int = 260

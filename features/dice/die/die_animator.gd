@@ -1,4 +1,6 @@
 extends Node
+
+## Die animator script: coordinates this part of the game's behavior.
 class_name DieVisuals
 
 @export var animator : AnimationPlayer

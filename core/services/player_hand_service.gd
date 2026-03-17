@@ -1,4 +1,6 @@
 extends RefCounted
+
+## Player hand service script: coordinates this part of the game's behavior.
 class_name PlayerHandService
 
 const DIE_MATERIAL_STANDARD := "standard"

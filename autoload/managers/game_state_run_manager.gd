@@ -1,4 +1,6 @@
 extends RefCounted
+
+## Game state run manager script: coordinates this part of the game's behavior.
 class_name GameStateRunManager
 
 const MAX_ROUNDS: int = 18

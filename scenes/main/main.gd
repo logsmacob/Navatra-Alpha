@@ -1,4 +1,5 @@
 extends Control
+## Main script: coordinates this part of the game's behavior.
 
 @onready var hand: Node = $MarginContainer/Hand
 @onready var score_bar: VBoxContainer = $MarginContainer/ScoreBar

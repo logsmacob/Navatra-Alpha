@@ -1,4 +1,6 @@
 extends Node
+
+## Hand currency bonus service script: coordinates this part of the game's behavior.
 class_name HandCurrencyBonusService
 
 func get_scoring_material_currency_bonus(scoring_dice: Array[DieUI]) -> int:

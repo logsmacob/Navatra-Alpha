@@ -1,4 +1,6 @@
 extends Node
+
+## Score system script: coordinates this part of the game's behavior.
 class_name ScoreSystem
 
 var _rules: HandScoreRulesService = HandScoreRulesService.new()

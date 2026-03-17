@@ -1,4 +1,5 @@
 extends Node
+## Event bus script: coordinates this part of the game's behavior.
 
 # NOTE: Global signal hub for decoupled feature communication.
 

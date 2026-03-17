@@ -1,4 +1,5 @@
 extends VBoxContainer
+## Score bar script: coordinates this part of the game's behavior.
 
 @onready var round_index_label: Label = $RoundIndex
 @onready var quota_label: Label = $Quota

@@ -1,4 +1,6 @@
 extends Node
+
+## Main gameplay controller script: coordinates this part of the game's behavior.
 class_name MainGameplayController
 
 var _hand: Node

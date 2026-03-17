@@ -1,4 +1,6 @@
 extends RefCounted
+
+## Game state player manager script: coordinates this part of the game's behavior.
 class_name GameStatePlayerManager
 
 const DIE_MATERIAL_STANDARD := PlayerHandService.DIE_MATERIAL_STANDARD

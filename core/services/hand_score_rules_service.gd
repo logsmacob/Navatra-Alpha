@@ -1,4 +1,6 @@
 extends RefCounted
+
+## Hand score rules service script: coordinates this part of the game's behavior.
 class_name HandScoreRulesService
 
 const DEFAULT_VALUES := {"base": 0, "mult": 0}
