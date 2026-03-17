@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/resources/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "house_banner"
+item_name = "House Banner"
+cost = 8
+hand_type = 6
+tag = "royal"
+base = 2
+mult = 0
+synergy_base = 1
+synergy_mult = 1
+weight = 5.0
+rarity = 2
+min_round = 2
+max_round = 999

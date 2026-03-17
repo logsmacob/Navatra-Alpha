@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/resources/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pair_gloves"
+item_name = "Pair Gloves"
+cost = 5
+hand_type = 1
+tag = "precision"
+base = 1
+mult = 0
+synergy_base = 1
+synergy_mult = 0
+weight = 10.0
+rarity = 0
+min_round = 1
+max_round = 999

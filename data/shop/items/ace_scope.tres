@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ItemData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/resources/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "ace_scope"
+item_name = "Ace Scope"
+cost = 6
+hand_type = 7
+tag = "precision"
+base = 0
+mult = 1
+synergy_base = 0
+synergy_mult = 1
+weight = 8.0
+rarity = 1
+min_round = 1
+max_round = 999

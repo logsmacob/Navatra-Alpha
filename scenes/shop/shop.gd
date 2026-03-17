@@ -7,23 +7,12 @@ extends Control
 @export var reroll_button: Button
 @export var continue_button: Button
 
-const OFFER_COUNT: int = 6
+@export var item_pool: Array[ItemData] = []
+@export_range(1, 12, 1) var offer_count: int = 6
+
 const REROLL_COST: int = 3
 
-const ITEM_POOL := [
-	{"id": "sparking_ring", "name": "Sparking Ring", "cost": 5, "hand_type": 0, "tag": "elemental", "base": 1, "mult": 0, "synergy_base": 1, "synergy_mult": 0},
-	{"id": "ace_scope", "name": "Ace Scope", "cost": 6, "hand_type": 7, "tag": "precision", "base": 0, "mult": 1, "synergy_base": 0, "synergy_mult": 1},
-	{"id": "pair_gloves", "name": "Pair Gloves", "cost": 5, "hand_type": 1, "tag": "precision", "base": 1, "mult": 0, "synergy_base": 1, "synergy_mult": 0},
-	{"id": "house_banner", "name": "House Banner", "cost": 8, "hand_type": 6, "tag": "royal", "base": 2, "mult": 0, "synergy_base": 1, "synergy_mult": 1},
-	{"id": "street_bet", "name": "Street Bet", "cost": 4, "hand_type": 0, "tag": "economy", "base": 0, "mult": 1, "synergy_base": 1, "synergy_mult": 0},
-	{"id": "triple_badge", "name": "Triple Badge", "cost": 7, "hand_type": 3, "tag": "combo", "base": 1, "mult": 1, "synergy_base": 1, "synergy_mult": 1},
-	{"id": "flush_charm", "name": "Flush Charm", "cost": 7, "hand_type": 5, "tag": "elemental", "base": 2, "mult": 0, "synergy_base": 1, "synergy_mult": 0},
-	{"id": "high_roller", "name": "High Roller", "cost": 9, "hand_type": 7, "tag": "royal", "base": 1, "mult": 1, "synergy_base": 0, "synergy_mult": 1},
-	{"id": "full_house_manual", "name": "Full House Manual", "cost": 8, "hand_type": 4, "tag": "combo", "base": 2, "mult": 0, "synergy_base": 1, "synergy_mult": 1},
-	{"id": "oddity_ink", "name": "Oddity Ink", "cost": 5, "hand_type": 2, "tag": "economy", "base": 1, "mult": 0, "synergy_base": 1, "synergy_mult": 0}
-]
-
-var _offers: Array[Dictionary] = []
+var _offers: Array[ItemData] = []
 
 func _ready() -> void:
 	_roll_offers()
@@ -36,14 +25,48 @@ func _ready() -> void:
 	GameState.currency_changed.connect(_on_currency_changed)
 
 func _roll_offers() -> void:
-	_offers.clear()
-	var pool_copy: Array[Dictionary] = []
-	for item: Dictionary in ITEM_POOL:
-		pool_copy.append(item.duplicate(true))
-	pool_copy.shuffle()
-	for i in range(min(OFFER_COUNT, pool_copy.size())):
-		_offers.append(pool_copy[i])
+	_offers = _roll_weighted_offers(offer_count, true)
 	_rebuild_offer_buttons()
+
+func _roll_weighted_offers(target_count: int, avoid_duplicates: bool = true) -> Array[ItemData]:
+	var rolled_offers: Array[ItemData] = []
+	var candidate_pool: Array[ItemData] = _get_available_items_for_round()
+
+	while rolled_offers.size() < target_count and not candidate_pool.is_empty():
+		var picked_item := _pick_weighted_item(candidate_pool)
+		if picked_item == null:
+			break
+		rolled_offers.append(picked_item)
+		if avoid_duplicates:
+			candidate_pool.erase(picked_item)
+
+	return rolled_offers
+
+func _get_available_items_for_round() -> Array[ItemData]:
+	var current_round: int = max(GameState.round, 1)
+	var available_items: Array[ItemData] = []
+	for item: ItemData in item_pool:
+		if item == null:
+			continue
+		if item.is_available_for_round(current_round):
+			available_items.append(item)
+	return available_items
+
+func _pick_weighted_item(pool: Array[ItemData]) -> ItemData:
+	var total_weight: float = 0.0
+	for item: ItemData in pool:
+		total_weight += max(item.weight, 0.0)
+	if total_weight <= 0.0:
+		return null
+
+	var roll: float = randf_range(0.0, total_weight)
+	var running_weight: float = 0.0
+	for item: ItemData in pool:
+		running_weight += max(item.weight, 0.0)
+		if roll <= running_weight:
+			return item
+
+	return pool.back() if not pool.is_empty() else null
 
 func _rebuild_offer_buttons() -> void:
 	if offers_container == null:
@@ -52,7 +75,7 @@ func _rebuild_offer_buttons() -> void:
 		child.queue_free()
 
 	for i in range(_offers.size()):
-		var offer: Dictionary = _offers[i]
+		var offer: ItemData = _offers[i]
 		var button := Button.new()
 		button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		button.text = _format_offer_text(offer)
@@ -62,34 +85,31 @@ func _rebuild_offer_buttons() -> void:
 func _on_offer_button_pressed(index: int) -> void:
 	_try_buy_offer(index)
 
-func _format_offer_text(offer: Dictionary) -> String:
-	return "%s | %s tag | Cost %d | +%d base +%d mult | synergy +%d/%d per matching tag owned" % [
-		str(offer.get("name", "Item")),
-		str(offer.get("tag", "general")),
-		int(offer.get("cost", 0)),
-		int(offer.get("base", 0)),
-		int(offer.get("mult", 0)),
-		int(offer.get("synergy_base", 0)),
-		int(offer.get("synergy_mult", 0))
+func _format_offer_text(offer: ItemData) -> String:
+	return "%s [%s] | Cost %d | +%d base +%d mult | synergy +%d/%d per matching tag owned" % [
+		offer.get_display_name(),
+		ItemData.ItemRarity.keys()[offer.rarity].capitalize(),
+		offer.cost,
+		offer.base,
+		offer.mult,
+		offer.synergy_base,
+		offer.synergy_mult,
 	]
 
 func _try_buy_offer(index: int) -> void:
 	if index < 0 or index >= _offers.size():
 		return
 
-	var offer: Dictionary = _offers[index]
-	var cost := int(offer.get("cost", 0))
-	if not GameState.spend_currency(cost):
+	var offer: ItemData = _offers[index]
+	if not GameState.spend_currency(offer.cost):
 		return
 
-	var tag := str(offer.get("tag", ""))
-	var tag_count := GameState.get_shop_tag_count(tag)
-	var base_bonus := int(offer.get("base", 0)) + (int(offer.get("synergy_base", 0)) * tag_count)
-	var mult_bonus := int(offer.get("mult", 0)) + (int(offer.get("synergy_mult", 0)) * tag_count)
-	var hand_type := int(offer.get("hand_type", 0))
+	var tag_count := GameState.get_shop_tag_count(offer.tag)
+	var base_bonus := offer.base + (offer.synergy_base * tag_count)
+	var mult_bonus := offer.mult + (offer.synergy_mult * tag_count)
 
-	GameState.add_hand_type_upgrade(hand_type, base_bonus, mult_bonus)
-	GameState.add_shop_item(str(offer.get("id", "unknown")), tag)
+	GameState.add_hand_type_upgrade(offer.hand_type, base_bonus, mult_bonus)
+	GameState.add_shop_item(offer.id, offer.tag)
 	_offers.remove_at(index)
 	_rebuild_offer_buttons()
 	_refresh_view()
