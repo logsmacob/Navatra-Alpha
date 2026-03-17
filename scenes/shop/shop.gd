@@ -86,14 +86,12 @@ func _on_offer_button_pressed(index: int) -> void:
 	_try_buy_offer(index)
 
 func _format_offer_text(offer: ItemData) -> String:
-	return "%s [%s] | Cost %d | +%d base +%d mult | synergy +%d/%d per matching tag owned" % [
+	return "%s [%s] | Cost %d | +%d base +%d mult" % [
 		offer.get_display_name(),
 		ItemData.ItemRarity.keys()[offer.rarity].capitalize(),
 		offer.cost,
 		offer.base,
 		offer.mult,
-		offer.synergy_base,
-		offer.synergy_mult,
 	]
 
 func _try_buy_offer(index: int) -> void:
@@ -104,12 +102,8 @@ func _try_buy_offer(index: int) -> void:
 	if not GameState.spend_currency(offer.cost):
 		return
 
-	var tag_count := GameState.get_shop_tag_count(offer.tag)
-	var base_bonus := offer.base + (offer.synergy_base * tag_count)
-	var mult_bonus := offer.mult + (offer.synergy_mult * tag_count)
-
-	GameState.add_hand_type_upgrade(offer.hand_type, base_bonus, mult_bonus)
-	GameState.add_shop_item(offer.id, offer.tag)
+	GameState.add_hand_type_upgrade(offer.hand_type, offer.base, offer.mult)
+	GameState.add_shop_item(offer.id)
 	_offers.remove_at(index)
 	_rebuild_offer_buttons()
 	_refresh_view()
@@ -133,7 +127,7 @@ func _refresh_view() -> void:
 	if reroll_button:
 		reroll_button.text = "Reroll offers (%d)" % REROLL_COST
 	var item_counts: Dictionary = GameState.get_shop_item_counts()
-	var lines: Array[String] = ["Owned synergy items:"]
+	var lines: Array[String] = ["Owned items:"]
 	for key in item_counts.keys():
 		lines.append("- %s x%d" % [str(key), int(item_counts[key])])
 	if item_counts.is_empty():

@@ -136,14 +136,12 @@ func add_hand_type_upgrade(hand_type: int, base_bonus: int, mult_bonus: int) -> 
 func get_hand_type_upgrade(hand_type: int) -> Dictionary:
 	return _player_manager.get_hand_type_upgrade(hand_type)
 
-func add_shop_item(item_id: String, tag: String) -> void:
-	_player_manager.add_shop_item(item_id, tag)
+func add_shop_item(item_id: String) -> void:
+	_player_manager.add_shop_item(item_id)
 
 func get_shop_item_counts() -> Dictionary:
 	return _player_manager.get_shop_item_counts()
 
-func get_shop_tag_count(tag: String) -> int:
-	return _player_manager.get_shop_tag_count(tag)
 
 func consume_reroll() -> bool:
 	if not _run_manager.consume_reroll():

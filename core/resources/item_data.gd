@@ -13,14 +13,10 @@ enum ItemRarity {
 @export var item_name: String = ""
 @export var cost: int = 0
 
-@export var hand_type: int = 0
-@export var tag: String = "general"
+@export var hand_type: HandEvaluatorService.HandType = HandEvaluatorService.HandType.HIGH_CARD
 
 @export var base: int = 0
 @export var mult: int = 0
-
-@export var synergy_base: int = 0
-@export var synergy_mult: int = 0
 
 @export_range(0.0, 999.0, 0.1) var weight: float = 1.0
 @export var rarity: ItemRarity = ItemRarity.COMMON
@@ -34,12 +30,9 @@ func is_available_for_round(round_number: int) -> bool:
 	return round_number >= min_round and round_number <= max_round
 
 func get_effect_text() -> String:
-	return "%s | %s | Cost %d | +%d base +%d mult | synergy +%d/%d" % [
+	return "%s | Cost %d | +%d base +%d mult" % [
 		get_display_name(),
-		tag,
 		cost,
 		base,
 		mult,
-		synergy_base,
-		synergy_mult,
 	]
