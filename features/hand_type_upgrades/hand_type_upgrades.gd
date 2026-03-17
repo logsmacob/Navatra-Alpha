@@ -1,4 +1,5 @@
 extends Control
+## Hand type upgrades script: coordinates this part of the game's behavior.
 
 signal upgrade_selected(upgrade: HandTypeUpgradeDefinition)
 signal reroll_requested

@@ -1,4 +1,5 @@
 extends Control
+## Title screen script: coordinates this part of the game's behavior.
 
 @export var play: Button
 @export var discord: Button

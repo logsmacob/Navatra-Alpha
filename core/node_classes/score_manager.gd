@@ -1,4 +1,6 @@
 extends Node
+
+## Score manager script: coordinates this part of the game's behavior.
 class_name ScoreManager
 
 var current_score: int = 0

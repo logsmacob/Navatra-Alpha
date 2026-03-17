@@ -1,4 +1,5 @@
 extends Control
+## Shop script: coordinates this part of the game's behavior.
 
 @export var currency_label: Label
 @export var inventory_label: Label

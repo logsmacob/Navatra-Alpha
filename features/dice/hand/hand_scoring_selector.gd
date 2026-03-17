@@ -1,4 +1,6 @@
 extends Node
+
+## Hand scoring selector script: coordinates this part of the game's behavior.
 class_name HandScoringSelector
 
 var hand_evaluator := HandEvaluatorService.new()

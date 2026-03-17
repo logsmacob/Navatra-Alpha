@@ -1,4 +1,6 @@
 extends RefCounted
+
+## Dice hand script: coordinates this part of the game's behavior.
 class_name DiceHand
 
 var values: Array[int]

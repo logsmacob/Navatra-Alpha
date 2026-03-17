@@ -1,3 +1,4 @@
+## Hand evaluator service script: coordinates this part of the game's behavior.
 # HandEvaluatorService
 # ---------------------------------------------------------
 # Responsible for determining what type of hand a player has.

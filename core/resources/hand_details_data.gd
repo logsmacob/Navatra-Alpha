@@ -1,4 +1,6 @@
 extends RefCounted
+
+## Hand details data script: coordinates this part of the game's behavior.
 class_name HandDetails
 
 var type: int

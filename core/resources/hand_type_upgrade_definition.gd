@@ -1,4 +1,6 @@
 class_name HandTypeUpgradeDefinition
+
+## Hand type upgrade definition script: coordinates this part of the game's behavior.
 extends Resource
 
 enum UpgradeRarity {

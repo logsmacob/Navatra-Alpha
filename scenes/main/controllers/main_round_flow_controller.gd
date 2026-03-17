@@ -1,4 +1,6 @@
 extends Node
+
+## Main round flow controller script: coordinates this part of the game's behavior.
 class_name MainRoundFlowController
 
 var _hand_type_upgrades: Control

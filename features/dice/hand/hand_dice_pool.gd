@@ -1,4 +1,6 @@
 extends Node
+
+## Hand dice pool script: coordinates this part of the game's behavior.
 class_name HandDicePool
 
 signal hand_built(dice: Array[DieUI])

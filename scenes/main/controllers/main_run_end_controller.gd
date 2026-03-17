@@ -1,4 +1,6 @@
 extends Node
+
+## Main run end controller script: coordinates this part of the game's behavior.
 class_name MainRunEndController
 
 var _hand: Node

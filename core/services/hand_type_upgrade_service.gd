@@ -1,4 +1,6 @@
 extends RefCounted
+
+## Hand type upgrade service script: coordinates this part of the game's behavior.
 class_name HandTypeUpgradeService
 
 const RARITY_BONUSES := {

@@ -1,4 +1,6 @@
 extends Node
+
+## Die logic script: coordinates this part of the game's behavior.
 class_name DieLogic
 
 signal die_rolled(face: FaceData)

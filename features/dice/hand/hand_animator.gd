@@ -1,4 +1,6 @@
 extends Node
+
+## Hand animator script: coordinates this part of the game's behavior.
 class_name HandAnimator
 
 @onready var hand = $".."
