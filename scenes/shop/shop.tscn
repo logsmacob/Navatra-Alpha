@@ -13,6 +13,16 @@
 [ext_resource type="Resource" uid="uid://bx7q6etxbs6dj" path="res://data/shop/items/high_roller.tres" id="9"]
 [ext_resource type="Resource" uid="uid://8xy0ak5qwjn1" path="res://data/shop/items/full_house_manual.tres" id="10"]
 [ext_resource type="Resource" uid="uid://jwbvraptmwkg" path="res://data/shop/items/oddity_ink.tres" id="11"]
+[ext_resource type="Resource" uid="uid://d0m7n3lucky001" path="res://data/shop/items/lucky_marble.tres" id="12"]
+[ext_resource type="Resource" uid="uid://d0m7n3horse002" path="res://data/shop/items/copper_horseshoe.tres" id="13"]
+[ext_resource type="Resource" uid="uid://d0m7n3snake003" path="res://data/shop/items/snake_eye_charm.tres" id="14"]
+[ext_resource type="Resource" uid="uid://d0m7n3abacus004" path="res://data/shop/items/pocket_abacus.tres" id="15"]
+[ext_resource type="Resource" uid="uid://d0m7n3chalk005" path="res://data/shop/items/dealers_chalk.tres" id="16"]
+[ext_resource type="Resource" uid="uid://d0m7n3ribbon006" path="res://data/shop/items/tandem_ribbon.tres" id="17"]
+[ext_resource type="Resource" uid="uid://d0m7n3loaded007" path="res://data/shop/items/loaded_pip.tres" id="18"]
+[ext_resource type="Resource" uid="uid://d0m7n3forge008" path="res://data/shop/items/forge_seal.tres" id="19"]
+[ext_resource type="Resource" uid="uid://d0m7n3royal009" path="res://data/shop/items/royal_jelly.tres" id="20"]
+[ext_resource type="Resource" uid="uid://d0m7n3ledger010" path="res://data/shop/items/quota_ledger.tres" id="21"]
 
 [node name="Shop" type="Control" unique_id=1773375267 node_paths=PackedStringArray("currency_label", "inventory_label", "offers_container", "reroll_button", "continue_button")]
 layout_mode = 3
@@ -29,7 +39,7 @@ offers_container = NodePath("Margin/VBox/Offers")
 reroll_button = NodePath("Margin/VBox/RerollButton")
 continue_button = NodePath("Margin/VBox/ContinueButton")
 item_button = ExtResource("2_g6lcs")
-item_pool = Array[ExtResource("2_dww4p")]([ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9"), ExtResource("10"), ExtResource("11")])
+item_pool = Array[ExtResource("2_dww4p")]([ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9"), ExtResource("10"), ExtResource("11"), ExtResource("12"), ExtResource("13"), ExtResource("14"), ExtResource("15"), ExtResource("16"), ExtResource("17"), ExtResource("18"), ExtResource("19"), ExtResource("20"), ExtResource("21")])
 
 [node name="Margin" type="MarginContainer" parent="." unique_id=910155671]
 layout_mode = 1

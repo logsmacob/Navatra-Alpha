@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://d0m7n3abacus004"]
+
+[ext_resource type="Script" uid="uid://1aoacss5301g" path="res://core/resources/item_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "pocket_abacus"
+item_name = "Pocket Abacus"
+cost = 5
+weight = 8.0
+shop_playable_hands = 1
+shop_rerolls = -1
