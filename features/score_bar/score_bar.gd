@@ -2,6 +2,19 @@ extends VBoxContainer
 ## Score bar script: coordinates this part of the game's behavior.
 class_name ScoreBar
 
+const GENERAL_MODIFIER_ROWS := [
+	{"key": "luck", "label": "Luck"},
+	{"key": "base_marbles_per_round", "label": "Base Marbles per Round"},
+	{"key": "shop_rerolls", "label": "Re-Rolls"},
+	{"key": "shop_playable_hands", "label": "Playable Hands"},
+	{"key": "base_1_value", "label": "Base 1 Value"},
+	{"key": "base_2_value", "label": "Base 2 Value"},
+	{"key": "base_3_value", "label": "Base 3 Value"},
+	{"key": "base_4_value", "label": "Base 4 Value"},
+	{"key": "base_5_value", "label": "Base 5 Value"},
+	{"key": "base_6_value", "label": "Base 6 Value"},
+]
+
 @onready var round_index_label: Label = $RoundIndex
 @onready var quota_label: Label = $Quota
 @onready var current_hand_points_label: Label = $CurrentHandPoints
@@ -11,6 +24,7 @@ class_name ScoreBar
 @onready var hands_left_leabel: Label = $HandaLeft
 @onready var rolls_left_label: Label = $RollsLeft
 @onready var current_hand_points_label_math: Label = $CurrentHandPointsMath
+@onready var general_modifiers_label: Label = $GeneralModifiers
 
 var score_manager: ScoreManager
 
@@ -30,10 +44,8 @@ func preview_hand(hand_data: DiceHand) -> void:
 	set_scoring_context(_build_scoring_context())
 	score_manager.preview_hand(hand_data.to_array())
 
-
 func can_play_previewed_hand() -> bool:
 	return score_manager != null and score_manager.can_play_hand()
-
 
 func play_previewed_hand() -> Dictionary:
 	if score_manager == null or not score_manager.can_play_hand():
@@ -53,7 +65,6 @@ func play_previewed_hand() -> Dictionary:
 		"applied_score": applied_score,
 	}
 
-
 func update_state(state: Dictionary = {}) -> void:
 	if score_manager == null:
 		return
@@ -67,7 +78,7 @@ func update_state(state: Dictionary = {}) -> void:
 	var final_score := int(breakdown.get("final_score", 0))
 
 	round_index_label.text = "Round %d/%d" % [int(state.get("round_index", 0)), GameState.MAX_ROUNDS]
-	quota_label.text = "Quota: %d | Currency: %d" % [int(state.get("quota_remaining", 0)), int(state.get("currency", 0))]
+	quota_label.text = "Quota: %d | Marbles: %d" % [int(state.get("quota_remaining", 0)), int(state.get("currency", 0))]
 	current_hand_points_label.text = "Current Hand Points: %d" % final_score
 	current_hand_points_label_math.text = "(Base %d + Dice %d) x Mult %d = %d" % [
 		int(breakdown.get("base", 0)),
@@ -84,7 +95,7 @@ func update_state(state: Dictionary = {}) -> void:
 	hand_type_value_label.text = "Hand Type Value: %d" % type_total
 	hands_left_leabel.text = "Hands Left: %d" % int(state.get("hands_remaining", 0))
 	rolls_left_label.text = "Rolls Left: %d" % int(state.get("rerolls_remaining", 0))
-
+	general_modifiers_label.text = _build_general_modifier_text(GameState.get_general_modifiers())
 
 func _get_played_hand_name() -> String:
 	var breakdown := score_manager.get_last_breakdown()
@@ -92,3 +103,9 @@ func _get_played_hand_name() -> String:
 
 func _build_scoring_context() -> HandScoringContext:
 	return HandScoringContext.new(GameState.hand_type_upgrades, GameState.round_score_multiplier)
+
+func _build_general_modifier_text(modifiers: Dictionary) -> String:
+	var lines: Array[String] = ["General Modifiers:"]
+	for row in GENERAL_MODIFIER_ROWS:
+		lines.append("- %s: %d" % [str(row.label), int(modifiers.get(row.key, 0))])
+	return "\n".join(lines)

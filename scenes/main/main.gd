@@ -30,6 +30,7 @@ func _ready() -> void:
 	GameState.run_won.connect(run_end_controller.handle_run_won)
 	GameState.round_state_changed.connect(_on_round_state_changed)
 	GameState.currency_changed.connect(_on_currency_changed)
+	GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
 	EventBus.roll_all_dice_requested.connect(gameplay_controller.handle_roll_all_dice_requested)
 	hand_type_upgrades.upgrade_selected.connect(round_flow_controller.handle_upgrade_selected)
 	hand_type_upgrades.reroll_requested.connect(round_flow_controller.handle_upgrade_reroll_requested)
@@ -51,4 +52,7 @@ func _on_round_state_changed(state: Dictionary) -> void:
 	score_bar.update_state(state)
 
 func _on_currency_changed(_amount: int) -> void:
+	score_bar.update_state()
+
+func _on_general_modifiers_changed(_modifiers: Dictionary) -> void:
 	score_bar.update_state()

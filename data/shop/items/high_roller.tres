@@ -13,3 +13,7 @@ mult = 1
 weight = 3.0
 rarity = 3
 min_round = 3
+
+luck = 2
+
+base_marbles_per_round = 2

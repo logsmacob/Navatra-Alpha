@@ -79,3 +79,15 @@ label_settings = SubResource("LabelSettings_vywcl")
 layout_mode = 2
 text = "Rolls Left"
 label_settings = SubResource("LabelSettings_vywcl")
+
+[node name="Line6" type="Label" parent="." unique_id=214748364]
+layout_mode = 2
+text = "------------------------------------------"
+label_settings = SubResource("LabelSettings_vywcl")
+
+[node name="GeneralModifiers" type="Label" parent="." unique_id=214748365]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 2
+text = "General Modifiers"
+autowrap_mode = 3
+label_settings = SubResource("LabelSettings_vywcl")

@@ -13,6 +13,7 @@ signal run_failed(round_index: int)
 signal run_won(round_index: int, stats: Dictionary)
 signal currency_changed(amount: int)
 signal player_hand_changed(hand_state: Array)
+signal general_modifiers_changed(modifiers: Dictionary)
 
 const BASE_DICE_PER_HAND: int = 5
 const BASE_DIE_FACE_COUNT: int = 6
@@ -22,6 +23,7 @@ const DIE_MATERIAL_STANDARD := GameStatePlayerManager.DIE_MATERIAL_STANDARD
 const DIE_MATERIAL_GOLDEN := GameStatePlayerManager.DIE_MATERIAL_GOLDEN
 const DIE_MATERIAL_STEEL := GameStatePlayerManager.DIE_MATERIAL_STEEL
 const MATERIAL_CURRENCY_BONUS := GameStatePlayerManager.MATERIAL_CURRENCY_BONUS
+const DEFAULT_GENERAL_MODIFIERS := GameStatePlayerManager.DEFAULT_GENERAL_MODIFIERS
 
 var round_index: int:
 	get:
@@ -55,6 +57,10 @@ var shop_item_counts: Dictionary:
 	get:
 		return _player_manager.shop_item_counts
 
+var general_modifiers: Dictionary:
+	get:
+		return _player_manager.general_modifiers
+
 var _player_manager: GameStatePlayerManager = GameStatePlayerManager.new()
 var _run_manager: GameStateRunManager = GameStateRunManager.new()
 
@@ -65,8 +71,10 @@ func start_new_run() -> void:
 	_run_manager.reset_run()
 	_player_manager.clear_hand_type_upgrades()
 	_player_manager.clear_shop_items()
+	_player_manager.reset_general_modifiers()
 	initialize_player_hand(BASE_DICE_PER_HAND, BASE_DIE_FACE_COUNT)
 	currency_changed.emit(currency)
+	general_modifiers_changed.emit(get_general_modifiers())
 	run_started.emit(round_index)
 	start_round(round_index)
 
@@ -76,7 +84,12 @@ func start_next_round() -> void:
 	start_round(round_index)
 
 func start_round(target_round: int) -> void:
-	var round_state := _run_manager.start_round(target_round)
+	var round_state := _run_manager.start_round(target_round, get_general_modifiers())
+	var base_marbles := get_base_marbles_per_round()
+	if base_marbles > 0:
+		_run_manager.add_currency(base_marbles)
+		currency_changed.emit(currency)
+		round_state = get_round_state()
 	round_started.emit(
 		target_round,
 		int(round_state.get("quota_remaining", 0)),
@@ -142,6 +155,16 @@ func add_shop_item(item_id: String) -> void:
 func get_shop_item_counts() -> Dictionary:
 	return _player_manager.get_shop_item_counts()
 
+func add_general_modifiers(modifier_changes: Dictionary) -> Dictionary:
+	var modifiers := _player_manager.add_general_modifiers(modifier_changes)
+	general_modifiers_changed.emit(modifiers)
+	return modifiers
+
+func get_general_modifiers() -> Dictionary:
+	return _player_manager.get_general_modifiers()
+
+func get_base_marbles_per_round() -> int:
+	return int(get_general_modifiers().get("base_marbles_per_round", 0))
 
 func consume_reroll() -> bool:
 	if not _run_manager.consume_reroll():

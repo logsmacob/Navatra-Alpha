@@ -8,8 +8,22 @@ const DIE_MATERIAL_GOLDEN := PlayerHandService.DIE_MATERIAL_GOLDEN
 const DIE_MATERIAL_STEEL := PlayerHandService.DIE_MATERIAL_STEEL
 const MATERIAL_CURRENCY_BONUS := PlayerHandService.MATERIAL_CURRENCY_BONUS
 
+const DEFAULT_GENERAL_MODIFIERS := {
+	"luck": 0,
+	"base_marbles_per_round": 0,
+	"shop_rerolls": 3,
+	"shop_playable_hands": 3,
+	"base_1_value": 1,
+	"base_2_value": 2,
+	"base_3_value": 3,
+	"base_4_value": 4,
+	"base_5_value": 5,
+	"base_6_value": 6,
+}
+
 var hand_type_upgrades: Dictionary = {}
 var shop_item_counts: Dictionary = {}
+var general_modifiers: Dictionary = DEFAULT_GENERAL_MODIFIERS.duplicate(true)
 
 var _player_hand_service: PlayerHandService = PlayerHandService.new()
 
@@ -53,3 +67,16 @@ func add_shop_item(item_id: String) -> void:
 
 func get_shop_item_counts() -> Dictionary:
 	return shop_item_counts.duplicate()
+
+func reset_general_modifiers() -> void:
+	general_modifiers = DEFAULT_GENERAL_MODIFIERS.duplicate(true)
+
+func add_general_modifiers(modifier_changes: Dictionary) -> Dictionary:
+	for key in modifier_changes.keys():
+		if not DEFAULT_GENERAL_MODIFIERS.has(key):
+			continue
+		general_modifiers[key] = int(general_modifiers.get(key, DEFAULT_GENERAL_MODIFIERS[key])) + int(modifier_changes[key])
+	return get_general_modifiers()
+
+func get_general_modifiers() -> Dictionary:
+	return general_modifiers.duplicate(true)

@@ -26,6 +26,7 @@ func _ready() -> void:
 	if continue_button:
 		continue_button.pressed.connect(_on_continue_pressed)
 	GameState.currency_changed.connect(_on_currency_changed)
+	GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
 
 func _roll_offers() -> void:
 	_offers = _offer_service.roll_weighted_offers(item_pool, max(GameState.round_index, 1), offer_count, true)
@@ -48,7 +49,6 @@ func _rebuild_offer_buttons() -> void:
 
 func _on_offer_button_pressed(index: int) -> void:
 	_try_buy_offer(index)
-
 
 func _try_buy_offer(index: int) -> void:
 	if index < 0 or index >= _offers.size():
@@ -75,13 +75,16 @@ func _on_continue_pressed() -> void:
 func _on_currency_changed(_amount: int) -> void:
 	_refresh_view()
 
+func _on_general_modifiers_changed(_modifiers: Dictionary) -> void:
+	_refresh_view()
+
 func _refresh_view() -> void:
 	if currency_label:
-		currency_label.text = "Currency: %d" % GameState.currency
+		currency_label.text = "Marbles: %d" % GameState.currency
 	if reroll_button:
-		reroll_button.text = "Reroll offers (%d)" % REROLL_COST
+		reroll_button.text = "Reroll trinkets (%d marbles)" % REROLL_COST
 	var item_counts: Dictionary = GameState.get_shop_item_counts()
-	var lines: Array[String] = ["Owned items:"]
+	var lines: Array[String] = ["Owned trinkets:"]
 	for key in item_counts.keys():
 		lines.append("- %s x%d" % [str(key), int(item_counts[key])])
 	if item_counts.is_empty():

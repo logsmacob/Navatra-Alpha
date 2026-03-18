@@ -14,6 +14,8 @@ func apply_purchase(game_state: Node, offer: ItemData) -> bool:
 		return false
 	if game_state.has_method("add_hand_type_upgrade"):
 		game_state.call("add_hand_type_upgrade", offer.hand_type, offer.base, offer.mult)
+	if game_state.has_method("add_general_modifiers"):
+		game_state.call("add_general_modifiers", offer.get_general_modifier_changes())
 	if game_state.has_method("add_shop_item"):
 		game_state.call("add_shop_item", offer.id)
 	return true

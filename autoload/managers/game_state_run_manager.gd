@@ -43,8 +43,8 @@ func advance_to_next_round() -> bool:
 	round_index += 1
 	return true
 
-func start_round(target_round: int) -> Dictionary:
-	var round_setup := _round_progression_service.build_round_state(target_round, get_pending_bonus_state())
+func start_round(target_round: int, general_modifiers: Dictionary = {}) -> Dictionary:
+	var round_setup := _round_progression_service.build_round_state(target_round, get_pending_bonus_state(), general_modifiers)
 	quota_remaining = int(round_setup.get("quota_remaining", 0))
 	hands_remaining = int(round_setup.get("hands_remaining", 0))
 	rerolls_remaining = int(round_setup.get("rerolls_remaining", 0))

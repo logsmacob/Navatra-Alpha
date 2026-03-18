@@ -49,9 +49,14 @@ func get_type_only_total(details: HandDetails, scoring_context: HandScoringConte
 
 func _sum_groups(groups: Array) -> int:
 	var total := 0
+	var modifiers := GameState.get_general_modifiers()
 	for group_data in groups:
 		for key in group_data.keys():
 			var values: Array = group_data[key]
 			for value in values:
-				total += value
+				total += _get_modified_face_value(int(value), modifiers)
 	return total
+
+func _get_modified_face_value(face_value: int, modifiers: Dictionary) -> int:
+	var modifier_key := "base_%d_value" % face_value
+	return int(modifiers.get(modifier_key, face_value))

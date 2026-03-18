@@ -9,6 +9,19 @@ enum ItemRarity {
 	EPIC,
 }
 
+const GENERAL_MODIFIER_LABELS := {
+	"luck": "Luck",
+	"base_marbles_per_round": "Base Marbles per Round",
+	"shop_rerolls": "Re-Rolls",
+	"shop_playable_hands": "Playable Hands",
+	"base_1_value": "Base 1 Value",
+	"base_2_value": "Base 2 Value",
+	"base_3_value": "Base 3 Value",
+	"base_4_value": "Base 4 Value",
+	"base_5_value": "Base 5 Value",
+	"base_6_value": "Base 6 Value",
+}
+
 @export var id: String = ""
 @export var item_name: String = ""
 @export var cost: int = 0
@@ -18,6 +31,17 @@ enum ItemRarity {
 @export var base: int = 0
 @export var mult: int = 0
 
+@export var luck: int = 0
+@export var base_marbles_per_round: int = 0
+@export var shop_rerolls: int = 0
+@export var shop_playable_hands: int = 0
+@export var base_1_value: int = 0
+@export var base_2_value: int = 0
+@export var base_3_value: int = 0
+@export var base_4_value: int = 0
+@export var base_5_value: int = 0
+@export var base_6_value: int = 0
+
 @export_range(0.0, 999.0, 0.1) var weight: float = 1.0
 @export var rarity: ItemRarity = ItemRarity.COMMON
 @export_range(1, 999, 1) var min_round: int = 1
@@ -26,20 +50,48 @@ enum ItemRarity {
 func get_display_name() -> String:
 	return item_name if not item_name.is_empty() else id
 
+func get_general_modifier_changes() -> Dictionary:
+	return {
+		"luck": luck,
+		"base_marbles_per_round": base_marbles_per_round,
+		"shop_rerolls": shop_rerolls,
+		"shop_playable_hands": shop_playable_hands,
+		"base_1_value": base_1_value,
+		"base_2_value": base_2_value,
+		"base_3_value": base_3_value,
+		"base_4_value": base_4_value,
+		"base_5_value": base_5_value,
+		"base_6_value": base_6_value,
+	}
+
+func _format_signed_modifier(value: int) -> String:
+	if value > 0:
+		return "+%d" % value
+	return "%d" % value
+
 func get_display_discription() -> String:
-	return "increces %s by base %d and mult %d" %[
-		HandEvaluatorService.HandType.keys()[hand_type],
-		base,
-		mult
-	]
+	var effects: Array[String] = []
+	if base != 0 or mult != 0:
+		effects.append("%s: %+d base, %+d mult" % [
+			HandEvaluatorService.HandType.keys()[hand_type],
+			base,
+			mult,
+		])
+	for key in get_general_modifier_changes().keys():
+		var value := int(get_general_modifier_changes()[key])
+		if value == 0:
+			continue
+		effects.append("%s %s" % [GENERAL_MODIFIER_LABELS.get(key, key), _format_signed_modifier(value)])
+	if effects.is_empty():
+		return "No effect"
+	return "; ".join(effects)
 
 func is_available_for_round(round_number: int) -> bool:
 	return round_number >= min_round and round_number <= max_round
 
 func get_effect_text() -> String:
-	return "%s | Cost %d | +%d base +%d mult" % [
+	return "%s | Cost %d | %s" % [
 		get_display_name(),
 		cost,
-		base,
-		mult,
+		get_display_discription(),
 	]

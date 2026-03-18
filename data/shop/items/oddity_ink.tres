@@ -10,3 +10,7 @@ cost = 5
 hand_type = 2
 base = 1
 weight = 9.0
+
+base_2_value = 4
+
+base_6_value = -5
