@@ -5,6 +5,8 @@
 [sub_resource type="LabelSettings" id="LabelSettings_vywcl"]
 font_size = 32
 
+[sub_resource type="LabelSettings" id="LabelSettings_nwx5f"]
+
 [node name="VBoxContainer" type="VBoxContainer" unique_id=1425863518]
 offset_right = 40.0
 offset_bottom = 40.0
@@ -89,5 +91,5 @@ label_settings = SubResource("LabelSettings_vywcl")
 custom_minimum_size = Vector2(520, 0)
 layout_mode = 2
 text = "General Modifiers"
+label_settings = SubResource("LabelSettings_nwx5f")
 autowrap_mode = 3
-label_settings = SubResource("LabelSettings_vywcl")
