@@ -31,6 +31,7 @@ const CALCULATION_DELAY_SECONDS := 0.5
 var score_manager: ScoreManager
 var _preview_breakdown: Dictionary = {}
 var _show_preview_math: bool = false
+var _last_hands_remaining: int = 0
 
 func _ready() -> void:
 	score_manager = ScoreManager.new()
@@ -40,7 +41,9 @@ func _ready() -> void:
 	GameState.currency_changed.connect(_on_currency_changed)
 	GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
 	_reset_score_display()
-	_update_meta_labels(GameState.get_round_state())
+	var initial_state := GameState.get_round_state()
+	_last_hands_remaining = int(initial_state.get("hands_remaining", 0))
+	_update_meta_labels(initial_state)
 
 func set_scoring_context(context: HandScoringContext) -> void:
 	if score_manager == null:
@@ -87,6 +90,7 @@ func update_state(state: Dictionary = {}) -> void:
 	general_modifiers_label.text = _build_general_modifier_text(GameState.get_general_modifiers())
 
 func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -> void:
+	_last_hands_remaining = hands
 	_update_meta_labels({
 		"round_index": round_index,
 		"quota_remaining": quota,
@@ -97,6 +101,10 @@ func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -
 	_reset_score_display()
 
 func _on_round_state_changed(state: Dictionary) -> void:
+	var hands_remaining := int(state.get("hands_remaining", _last_hands_remaining))
+	if hands_remaining < _last_hands_remaining:
+		_reset_score_display()
+	_last_hands_remaining = hands_remaining
 	update_state(state)
 
 func _on_currency_changed(_amount: int) -> void:
@@ -168,10 +176,10 @@ func _reset_score_display() -> void:
 
 func clear_after_play_reset() -> void:
 	_show_preview_math = false
-	_clear_math_values()
-	hand_type_label.text = "Hand Type:"
-	current_hand_points_label.text = "Current Hand Points: 0"
-	current_hand_points_label_math.text = "(Base 0 + Dice 0) x Mult 0 = 0"
+	if _preview_breakdown.is_empty():
+		_reset_score_display()
+		return
+	_update_preview_labels(_preview_breakdown)
 
 func show_preview_math() -> void:
 	_show_preview_math = true
