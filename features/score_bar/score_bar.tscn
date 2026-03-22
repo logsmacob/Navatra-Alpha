@@ -4,6 +4,9 @@
 [ext_resource type="FontFile" uid="uid://cnci0773b7q4d" path="res://assets/fonts/pixeloid-font/PixeloidSans-lxa3y.ttf" id="2_l3q4t"]
 [ext_resource type="FontFile" uid="uid://bfmc8ldjpblsv" path="res://assets/fonts/pixeloid-font/PixeloidSansBold-1jpBg.ttf" id="3_p1r1p"]
 [ext_resource type="StyleBox" uid="uid://5soqmitf5a1o" path="res://assets/UI/style_boxes/text_background.tres" id="4_p1r1p"]
+[ext_resource type="Script" path="res://features/score_bar/controllers/score_bar_meta_controller.gd" id="5_meta"]
+[ext_resource type="Script" path="res://features/score_bar/controllers/score_bar_math_controller.gd" id="6_math"]
+[ext_resource type="Script" path="res://features/score_bar/controllers/score_bar_score_controller.gd" id="7_score"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p1r1p"]
 
@@ -100,7 +103,7 @@ shadow_size = 25
 
 [sub_resource type="LabelSettings" id="LabelSettings_nwx5f"]
 
-[node name="Score Bar" type="PanelContainer" unique_id=1726318424 node_paths=PackedStringArray("round_index_label", "marble_label", "current_hand_points_label", "hand_type_label", "current_hand_points_label_math", "general_modifiers_label", "Base", "Mult", "Result", "Quota")]
+[node name="Score Bar" type="PanelContainer" unique_id=1726318424 node_paths=PackedStringArray("meta_controller", "math_controller", "score_controller")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -109,16 +112,9 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_p1r1p")
 script = ExtResource("1_vywcl")
-round_index_label = NodePath("Corner Label/left column/RoundIndex")
-marble_label = NodePath("Corner Label/left column/Marbles")
-current_hand_points_label = NodePath("")
-hand_type_label = NodePath("Math Label/center/VBoxContainer/HandType")
-current_hand_points_label_math = NodePath("")
-general_modifiers_label = NodePath("VBoxContainer/GeneralModifiers")
-Base = NodePath("Math Label/center/HBoxContainer/Base/HandTypeBase")
-Mult = NodePath("Math Label/center/HBoxContainer/Mult/HandTypeMult")
-Result = NodePath("Math Label/center/HBoxContainer/Total/HandTypeValue")
-Quota = NodePath("Math Label/center/Quota Value")
+meta_controller = NodePath("MetaController")
+math_controller = NodePath("MathController")
+score_controller = NodePath("ScoreController")
 
 [node name="Math Label" type="PanelContainer" parent="." unique_id=49875857]
 layout_mode = 2
@@ -261,3 +257,20 @@ layout_mode = 2
 text = "General Modifiers"
 label_settings = SubResource("LabelSettings_nwx5f")
 autowrap_mode = 3
+
+[node name="MetaController" type="Node" parent="."]
+script = ExtResource("5_meta")
+round_index_label_path = NodePath("../Corner Label/left column/RoundIndex")
+marble_label_path = NodePath("../Corner Label/left column/Marbles")
+quota_label_path = NodePath("../Math Label/center/Quota Value")
+general_modifiers_label_path = NodePath("../VBoxContainer/GeneralModifiers")
+
+[node name="MathController" type="Node" parent="."]
+script = ExtResource("6_math")
+hand_type_label_path = NodePath("../Math Label/center/VBoxContainer/HandType")
+base_label_path = NodePath("../Math Label/center/HBoxContainer/Base/HandTypeBase")
+mult_label_path = NodePath("../Math Label/center/HBoxContainer/Mult/HandTypeMult")
+result_label_path = NodePath("../Math Label/center/HBoxContainer/Total/HandTypeValue")
+
+[node name="ScoreController" type="Node" parent="."]
+script = ExtResource("7_score")

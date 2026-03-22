@@ -3,36 +3,18 @@ class_name ScoreBarMathController
 
 const CALCULATION_DELAY_SECONDS := 0.5
 
-var _current_hand_points_label: Label
-var _hand_type_label: Label
-var _current_hand_points_label_math: Label
-var _base_label: Label
-var _mult_label: Label
-var _result_label: Label
+@export_node_path("Label") var hand_type_label_path: NodePath
+@export_node_path("Label") var base_label_path: NodePath
+@export_node_path("Label") var mult_label_path: NodePath
+@export_node_path("Label") var result_label_path: NodePath
 
 var _preview_breakdown: Dictionary = {}
 var _show_preview_math: bool = false
 
-func setup(
-	current_hand_points_label: Label,
-	hand_type_label: Label,
-	current_hand_points_label_math: Label,
-	base_label: Label,
-	mult_label: Label,
-	result_label: Label
-) -> void:
-	_current_hand_points_label = current_hand_points_label
-	_hand_type_label = hand_type_label
-	_current_hand_points_label_math = current_hand_points_label_math
-	_base_label = base_label
-	_mult_label = mult_label
-	_result_label = result_label
-
 func update_preview(breakdown: Dictionary) -> void:
 	_preview_breakdown = breakdown.duplicate(true)
 	if breakdown.is_empty():
-		_hand_type_label.text = "Hand Type:"
-		_current_hand_points_label.text = "Current Hand Points: 0"
+		_set_label_text(_get_hand_type_label(), "Hand Type:")
 		_zero_math_display()
 		return
 
@@ -41,8 +23,7 @@ func update_preview(breakdown: Dictionary) -> void:
 	var group_total := int(breakdown.get("group_total", 0))
 	var mult_value := int(breakdown.get("mult", 0))
 	var final_score := int(breakdown.get("final_score", 0))
-	_current_hand_points_label.text = "Current Hand Points: %d" % final_score
-	_hand_type_label.text = "%s:" % hand_name
+	_set_label_text(_get_hand_type_label(), "%s:" % hand_name)
 	if _show_preview_math:
 		_apply_preview_math(base_value, group_total, mult_value, final_score)
 
@@ -54,33 +35,26 @@ func animate_played_hand(tree: SceneTree, breakdown: Dictionary) -> void:
 	var final_score := int(breakdown.get("final_score", 0))
 
 	_show_preview_math = false
-	_hand_type_label.text = "%s:" % hand_name
-	_current_hand_points_label.text = "Current Hand Points: 0"
+	_set_label_text(_get_hand_type_label(), "%s:" % hand_name)
 	_zero_math_display()
 	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
 
-	_base_label.text = "%d" % base_value
-	_current_hand_points_label_math.text = "Base = %d" % base_value
+	_set_label_text(_get_base_label(), "%d" % base_value)
 	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
 
-	_mult_label.text = "%d" % mult_value
-	_current_hand_points_label_math.text = "Base %d | Mult = %d" % [base_value, mult_value]
+	_set_label_text(_get_mult_label(), "%d" % mult_value)
 	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
 
-	_base_label.text = "%d" % (base_value + group_total)
-	_current_hand_points_label_math.text = "Base %d + Dice %d = %d" % [base_value, group_total, base_value + group_total]
+	_set_label_text(_get_base_label(), "%d" % (base_value + group_total))
 	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
 
-	_result_label.text = "%d" % final_score
-	_current_hand_points_label.text = "Current Hand Points: %d" % final_score
-	_current_hand_points_label_math.text = "(%d) x %d = %d" % [base_value + group_total, mult_value, final_score]
+	_set_label_text(_get_result_label(), "%d" % final_score)
 
 func reset_display() -> void:
 	_preview_breakdown.clear()
 	_show_preview_math = false
 	_zero_math_display()
-	_hand_type_label.text = "Hand Type:"
-	_current_hand_points_label.text = "Current Hand Points: 0"
+	_set_label_text(_get_hand_type_label(), "Hand Type:")
 
 func zero_math_display() -> void:
 	_show_preview_math = false
@@ -108,13 +82,27 @@ func hide_preview_math() -> void:
 	_zero_math_display()
 
 func _zero_math_display() -> void:
-	_base_label.text = "%d" % 0
-	_mult_label.text = "%d" % 0
-	_result_label.text = "%d" % 0
-	_current_hand_points_label_math.text = "(Base 0 + Dice 0) x Mult 0 = 0"
+	_set_label_text(_get_base_label(), "%d" % 0)
+	_set_label_text(_get_mult_label(), "%d" % 0)
+	_set_label_text(_get_result_label(), "%d" % 0)
 
 func _apply_preview_math(base_value: int, group_total: int, mult_value: int, final_score: int) -> void:
-	_base_label.text = "%d" % (base_value + group_total)
-	_mult_label.text = "%d" % mult_value
-	_result_label.text = "%d" % final_score
-	_current_hand_points_label_math.text = "(Base %d + Dice %d) x Mult %d = %d" % [base_value, group_total, mult_value, final_score]
+	_set_label_text(_get_base_label(), "%d" % (base_value + group_total))
+	_set_label_text(_get_mult_label(), "%d" % mult_value)
+	_set_label_text(_get_result_label(), "%d" % final_score)
+
+func _get_hand_type_label() -> Label:
+	return get_node_or_null(hand_type_label_path) as Label
+
+func _get_base_label() -> Label:
+	return get_node_or_null(base_label_path) as Label
+
+func _get_mult_label() -> Label:
+	return get_node_or_null(mult_label_path) as Label
+
+func _get_result_label() -> Label:
+	return get_node_or_null(result_label_path) as Label
+
+func _set_label_text(label: Label, value: String) -> void:
+	if label != null:
+		label.text = value
