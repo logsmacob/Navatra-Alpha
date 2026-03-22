@@ -100,7 +100,7 @@ shadow_size = 25
 
 [sub_resource type="LabelSettings" id="LabelSettings_nwx5f"]
 
-[node name="VBoxContainer" type="PanelContainer" unique_id=1726318424 node_paths=PackedStringArray("round_index_label", "quota_label", "marble_label", "current_hand_points_label", "hand_type_label", "hand_type_value_label", "hand_type_base_label", "hand_type_mult_label", "current_hand_points_label_math", "general_modifiers_label")]
+[node name="VBoxContainer" type="PanelContainer" unique_id=1726318424 node_paths=PackedStringArray("round_index_label", "marble_label", "current_hand_points_label", "hand_type_label", "current_hand_points_label_math", "general_modifiers_label", "Base", "Mult", "Result", "Quota")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -110,13 +110,13 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_p1r1p")
 script = ExtResource("1_vywcl")
 round_index_label = NodePath("Corner Label/left column/RoundIndex")
-quota_label = NodePath("Math Label/center/Quota Value")
+Quota = NodePath("Math Label/center/Quota Value")
 marble_label = NodePath("Corner Label/left column/Marbles")
 current_hand_points_label = NodePath("VBoxContainer/CurrentHandPoints")
 hand_type_label = NodePath("Math Label/center/VBoxContainer/HandType")
-hand_type_value_label = NodePath("Math Label/center/HBoxContainer/Total/HandTypeValue")
-hand_type_base_label = NodePath("Math Label/center/HBoxContainer/Base/HandTypeBase")
-hand_type_mult_label = NodePath("Math Label/center/HBoxContainer/Mult/HandTypeMult")
+Result = NodePath("Math Label/center/HBoxContainer/Total/HandTypeValue")
+Base = NodePath("Math Label/center/HBoxContainer/Base/HandTypeBase")
+Mult = NodePath("Math Label/center/HBoxContainer/Mult/HandTypeMult")
 current_hand_points_label_math = NodePath("VBoxContainer/CurrentHandPointsMath")
 general_modifiers_label = NodePath("VBoxContainer/GeneralModifiers")
 
