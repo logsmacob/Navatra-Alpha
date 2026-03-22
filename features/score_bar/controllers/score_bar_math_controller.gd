@@ -31,6 +31,9 @@ func setup(
 func update_preview(breakdown: Dictionary) -> void:
 	_preview_breakdown = breakdown.duplicate(true)
 	if breakdown.is_empty():
+		_hand_type_label.text = "Hand Type:"
+		_current_hand_points_label.text = "Current Hand Points: 0"
+		_zero_math_display()
 		return
 
 	var hand_name := str(breakdown.get("hand_name", "-"))
@@ -50,7 +53,12 @@ func animate_played_hand(tree: SceneTree, breakdown: Dictionary) -> void:
 	var mult_value := int(breakdown.get("mult", 0))
 	var final_score := int(breakdown.get("final_score", 0))
 
+	_show_preview_math = false
 	_hand_type_label.text = "%s:" % hand_name
+	_current_hand_points_label.text = "Current Hand Points: 0"
+	_zero_math_display()
+	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
+
 	_base_label.text = "%d" % base_value
 	_current_hand_points_label_math.text = "Base = %d" % base_value
 	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
@@ -97,6 +105,7 @@ func show_preview_math() -> void:
 
 func hide_preview_math() -> void:
 	_show_preview_math = false
+	_zero_math_display()
 
 func _zero_math_display() -> void:
 	_base_label.text = "%d" % 0
