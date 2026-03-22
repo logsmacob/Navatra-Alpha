@@ -168,10 +168,10 @@ func _reset_score_display() -> void:
 
 func clear_after_play_reset() -> void:
 	_show_preview_math = false
-	_clear_math_values()
-	hand_type_label.text = "Hand Type:"
-	current_hand_points_label.text = "Current Hand Points: 0"
-	current_hand_points_label_math.text = "(Base 0 + Dice 0) x Mult 0 = 0"
+	if _preview_breakdown.is_empty():
+		_reset_score_display()
+		return
+	_update_preview_labels(_preview_breakdown)
 
 func show_preview_math() -> void:
 	_show_preview_math = true
