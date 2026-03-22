@@ -30,6 +30,8 @@ signal setup_complete
 signal played_hand_ready(hand: DiceHand)
 ## Emitted when gameplay resolution is done and the hand can start its reset animation.
 signal played_hand_finished
+## Emitted when the post-play reset phase begins so UI can clear transient played-hand math before rerolling.
+signal play_reset_started
 ## Emitted when the play button has been held long enough to show score preview math.
 signal play_hold_started
 ## Emitted when the play-button hold preview should be dismissed.
@@ -100,9 +102,10 @@ func _on_played_hand_finish() -> void:
 	played_hand_finished.emit()
 
 ## Handles the final step of the play chain after [HandAnimator] finishes resetting the dice.
-## Flow: [signal played_hand_finished] -> HandAnimator reset -> [signal hand_reset_ready] -> roll -> [signal reset_roll_finished].
+## Flow: [signal played_hand_finished] -> HandAnimator reset -> [signal hand_reset_ready] -> [signal play_reset_started] -> roll -> [signal reset_roll_finished].
 func _on_hand_reset_ready() -> void:
 	is_resolving_play_reset = true
+	play_reset_started.emit()
 	await roll_hand()
 	is_resolving_play_reset = false
 	reset_roll_finished.emit()

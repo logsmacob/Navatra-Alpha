@@ -58,6 +58,12 @@ func handle_roll_all_dice_requested() -> void:
 	refresh_hand_preview()
 	_score_bar.update_state()
 
+## Clears the played-hand math columns as soon as the post-play reset phase begins.
+func handle_play_reset_started() -> void:
+	if _score_bar == null:
+		return
+	_score_bar.zero_math_display()
+
 ## Clears score-bar preview state after the reset roll completes.
 func handle_reset_roll_finished() -> void:
 	if _score_bar == null:
