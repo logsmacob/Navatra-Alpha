@@ -17,15 +17,23 @@ extends Control
 @onready var round_flow_controller: MainRoundFlowController = $Controllers/RoundFlowController
 @onready var run_end_controller: MainRunEndController = $Controllers/RunEndController
 
+## Wires the main-scene event graph.
+## Event flow overview:
+## - Hand local signals drive gameplay preview/resolution.
+## - GameState signals drive round/run UI transitions.
+## - EventBus handles the shared "reroll finished" refresh broadcast.
 func _ready() -> void:
 	gameplay_controller.setup(hand, score_bar)
 	round_flow_controller.setup(hand_type_upgrades)
 	run_end_controller.setup(hand, score_bar, hand_type_upgrades, win_screen, win_stats_label, lose_screen, lose_stats_label)
 
+	# Hand -> gameplay/score-bar flow.
 	hand.played_hand_ready.connect(gameplay_controller.handle_played_hand_ready)
 	hand.reset_roll_finished.connect(gameplay_controller.handle_reset_roll_finished)
 	hand.play_hold_started.connect(score_bar.show_preview_math)
 	hand.play_hold_ended.connect(score_bar.hide_preview_math)
+
+	# GameState -> screen flow.
 	GameState.round_started.connect(_on_round_started)
 	GameState.round_completed.connect(round_flow_controller.handle_round_completed)
 	GameState.reward_phase_started.connect(round_flow_controller.handle_reward_phase_started)
@@ -34,6 +42,8 @@ func _ready() -> void:
 	GameState.round_state_changed.connect(_on_round_state_changed)
 	GameState.currency_changed.connect(_on_currency_changed)
 	GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
+
+	# Cross-feature events.
 	EventBus.roll_all_dice_requested.connect(gameplay_controller.handle_roll_all_dice_requested)
 	hand_type_upgrades.upgrade_selected.connect(round_flow_controller.handle_upgrade_selected)
 	hand_type_upgrades.reroll_requested.connect(round_flow_controller.handle_upgrade_reroll_requested)
@@ -43,6 +53,7 @@ func _ready() -> void:
 	gameplay_controller.refresh_hand_preview()
 	score_bar.update_state()
 
+## Applies round-start UI updates after [GameState] emits [signal round_started].
 func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -> void:
 	round_flow_controller.handle_round_started(round_index, quota, hands, rerolls)
 	win_screen.visible = false
@@ -50,12 +61,15 @@ func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -
 	gameplay_controller.refresh_hand_preview()
 	score_bar.update_state()
 
+## Keeps the score bar synchronized with round-state changes.
 func _on_round_state_changed(state: Dictionary) -> void:
 	print("State: ", state)
 	score_bar.update_state(state)
 
+## Refreshes currency-dependent score bar UI.
 func _on_currency_changed(_amount: int) -> void:
 	score_bar.update_state()
 
+## Refreshes modifier-dependent score bar UI.
 func _on_general_modifiers_changed(_modifiers: Dictionary) -> void:
 	score_bar.update_state()

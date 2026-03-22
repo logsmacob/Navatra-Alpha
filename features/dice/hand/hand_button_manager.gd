@@ -8,20 +8,26 @@ const HOVER_DURATION := 0.1
 const PRESS_DURATION := 0.05
 const PLAY_HOLD_DELAY_SECONDS := 0.5
 
+## Play button reference used for click and hold interactions.
 @export var play_hand: TextureButton
+## Reroll button reference used for reroll interactions.
 @export var re_roll: TextureButton
 
 var _button_tweens: Dictionary = {}
 var _play_hold_timer: SceneTreeTimer
 var _play_hold_active: bool = false
 
+## Emitted when the play button has been held long enough to show preview math.
 signal play_hold_started
+## Emitted when the held preview should be dismissed.
 signal play_hold_ended
 
+## Connects visual/input handlers for the exported buttons.
 func _ready() -> void:
 	_setup_button(play_hand)
 	_setup_button(re_roll)
 
+## Adds shared hover/press listeners to a button.
 func _setup_button(button: TextureButton) -> void:
 	if button == null:
 		return
@@ -44,15 +50,18 @@ func _on_button_hovered(button: TextureButton) -> void:
 func _on_button_unhovered(button: TextureButton) -> void:
 	_animate_button_scale(button, DEFAULT_SCALE, HOVER_DURATION)
 
+## Starts hold tracking for the play button while still applying the press animation.
 func _on_button_pressed(button: TextureButton) -> void:
 	_animate_button_scale(button, DEFAULT_SCALE, PRESS_DURATION)
 	if button == play_hand:
 		_start_play_hold_tracking()
 
+## Ends hold tracking when the play button is released.
 func _on_button_released(button: TextureButton) -> void:
 	if button == play_hand:
 		_stop_play_hold_tracking()
 
+## Waits for the hold threshold and emits [signal play_hold_started] if the button is still held.
 func _start_play_hold_tracking() -> void:
 	_play_hold_active = false
 	_play_hold_timer = get_tree().create_timer(PLAY_HOLD_DELAY_SECONDS)
@@ -61,6 +70,7 @@ func _start_play_hold_tracking() -> void:
 		_play_hold_active = true
 		play_hold_started.emit()
 
+## Emits [signal play_hold_ended] when an active hold preview should stop.
 func _stop_play_hold_tracking() -> void:
 	if _play_hold_active:
 		play_hold_ended.emit()
@@ -78,7 +88,8 @@ func _animate_button_scale(button: TextureButton, target_scale: Vector2, duratio
 	tween.set_ease(Tween.EASE_OUT)
 	tween.tween_property(button, "scale", target_scale, duration)
 
-func disable_buttons():
+## Disables hand buttons during roll/play resolution and clears hold-preview state.
+func disable_buttons() -> void:
 	play_hand.disabled = true
 	re_roll.disabled = true
 	_stop_play_hold_tracking()
@@ -87,12 +98,14 @@ func disable_buttons():
 	play_hand.modulate = Color(1, 1, 1, 0.5)
 	re_roll.modulate = Color(1, 1, 1, 0.5)
 
-func enable_buttons():
+## Re-enables hand buttons once the current action has completed.
+func enable_buttons() -> void:
 	play_hand.disabled = false
 	re_roll.disabled = false
 	play_hand.modulate = Color.WHITE
 	re_roll.modulate = Color.WHITE
 
-func update_button_labels():
+## Updates button labels using the latest round-state counters from [GameState].
+func update_button_labels() -> void:
 	play_hand.get_child(0).text = "Play Hand\nx%d" % int(GameState.get_round_state().get("hands_remaining", 0))
 	re_roll.get_child(0).text = "Re-Roll\nx%d" % int(GameState.get_round_state().get("rerolls_remaining", 0))
