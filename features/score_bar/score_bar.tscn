@@ -20,9 +20,9 @@ corner_radius_bottom_right = 32
 corner_radius_bottom_left = 32
 corner_detail = 1
 expand_margin_left = 16.0
-expand_margin_top = 16.0
+expand_margin_top = 100.0
 expand_margin_right = 16.0
-expand_margin_bottom = 100.0
+expand_margin_bottom = 32.0
 shadow_color = Color(0, 0, 0, 0.5882353)
 shadow_size = 25
 
@@ -43,11 +43,19 @@ font = ExtResource("3_p1r1p")
 font_size = 32
 font_color = Color(0, 0.63333344, 1, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_bw8x2"]
+font = ExtResource("3_p1r1p")
+font_size = 32
+
+[sub_resource type="LabelSettings" id="LabelSettings_vt01p"]
+font = ExtResource("3_p1r1p")
+font_size = 32
+font_color = Color(1, 0, 0.916667, 1)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_swtl4"]
 content_margin_left = 32.0
-content_margin_top = 8.0
+content_margin_top = 16.0
 content_margin_right = 32.0
-content_margin_bottom = 8.0
 bg_color = Color(0.1, 0, 0.08999997, 1)
 border_width_left = 4
 border_width_top = 4
@@ -58,15 +66,23 @@ corner_radius_top_right = 25
 corner_radius_bottom_right = 25
 corner_radius_bottom_left = 25
 corner_detail = 1
+expand_margin_bottom = 16.0
 
-[sub_resource type="LabelSettings" id="LabelSettings_vt01p"]
-font = ExtResource("3_p1r1p")
-font_size = 32
-font_color = Color(1, 0, 0.916667, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_bw8x2"]
-font = ExtResource("3_p1r1p")
-font_size = 52
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p1r1p"]
+content_margin_left = 32.0
+content_margin_top = 16.0
+content_margin_right = 32.0
+bg_color = Color(0.07058824, 0.07058824, 0.07058824, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+corner_detail = 1
+expand_margin_bottom = 16.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l3q4t"]
 bg_color = Color(0.07058824, 0.07058824, 0.07058824, 1)
@@ -84,7 +100,7 @@ shadow_size = 25
 
 [sub_resource type="LabelSettings" id="LabelSettings_nwx5f"]
 
-[node name="VBoxContainer" type="PanelContainer" unique_id=1726318424 node_paths=PackedStringArray("round_index_label", "quota_label", "marble_label", "current_hand_points_label", "hand_type_label", "hand_type_value_label", "hand_type_base_label", "hand_type_mult_label", "current_hand_points_label_math", "general_modifiers_label", "end_value_label")]
+[node name="VBoxContainer" type="PanelContainer" unique_id=1726318424 node_paths=PackedStringArray("round_index_label", "quota_label", "marble_label", "current_hand_points_label", "hand_type_label", "hand_type_value_label", "hand_type_base_label", "hand_type_mult_label", "current_hand_points_label_math", "general_modifiers_label")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -97,19 +113,17 @@ round_index_label = NodePath("Corner Label/left column/RoundIndex")
 quota_label = NodePath("Math Label/center/Quota Value")
 marble_label = NodePath("Corner Label/left column/Marbles")
 current_hand_points_label = NodePath("VBoxContainer/CurrentHandPoints")
-hand_type_label = NodePath("Math Label/center/HBoxContainer/VBoxContainer/HandType")
-hand_type_value_label = NodePath("Math Label/center/HBoxContainer/HandTypeValue")
-hand_type_base_label = NodePath("Math Label/center/HBoxContainer/VBoxContainer/HandTypeBase")
-hand_type_mult_label = NodePath("Math Label/center/HBoxContainer/VBoxContainer/HandTypeMult")
+hand_type_label = NodePath("Math Label/center/VBoxContainer/HandType")
+hand_type_value_label = NodePath("Math Label/center/HBoxContainer/Total/HandTypeValue")
+hand_type_base_label = NodePath("Math Label/center/HBoxContainer/Base/HandTypeBase")
+hand_type_mult_label = NodePath("Math Label/center/HBoxContainer/Mult/HandTypeMult")
 current_hand_points_label_math = NodePath("VBoxContainer/CurrentHandPointsMath")
 general_modifiers_label = NodePath("VBoxContainer/GeneralModifiers")
-end_value_label = NodePath("Math Label/center/Result")
 
 [node name="Math Label" type="PanelContainer" parent="." unique_id=49875857]
-custom_minimum_size = Vector2(0, 900)
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
+size_flags_horizontal = 4
+size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_vywcl")
 
 [node name="center" type="VBoxContainer" parent="Math Label" unique_id=2012008888]
@@ -122,23 +136,18 @@ modulate = Color(1, 1, 1, 0.49019608)
 layout_mode = 2
 text = "Quota:"
 label_settings = SubResource("LabelSettings_p1r1p")
-horizontal_alignment = 2
+horizontal_alignment = 1
 
 [node name="Quota Value" type="Label" parent="Math Label/center" unique_id=598673048]
 layout_mode = 2
 text = "Quota"
 label_settings = SubResource("LabelSettings_l3q4t")
-horizontal_alignment = 2
+horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Math Label/center" unique_id=1094779636]
-layout_mode = 2
-theme_override_constants/separation = 32
-alignment = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Math Label/center/HBoxContainer" unique_id=672250400]
+[node name="VBoxContainer" type="VBoxContainer" parent="Math Label/center" unique_id=672250400]
 layout_mode = 2
 
-[node name="HandType" type="Label" parent="Math Label/center/HBoxContainer/VBoxContainer" unique_id=301125834]
+[node name="HandType" type="Label" parent="Math Label/center/VBoxContainer" unique_id=301125834]
 modulate = Color(1, 1, 1, 0.49019608)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -146,37 +155,75 @@ text = "Hand Type:"
 label_settings = SubResource("LabelSettings_vywcl")
 horizontal_alignment = 1
 
-[node name="HandTypeBase" type="Label" parent="Math Label/center/HBoxContainer/VBoxContainer" unique_id=100196331]
+[node name="HBoxContainer" type="HBoxContainer" parent="Math Label/center" unique_id=1094779636]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Base" type="VBoxContainer" parent="Math Label/center/HBoxContainer" unique_id=562162007]
+layout_mode = 2
+
+[node name="Base" type="Label" parent="Math Label/center/HBoxContainer/Base" unique_id=1246912044]
+layout_mode = 2
+text = "BASE"
+label_settings = SubResource("LabelSettings_swtl4")
+horizontal_alignment = 1
+
+[node name="HandTypeBase" type="Label" parent="Math Label/center/HBoxContainer/Base" unique_id=100196331]
 layout_mode = 2
 theme_override_styles/normal = ExtResource("4_p1r1p")
 text = "Hand Type Base"
 label_settings = SubResource("LabelSettings_swtl4")
 horizontal_alignment = 1
 
-[node name="HandTypeMult" type="Label" parent="Math Label/center/HBoxContainer/VBoxContainer" unique_id=1416433062]
+[node name="X" type="Label" parent="Math Label/center/HBoxContainer" unique_id=265610456]
+layout_mode = 2
+size_flags_vertical = 8
+text = "X"
+label_settings = SubResource("LabelSettings_bw8x2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Mult" type="VBoxContainer" parent="Math Label/center/HBoxContainer" unique_id=193614913]
+layout_mode = 2
+
+[node name="Mult" type="Label" parent="Math Label/center/HBoxContainer/Mult" unique_id=872422517]
+layout_mode = 2
+text = "Mult"
+label_settings = SubResource("LabelSettings_vt01p")
+horizontal_alignment = 1
+
+[node name="HandTypeMult" type="Label" parent="Math Label/center/HBoxContainer/Mult" unique_id=1416433062]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_swtl4")
 text = "Hand Type Mult"
 label_settings = SubResource("LabelSettings_vt01p")
 horizontal_alignment = 1
 
-[node name="HandTypeValue" type="Label" parent="Math Label/center/HBoxContainer" unique_id=1845529967]
+[node name="=" type="Label" parent="Math Label/center/HBoxContainer" unique_id=1529105603]
 layout_mode = 2
 size_flags_vertical = 8
+text = "="
+label_settings = SubResource("LabelSettings_bw8x2")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Total" type="VBoxContainer" parent="Math Label/center/HBoxContainer" unique_id=716555270]
+layout_mode = 2
+
+[node name="Total" type="Label" parent="Math Label/center/HBoxContainer/Total" unique_id=1877683715]
+layout_mode = 2
+size_flags_vertical = 8
+text = "Total"
+label_settings = SubResource("LabelSettings_bw8x2")
+horizontal_alignment = 1
+
+[node name="HandTypeValue" type="Label" parent="Math Label/center/HBoxContainer/Total" unique_id=1845529967]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_styles/normal = SubResource("StyleBoxFlat_p1r1p")
 text = "Value"
 label_settings = SubResource("LabelSettings_bw8x2")
-
-[node name="Line" type="Label" parent="Math Label/center" unique_id=522414373]
-layout_mode = 2
-text = "--------------"
-label_settings = SubResource("LabelSettings_l3q4t")
-horizontal_alignment = 2
-
-[node name="Result" type="Label" parent="Math Label/center" unique_id=610526806]
-layout_mode = 2
-text = "Result"
-label_settings = SubResource("LabelSettings_l3q4t")
-horizontal_alignment = 2
 
 [node name="Corner Label" type="PanelContainer" parent="." unique_id=2111127552]
 layout_mode = 2
