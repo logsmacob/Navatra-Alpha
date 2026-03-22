@@ -29,6 +29,8 @@ const CALCULATION_DELAY_SECONDS := 0.5
 @export var Quota: Label
 
 var score_manager: ScoreManager
+var _preview_breakdown: Dictionary = {}
+var _show_preview_math: bool = false
 
 func _ready() -> void:
 	score_manager = ScoreManager.new()
@@ -109,10 +111,9 @@ func _update_meta_labels(state: Dictionary) -> void:
 	marble_label.text = "Marbles: %d" % int(state.get("currency", 0))
 
 func _update_preview_labels(breakdown: Dictionary) -> void:
+	_preview_breakdown = breakdown.duplicate(true)
 	if breakdown.is_empty():
-		hand_type_label.text = "Hand Type:"
-		current_hand_points_label.text = "Current Hand Points: 0"
-		current_hand_points_label_math.text = "(Base 0 + Dice 0) x Mult 0 = 0"
+		_reset_score_display()
 		return
 
 	var hand_name := str(breakdown.get("hand_name", "-"))
@@ -121,8 +122,11 @@ func _update_preview_labels(breakdown: Dictionary) -> void:
 	var mult_value := int(breakdown.get("mult", 0))
 	var final_score := int(breakdown.get("final_score", 0))
 	current_hand_points_label.text = "Current Hand Points: %d" % final_score
-	current_hand_points_label_math.text = "(Base %d + Dice %d) x Mult %d = %d" % [base_value, group_total, mult_value, final_score]
 	hand_type_label.text = "%s:" % hand_name
+	if _show_preview_math:
+		_apply_preview_math(base_value, group_total, mult_value, final_score)
+	else:
+		_clear_math_values()
 
 func _animate_played_hand(breakdown: Dictionary) -> void:
 	var hand_name := str(breakdown.get("hand_name", "-"))
@@ -153,14 +157,52 @@ func _animate_played_hand(breakdown: Dictionary) -> void:
 	Result.text = "%d" % final_score
 	current_hand_points_label.text = "Current Hand Points: %d" % final_score
 	current_hand_points_label_math.text = "(%d) x %d = %d" % [base_value + group_total, mult_value, final_score]
+	_clear_preview_math()
 
 func _reset_score_display() -> void:
-	Base.text = "%d" % 0
-	Mult.text = "%d" % 0
-	Result.text = "%d" % 0
+	_preview_breakdown.clear()
+	_show_preview_math = false
+	_clear_math_values()
+	hand_type_label.text = "Hand Type:"
+	current_hand_points_label.text = "Current Hand Points: 0"
+
+func clear_after_play_reset() -> void:
+	_show_preview_math = false
+	_clear_math_values()
 	hand_type_label.text = "Hand Type:"
 	current_hand_points_label.text = "Current Hand Points: 0"
 	current_hand_points_label_math.text = "(Base 0 + Dice 0) x Mult 0 = 0"
+
+func show_preview_math() -> void:
+	_show_preview_math = true
+	if _preview_breakdown.is_empty():
+		_clear_math_values()
+		return
+	_apply_preview_math(
+		int(_preview_breakdown.get("base", 0)),
+		int(_preview_breakdown.get("group_total", 0)),
+		int(_preview_breakdown.get("mult", 0)),
+		int(_preview_breakdown.get("final_score", 0))
+	)
+
+func hide_preview_math() -> void:
+	_show_preview_math = false
+	_clear_preview_math()
+
+func _apply_preview_math(base_value: int, group_total: int, mult_value: int, final_score: int) -> void:
+	Base.text = "%d" % (base_value + group_total)
+	Mult.text = "%d" % mult_value
+	Result.text = "%d" % final_score
+	current_hand_points_label_math.text = "(Base %d + Dice %d) x Mult %d = %d" % [base_value, group_total, mult_value, final_score]
+
+func _clear_preview_math() -> void:
+	_clear_math_values()
+	current_hand_points_label_math.text = "(Base 0 + Dice 0) x Mult 0 = 0"
+
+func _clear_math_values() -> void:
+	Base.text = "%d" % 0
+	Mult.text = "%d" % 0
+	Result.text = "%d" % 0
 
 func _build_scoring_context() -> HandScoringContext:
 	return HandScoringContext.new(GameState.hand_type_upgrades, GameState.round_score_multiplier)

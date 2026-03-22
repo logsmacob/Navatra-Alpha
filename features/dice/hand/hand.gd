@@ -13,6 +13,7 @@ class_name Hand
 @export var dice_per_hand: int = 5
 
 var is_hand_ready: bool = false
+var is_resolving_play_reset: bool = false
 
 var dice: Array[DieUI]:
 	get:
@@ -21,10 +22,15 @@ var dice: Array[DieUI]:
 signal setup_complete
 signal played_hand_ready(hand: DiceHand)
 signal played_hand_finished
+signal play_hold_started
+signal play_hold_ended
+signal reset_roll_finished
 
 func _ready() -> void:
 	update_buttons()
 	hand_dice_pool.setup(die_ui_scene, dice_per_hand, hand_container)
+	hand_button_manager.play_hold_started.connect(_on_play_hold_started)
+	hand_button_manager.play_hold_ended.connect(_on_play_hold_ended)
 	setup_complete.emit()
 	is_hand_ready = true
 
@@ -69,7 +75,16 @@ func _on_played_hand_finish() -> void:
 	played_hand_finished.emit()
 
 func _on_hand_reset_ready() -> void:
-	roll_hand()
+	is_resolving_play_reset = true
+	await roll_hand()
+	is_resolving_play_reset = false
+	reset_roll_finished.emit()
 
 func update_buttons():
 	hand_button_manager.update_button_labels()
+
+func _on_play_hold_started() -> void:
+	play_hold_started.emit()
+
+func _on_play_hold_ended() -> void:
+	play_hold_ended.emit()

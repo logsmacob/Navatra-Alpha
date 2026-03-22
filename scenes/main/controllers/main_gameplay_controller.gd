@@ -44,5 +44,13 @@ func refresh_hand_preview() -> void:
 	_score_bar.preview_hand(current_hand)
 
 func handle_roll_all_dice_requested() -> void:
+	if _hand != null and _hand.is_resolving_play_reset:
+		_score_bar.update_state()
+		return
 	refresh_hand_preview()
 	_score_bar.update_state()
+
+func handle_reset_roll_finished() -> void:
+	if _score_bar == null:
+		return
+	_score_bar.clear_after_play_reset()

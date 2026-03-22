@@ -23,6 +23,9 @@ func _ready() -> void:
 	run_end_controller.setup(hand, score_bar, hand_type_upgrades, win_screen, win_stats_label, lose_screen, lose_stats_label)
 
 	hand.played_hand_ready.connect(gameplay_controller.handle_played_hand_ready)
+	hand.reset_roll_finished.connect(gameplay_controller.handle_reset_roll_finished)
+	hand.play_hold_started.connect(score_bar.show_preview_math)
+	hand.play_hold_ended.connect(score_bar.hide_preview_math)
 	GameState.round_started.connect(_on_round_started)
 	GameState.round_completed.connect(round_flow_controller.handle_round_completed)
 	GameState.reward_phase_started.connect(round_flow_controller.handle_reward_phase_started)
