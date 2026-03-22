@@ -2,21 +2,6 @@ extends Control
 ## Score bar script: coordinates this part of the game's behavior.
 class_name ScoreBar
 
-const GENERAL_MODIFIER_ROWS := [
-	{"key": "luck", "label": "Luck"},
-	{"key": "base_marbles_per_round", "label": "Base Marbles per Round"},
-	{"key": "shop_rerolls", "label": "Re-Rolls"},
-	{"key": "shop_playable_hands", "label": "Playable Hands"},
-	{"key": "base_1_value", "label": "Base 1 Value"},
-	{"key": "base_2_value", "label": "Base 2 Value"},
-	{"key": "base_3_value", "label": "Base 3 Value"},
-	{"key": "base_4_value", "label": "Base 4 Value"},
-	{"key": "base_5_value", "label": "Base 5 Value"},
-	{"key": "base_6_value", "label": "Base 6 Value"},
-]
-
-const CALCULATION_DELAY_SECONDS := 0.5
-
 @export var round_index_label: Label
 @export var marble_label: Label
 @export var current_hand_points_label: Label
@@ -28,69 +13,74 @@ const CALCULATION_DELAY_SECONDS := 0.5
 @export var Result: Label
 @export var Quota: Label
 
-var score_manager: ScoreManager
-var _preview_breakdown: Dictionary = {}
-var _show_preview_math: bool = false
+var _meta_controller: ScoreBarMetaController
+var _math_controller: ScoreBarMathController
+var _score_controller: ScoreBarScoreController
 var _last_hands_remaining: int = 0
 
 func _ready() -> void:
-	score_manager = ScoreManager.new()
-	add_child(score_manager)
+	_meta_controller = ScoreBarMetaController.new()
+	add_child(_meta_controller)
+	_meta_controller.setup(round_index_label, marble_label, Quota, general_modifiers_label)
+
+	_math_controller = ScoreBarMathController.new()
+	add_child(_math_controller)
+	_math_controller.setup(
+		current_hand_points_label,
+		hand_type_label,
+		current_hand_points_label_math,
+		Base,
+		Mult,
+		Result
+	)
+
+	_score_controller = ScoreBarScoreController.new()
+	add_child(_score_controller)
+
 	GameState.round_started.connect(_on_round_started)
 	GameState.round_state_changed.connect(_on_round_state_changed)
 	GameState.currency_changed.connect(_on_currency_changed)
 	GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
-	_reset_score_display()
-	var initial_state := GameState.get_round_state()
-	_update_meta_labels(initial_state)
+
+	_math_controller.reset_display()
+	update_state(GameState.get_round_state())
 
 func set_scoring_context(context: HandScoringContext) -> void:
-	if score_manager == null:
+	if _score_controller == null:
 		return
-	score_manager.set_scoring_context(context)
+	_score_controller.set_scoring_context(context)
 
 func preview_hand(hand_data: DiceHand) -> void:
-	if hand_data == null or score_manager == null:
+	if hand_data == null or _score_controller == null:
 		return
 
 	set_scoring_context(_build_scoring_context())
-	score_manager.preview_hand(hand_data.to_array())
-	_update_preview_labels(score_manager.get_last_breakdown())
+	var breakdown := _score_controller.preview_hand(hand_data)
+	_math_controller.update_preview(breakdown)
 
 func can_play_previewed_hand() -> bool:
-	return score_manager != null and score_manager.can_play_hand()
+	return _score_controller != null and _score_controller.can_play_previewed_hand()
 
 func play_previewed_hand() -> Dictionary:
-	if score_manager == null or not score_manager.can_play_hand():
+	if _score_controller == null or not _score_controller.can_play_previewed_hand():
 		return {
 			"played": false,
 			"hand_name": "Unknown",
 			"applied_score": 0,
 		}
 
-	var breakdown := score_manager.get_last_breakdown()
-	await _animate_played_hand(breakdown)
-
-	score_manager.play_hand()
-	var played_hand_name := str(breakdown.get("hand_name", "Unknown"))
-	var applied_score := score_manager.commit_played_hand()
-
-	return {
-		"played": true,
-		"hand_name": played_hand_name,
-		"applied_score": applied_score,
-	}
+	var breakdown := _score_controller.get_last_breakdown()
+	await _math_controller.animate_played_hand(get_tree(), breakdown)
+	return _score_controller.commit_played_hand()
 
 func update_state(state: Dictionary = {}) -> void:
 	if state.is_empty():
 		state = GameState.get_round_state()
-
-	_update_meta_labels(state)
-	general_modifiers_label.text = _build_general_modifier_text(GameState.get_general_modifiers())
+	_meta_controller.update_state(state, GameState.get_general_modifiers())
 
 func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -> void:
 	_last_hands_remaining = hands
-	_update_meta_labels({
+	update_state({
 		"round_index": round_index,
 		"quota_remaining": quota,
 		"hands_remaining": hands,
@@ -101,7 +91,7 @@ func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -
 func _on_round_state_changed(state: Dictionary) -> void:
 	var hands_remaining := int(state.get("hands_remaining", _last_hands_remaining))
 	if hands_remaining < _last_hands_remaining:
-		_reset_score_display()
+		_math_controller.reset_display()
 	_last_hands_remaining = hands_remaining
 	update_state(state)
 
@@ -111,99 +101,17 @@ func _on_currency_changed(_amount: int) -> void:
 func _on_general_modifiers_changed(_modifiers: Dictionary) -> void:
 	update_state()
 
-func _update_meta_labels(state: Dictionary) -> void:
-	round_index_label.text = "Round %d/%d" % [int(state.get("round_index", 0)), GameState.MAX_ROUNDS]
-	Quota.text = "%d" % int(state.get("quota_remaining", 0))
-	marble_label.text = "Marbles: %d" % int(state.get("currency", 0))
-
-func _update_preview_labels(breakdown: Dictionary) -> void:
-	_preview_breakdown = breakdown.duplicate(true)
-	if breakdown.is_empty():
-		return
-
-	var hand_name := str(breakdown.get("hand_name", "-"))
-	var base_value := int(breakdown.get("base", 0))
-	var group_total := int(breakdown.get("group_total", 0))
-	var mult_value := int(breakdown.get("mult", 0))
-	var final_score := int(breakdown.get("final_score", 0))
-	current_hand_points_label.text = "Current Hand Points: %d" % final_score
-	hand_type_label.text = "%s:" % hand_name
-	if _show_preview_math:
-		_apply_preview_math(base_value, group_total, mult_value, final_score)
-
-func _animate_played_hand(breakdown: Dictionary) -> void:
-	var hand_name := str(breakdown.get("hand_name", "-"))
-	var base_value := int(breakdown.get("base", 0))
-	var group_total := int(breakdown.get("group_total", 0))
-	var mult_value := int(breakdown.get("mult", 0))
-	var final_score := int(breakdown.get("final_score", 0))
-
-	hand_type_label.text = "%s:" % hand_name
-	Base.text = "%d" % base_value
-	current_hand_points_label_math.text = "Base = %d" % base_value
-	await get_tree().create_timer(CALCULATION_DELAY_SECONDS).timeout
-
-	Mult.text = "%d" % mult_value
-	current_hand_points_label_math.text = "Base %d | Mult = %d" % [base_value, mult_value]
-	await get_tree().create_timer(CALCULATION_DELAY_SECONDS).timeout
-
-	Base.text = "%d" % (base_value + group_total)
-	current_hand_points_label_math.text = "Base %d + Dice %d = %d" % [base_value, group_total, base_value + group_total]
-	await get_tree().create_timer(CALCULATION_DELAY_SECONDS).timeout
-
-	Result.text = "%d" % final_score
-	current_hand_points_label.text = "Current Hand Points: %d" % final_score
-	current_hand_points_label_math.text = "(%d) x %d = %d" % [base_value + group_total, mult_value, final_score]
-
-func _reset_score_display() -> void:
-	_preview_breakdown.clear()
-	_show_preview_math = false
-	_zero_math_display()
-	hand_type_label.text = "Hand Type:"
-	current_hand_points_label.text = "Current Hand Points: 0"
-
 func zero_math_display() -> void:
-	_show_preview_math = false
-	_zero_math_display()
-
-func _zero_math_display() -> void:
-	Base.text = "%d" % 0
-	Mult.text = "%d" % 0
-	Result.text = "%d" % 0
-	current_hand_points_label_math.text = "(Base 0 + Dice 0) x Mult 0 = 0"
+	_math_controller.zero_math_display()
 
 func clear_after_play_reset() -> void:
-	_show_preview_math = false
-	if _preview_breakdown.is_empty():
-		return
-	_update_preview_labels(_preview_breakdown)
+	_math_controller.clear_after_play_reset()
 
 func show_preview_math() -> void:
-	_show_preview_math = true
-	if _preview_breakdown.is_empty():
-		return
-	_apply_preview_math(
-		int(_preview_breakdown.get("base", 0)),
-		int(_preview_breakdown.get("group_total", 0)),
-		int(_preview_breakdown.get("mult", 0)),
-		int(_preview_breakdown.get("final_score", 0))
-	)
+	_math_controller.show_preview_math()
 
 func hide_preview_math() -> void:
-	_show_preview_math = false
-
-func _apply_preview_math(base_value: int, group_total: int, mult_value: int, final_score: int) -> void:
-	Base.text = "%d" % (base_value + group_total)
-	Mult.text = "%d" % mult_value
-	Result.text = "%d" % final_score
-	current_hand_points_label_math.text = "(Base %d + Dice %d) x Mult %d = %d" % [base_value, group_total, mult_value, final_score]
-
+	_math_controller.hide_preview_math()
 
 func _build_scoring_context() -> HandScoringContext:
 	return HandScoringContext.new(GameState.hand_type_upgrades, GameState.round_score_multiplier)
-
-func _build_general_modifier_text(modifiers: Dictionary) -> String:
-	var lines: Array[String] = ["General Modifiers:"]
-	for row in GENERAL_MODIFIER_ROWS:
-		lines.append("- %s: %d" % [str(row.label), int(modifiers.get(row.key, 0))])
-	return "\n".join(lines)
