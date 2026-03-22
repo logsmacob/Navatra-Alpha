@@ -260,17 +260,17 @@ autowrap_mode = 3
 
 [node name="MetaController" type="Node" parent="."]
 script = ExtResource("5_meta")
-round_index_label = NodePath("../Corner Label/left column/RoundIndex")
-marble_label = NodePath("../Corner Label/left column/Marbles")
-quota_label = NodePath("../Math Label/center/Quota Value")
-general_modifiers_label = NodePath("../VBoxContainer/GeneralModifiers")
+round_index_label_path = NodePath("../Corner Label/left column/RoundIndex")
+marble_label_path = NodePath("../Corner Label/left column/Marbles")
+quota_label_path = NodePath("../Math Label/center/Quota Value")
+general_modifiers_label_path = NodePath("../VBoxContainer/GeneralModifiers")
 
 [node name="MathController" type="Node" parent="."]
 script = ExtResource("6_math")
-hand_type_label = NodePath("../Math Label/center/VBoxContainer/HandType")
-base_label = NodePath("../Math Label/center/HBoxContainer/Base/HandTypeBase")
-mult_label = NodePath("../Math Label/center/HBoxContainer/Mult/HandTypeMult")
-result_label = NodePath("../Math Label/center/HBoxContainer/Total/HandTypeValue")
+hand_type_label_path = NodePath("../Math Label/center/VBoxContainer/HandType")
+base_label_path = NodePath("../Math Label/center/HBoxContainer/Base/HandTypeBase")
+mult_label_path = NodePath("../Math Label/center/HBoxContainer/Mult/HandTypeMult")
+result_label_path = NodePath("../Math Label/center/HBoxContainer/Total/HandTypeValue")
 
 [node name="ScoreController" type="Node" parent="."]
 script = ExtResource("7_score")

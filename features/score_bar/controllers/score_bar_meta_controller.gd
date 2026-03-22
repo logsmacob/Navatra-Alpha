@@ -14,23 +14,35 @@ const GENERAL_MODIFIER_ROWS := [
 	{"key": "base_6_value", "label": "Base 6 Value"},
 ]
 
-@export var round_index_label: Label
-@export var marble_label: Label
-@export var quota_label: Label
-@export var general_modifiers_label: Label
+@export_node_path("Label") var round_index_label_path: NodePath
+@export_node_path("Label") var marble_label_path: NodePath
+@export_node_path("Label") var quota_label_path: NodePath
+@export_node_path("Label") var general_modifiers_label_path: NodePath
 
 func update_state(state: Dictionary, general_modifiers: Dictionary) -> void:
-	if round_index_label != null:
-		round_index_label.text = "Round %d/%d" % [int(state.get("round_index", 0)), GameState.MAX_ROUNDS]
-	if quota_label != null:
-		quota_label.text = "%d" % int(state.get("quota_remaining", 0))
-	if marble_label != null:
-		marble_label.text = "Marbles: %d" % int(state.get("currency", 0))
-	if general_modifiers_label != null:
-		general_modifiers_label.text = _build_general_modifier_text(general_modifiers)
+	_set_label_text(_get_round_index_label(), "Round %d/%d" % [int(state.get("round_index", 0)), GameState.MAX_ROUNDS])
+	_set_label_text(_get_quota_label(), "%d" % int(state.get("quota_remaining", 0)))
+	_set_label_text(_get_marble_label(), "Marbles: %d" % int(state.get("currency", 0)))
+	_set_label_text(_get_general_modifiers_label(), _build_general_modifier_text(general_modifiers))
 
 func _build_general_modifier_text(modifiers: Dictionary) -> String:
 	var lines: Array[String] = ["General Modifiers:"]
 	for row in GENERAL_MODIFIER_ROWS:
 		lines.append("- %s: %d" % [str(row.label), int(modifiers.get(row.key, 0))])
 	return "\n".join(lines)
+
+func _get_round_index_label() -> Label:
+	return get_node_or_null(round_index_label_path) as Label
+
+func _get_marble_label() -> Label:
+	return get_node_or_null(marble_label_path) as Label
+
+func _get_quota_label() -> Label:
+	return get_node_or_null(quota_label_path) as Label
+
+func _get_general_modifiers_label() -> Label:
+	return get_node_or_null(general_modifiers_label_path) as Label
+
+func _set_label_text(label: Label, value: String) -> void:
+	if label != null:
+		label.text = value
