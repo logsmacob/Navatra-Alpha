@@ -11,6 +11,7 @@ func setup(hand: Hand, score_bar: ScoreBar) -> void:
 	_score_bar = score_bar
 
 func handle_played_hand_ready(hand_data: DiceHand) -> void:
+	_score_bar.zero_math_display()
 	_score_bar.preview_hand(hand_data)
 	var scene_tree := get_tree()
 	if scene_tree == null:

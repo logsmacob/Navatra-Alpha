@@ -158,11 +158,18 @@ func _animate_played_hand(breakdown: Dictionary) -> void:
 func _reset_score_display() -> void:
 	_preview_breakdown.clear()
 	_show_preview_math = false
+	_zero_math_display()
+	hand_type_label.text = "Hand Type:"
+	current_hand_points_label.text = "Current Hand Points: 0"
+
+func zero_math_display() -> void:
+	_show_preview_math = false
+	_zero_math_display()
+
+func _zero_math_display() -> void:
 	Base.text = "%d" % 0
 	Mult.text = "%d" % 0
 	Result.text = "%d" % 0
-	hand_type_label.text = "Hand Type:"
-	current_hand_points_label.text = "Current Hand Points: 0"
 	current_hand_points_label_math.text = "(Base 0 + Dice 0) x Mult 0 = 0"
 
 func clear_after_play_reset() -> void:
