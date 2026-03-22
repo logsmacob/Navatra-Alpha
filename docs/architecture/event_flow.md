@@ -16,7 +16,8 @@ Play button pressed
 -> Hand emits played_hand_finished
 -> HandAnimator resets dice positions
 -> Hand receives hand_reset_ready
--> Score Bar Resets Base, Mult, Result to Zero
+-> Hand emits play_reset_started
+-> MainGameplayController zeroes Score Bar Base, Mult, Result
 -> Hand rolls non-held dice
 -> EventBus emits roll_all_dice_requested
 -> MainGameplayController refreshes preview/state
@@ -67,8 +68,9 @@ Round cleared in GameState
 | 5 | `MainGameplayController` | direct call `Hand.complete_play_resolution()` | `Hand` | Emits `played_hand_finished` to start the reset phase. |
 | 6 | `Hand` | `played_hand_finished` | `HandAnimator._on_hand_played_hand_finished()` | Dice return to their resting positions. |
 | 7 | `HandAnimator` | `hand_reset_ready` | `Hand._on_hand_reset_ready()` | Starts the automatic post-play reroll/reset. |
-| 8 | `Hand` | `EventBus.roll_all_dice_requested` | `MainGameplayController.handle_roll_all_dice_requested()` | Refreshes state during the reset roll. |
-| 9 | `Hand` | `reset_roll_finished` | `MainGameplayController.handle_reset_roll_finished()` | Clears score-bar preview leftovers from the played hand. |
+| 8 | `Hand` | `play_reset_started` | `MainGameplayController.handle_play_reset_started()` | Zeroes the score-bar Base/Mult/Result columns before the automatic reroll starts. |
+| 9 | `Hand` | `EventBus.roll_all_dice_requested` | `MainGameplayController.handle_roll_all_dice_requested()` | Refreshes state during the reset roll. |
+| 10 | `Hand` | `reset_roll_finished` | `MainGameplayController.handle_reset_roll_finished()` | Clears score-bar preview leftovers from the played hand. |
 
 **Important note:** this is the longest signal chain in the current project. It is still manageable, but it crosses several nodes (`Hand -> MainGameplayController -> GameState -> Hand -> HandAnimator -> Hand -> MainGameplayController`). Keep it documented whenever you extend it.
 
@@ -135,6 +137,7 @@ That coupling is acceptable because they belong to the same screen flow, but it 
 Several UI refreshes depend on exact timing:
 
 - `GameState.process_played_hand()` must happen before the final UI refresh.
+- `play_reset_started` must happen before the reset roll preview/state refresh so the score-bar math visibly clears first.
 - `reset_roll_finished` must happen after the reset roll.
 - `ScoreBar` preview updates behave differently during `is_resolving_play_reset`.
 

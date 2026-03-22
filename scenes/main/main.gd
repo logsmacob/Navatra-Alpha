@@ -29,6 +29,7 @@ func _ready() -> void:
 
 	# Hand -> gameplay/score-bar flow.
 	hand.played_hand_ready.connect(gameplay_controller.handle_played_hand_ready)
+	hand.play_reset_started.connect(gameplay_controller.handle_play_reset_started)
 	hand.reset_roll_finished.connect(gameplay_controller.handle_reset_roll_finished)
 	hand.play_hold_started.connect(score_bar.show_preview_math)
 	hand.play_hold_ended.connect(score_bar.hide_preview_math)
