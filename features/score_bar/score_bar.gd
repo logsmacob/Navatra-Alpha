@@ -4,9 +4,7 @@ class_name ScoreBar
 
 @export var round_index_label: Label
 @export var marble_label: Label
-@export var current_hand_points_label: Label
 @export var hand_type_label: Label
-@export var current_hand_points_label_math: Label
 @export var general_modifiers_label: Label
 @export var Base: Label
 @export var Mult: Label
@@ -26,9 +24,7 @@ func _ready() -> void:
 	_math_controller = ScoreBarMathController.new()
 	add_child(_math_controller)
 	_math_controller.setup(
-		current_hand_points_label,
 		hand_type_label,
-		current_hand_points_label_math,
 		Base,
 		Mult,
 		Result
