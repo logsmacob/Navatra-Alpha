@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://7exxejlvvrgq" path="res://features/dice/hand/hand_currency_bonus_service.gd" id="6_currency_bonus"]
 [ext_resource type="Script" uid="uid://do820f0ijjot7" path="res://features/dice/hand/hand_button_manager.gd" id="7_pyojo"]
 [ext_resource type="Texture2D" uid="uid://da6286dj3m538" path="res://assets/UI/Buttons/Texture/Light Button.png" id="8_ttxp3"]
+[ext_resource type="Script" uid="uid://cax8kir2bmkvu" path="res://features/dice/hand/hand_type_effect.gd" id="9_g5tl8"]
 [ext_resource type="FontFile" uid="uid://bfmc8ldjpblsv" path="res://assets/fonts/pixeloid-font/PixeloidSansBold-1jpBg.ttf" id="9_oxaye"]
 [ext_resource type="Texture2D" uid="uid://dsvnbe4nbpocq" path="res://assets/UI/Buttons/Texture/Dark Button.png" id="9_pyojo"]
 
@@ -15,10 +16,6 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pyojo"]
 content_margin_bottom = 100.0
-
-[sub_resource type="LabelSettings" id="LabelSettings_pyojo"]
-font = ExtResource("9_oxaye")
-font_size = 64
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oslr0"]
 content_margin_left = 8.0
@@ -72,14 +69,18 @@ script = ExtResource("7_pyojo")
 play_hand = NodePath("../HBoxContainer/ButtonContainer/play")
 re_roll = NodePath("../HBoxContainer/ButtonContainer/roll")
 
-[node name="Hand Type" type="Label" parent="." unique_id=59646504]
-visible = false
+[node name="Hand Type" type="RichTextLabel" parent="." unique_id=1241228263]
 z_index = 1
+custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("9_oxaye")
+theme_override_font_sizes/normal_font_size = 64
 theme_override_styles/normal = SubResource("StyleBoxEmpty_pyojo")
 text = "Hand Type"
-label_settings = SubResource("LabelSettings_pyojo")
+fit_content = true
 horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("9_g5tl8")
 
 [node name="HBoxContainer" type="VBoxContainer" parent="." unique_id=2047717781]
 layout_mode = 2
@@ -158,7 +159,6 @@ label_settings = SubResource("LabelSettings_g5tl8")
 horizontal_alignment = 1
 
 [connection signal="played_hand_finished" from="." to="HandAnimator" method="_on_hand_played_hand_finished"]
-[connection signal="setup_complete" from="." to="HandAnimator" method="_on_hand_setup_complete"]
 [connection signal="hand_reset_ready" from="HandAnimator" to="." method="_on_hand_reset_ready"]
 [connection signal="pressed" from="HBoxContainer/ButtonContainer/play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="HBoxContainer/ButtonContainer/roll" to="." method="_on_roll_pressed"]

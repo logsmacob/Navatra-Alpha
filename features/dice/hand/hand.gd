@@ -8,7 +8,7 @@ class_name Hand
 @onready var hand_dice_pool: HandDicePool = $HandDicePool
 @onready var hand_currency_bonus_service: HandCurrencyBonusService = $HandCurrencyBonusService
 @onready var hand_button_manager: HandButtonManager = $"Button Manager"
-@onready var hand_type_label: Label = $"Hand Type"
+@onready var hand_type_label: RichTextLabel = $"Hand Type"
 
 const DEFAULT_HAND_TYPE_LABEL := "Hand Type"
 
@@ -27,8 +27,6 @@ var dice: Array[DieUI]:
 	get:
 		return hand_dice_pool.get_dice()
 
-## Emitted once local hand setup is complete and child systems can safely initialize.
-signal setup_complete
 ## Emitted after the play animation finishes and scoring data is ready for gameplay resolution.
 signal played_hand_ready(hand: DiceHand)
 ## Emitted when gameplay resolution is done and the hand can start its reset animation.
@@ -47,7 +45,6 @@ func _ready() -> void:
 	hand_dice_pool.setup(die_ui_scene, dice_per_hand, hand_container)
 	hand_button_manager.play_hold_started.connect(_on_play_hold_started)
 	hand_button_manager.play_hold_ended.connect(_on_play_hold_ended)
-	setup_complete.emit()
 	is_hand_ready = true
 
 ## Consumes a reroll and starts the hand roll flow.
@@ -136,7 +133,6 @@ func _on_play_hold_ended() -> void:
 func set_hand_type_label(value: String) -> void:
 	if hand_type_label == null:
 		return
-	hand_type_label.show()
 	hand_type_label.text = value
 
 func reset_hand_type_label() -> void:
