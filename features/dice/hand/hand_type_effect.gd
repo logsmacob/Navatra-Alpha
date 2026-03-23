@@ -34,23 +34,23 @@ func _draw():
 	if font == null or rendered_text.is_empty():
 		return
 
-	var total_width := font.get_string_size(rendered_text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
-	var x := (size.x - total_width) * 0.5
-	var baseline_y := (size.y + font_size) * 0.5
+	var total_width: float = font.get_string_size(rendered_text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
+	var x: float = (size.x - total_width) * 0.5
+	var baseline_y: float = (size.y + float(font_size)) * 0.5
 
 	for i in range(visible_characters):
-		var char = rendered_text[i]
+		var glyph := rendered_text[i]
 
 		# Wave offset
 		var y_offset = sin(time * wave_speed + i * 0.5) * wave_height
 
 		# Scale effect
-		var scale = 1.0 + sin(time * wave_speed + i) * scale_amount
+		var glyph_scale := 1.0 + sin(time * wave_speed + i) * scale_amount
 
-		var char_size = font.get_string_size(char, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+		var char_size: Vector2 = font.get_string_size(glyph, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 
-		draw_set_transform(Vector2(x, baseline_y + y_offset), 0, Vector2(scale, scale))
-		draw_string(font, Vector2.ZERO, char, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+		draw_set_transform(Vector2(x, baseline_y + y_offset), 0, Vector2(glyph_scale, glyph_scale))
+		draw_string(font, Vector2.ZERO, glyph, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
 
 		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 
