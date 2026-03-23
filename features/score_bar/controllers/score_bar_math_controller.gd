@@ -21,7 +21,7 @@ func update_preview(breakdown: Dictionary) -> void:
 	var mult_value := int(breakdown.get("mult", 0))
 	var final_score := int(breakdown.get("final_score", 0))
 	if main_score != null:
-		main_score.set_hand_type("%s:" % hand_name)
+		main_score.set_hand_type(hand_name)
 	if _show_preview_math:
 		_apply_preview_math(base_value, group_total, mult_value, final_score)
 
@@ -34,23 +34,27 @@ func animate_played_hand(tree: SceneTree, breakdown: Dictionary) -> void:
 
 	_show_preview_math = false
 	if main_score != null:
-		main_score.set_hand_type("%s:" % hand_name)
+		main_score.set_hand_type(hand_name)
 		main_score.zero_math_display()
 	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
 
 	if main_score != null:
+		main_score.set_hand_type_highlight_base()
 		main_score.set_base(base_value)
 	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
 
 	if main_score != null:
+		main_score.set_hand_type_highlight_mult()
 		main_score.set_mult(mult_value)
 	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
 
 	if main_score != null:
+		main_score.set_hand_type_highlight_base()
 		main_score.set_base(base_value + group_total)
 	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
 
 	if main_score != null:
+		main_score.set_hand_type_highlight_default()
 		main_score.set_result(final_score)
 
 func animate_quota_update(tree: SceneTree, projected_quota: int) -> void:

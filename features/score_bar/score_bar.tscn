@@ -131,14 +131,15 @@ main_score = NodePath("../Main Score Label")
 [node name="ScoreController" type="Node" parent="." unique_id=1081461992]
 script = ExtResource("7_score")
 
-[node name="Main Score Label" type="PanelContainer" parent="." unique_id=49875857 node_paths=PackedStringArray("_quota_label", "_hand_type_label", "_base_label", "_mult_label", "_result_label")]
+[node name="Main Score Label" type="PanelContainer" parent="." unique_id=49875857 node_paths=PackedStringArray("_quota_label", "_hand_type_label", "_hand_type_value_label", "_base_label", "_mult_label", "_result_label")]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_vywcl")
 script = ExtResource("8_main_score")
 _quota_label = NodePath("center/Quota Value")
-_hand_type_label = NodePath("center/VBoxContainer/HandType")
+_hand_type_label = NodePath("center/VBoxContainer/HandTypeRow/HandType")
+_hand_type_value_label = NodePath("center/VBoxContainer/HandTypeRow/HandTypeValue")
 _base_label = NodePath("center/HBoxContainer/Base/HandTypeBase")
 _mult_label = NodePath("center/HBoxContainer/Mult/HandTypeMult")
 _result_label = NodePath("center/HBoxContainer/Total/HandTypeValue")
@@ -164,11 +165,22 @@ horizontal_alignment = 1
 [node name="VBoxContainer" type="VBoxContainer" parent="Main Score Label/center" unique_id=672250400]
 layout_mode = 2
 
-[node name="HandType" type="Label" parent="Main Score Label/center/VBoxContainer" unique_id=301125834]
-modulate = Color(1, 1, 1, 0.49019608)
+[node name="HandTypeRow" type="HBoxContainer" parent="Main Score Label/center/VBoxContainer" unique_id=179001001]
 layout_mode = 2
 size_flags_horizontal = 4
+alignment = 1
+
+[node name="HandType" type="Label" parent="Main Score Label/center/VBoxContainer/HandTypeRow" unique_id=301125834]
+modulate = Color(1, 1, 1, 0.49019608)
+layout_mode = 2
 text = "Hand Type:"
+label_settings = SubResource("LabelSettings_vywcl")
+horizontal_alignment = 1
+
+[node name="HandTypeValue" type="Label" parent="Main Score Label/center/VBoxContainer/HandTypeRow" unique_id=179001002]
+modulate = Color(1, 1, 1, 0.49019608)
+layout_mode = 2
+text = "-"
 label_settings = SubResource("LabelSettings_vywcl")
 horizontal_alignment = 1
 
