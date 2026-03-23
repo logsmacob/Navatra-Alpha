@@ -4,10 +4,10 @@ extends Node
 class_name HandAnimator
 
 const SCORE_STEP_DURATION_SECONDS := 0.5
-const BASE_STEP_MODULATE := Color("8be9ff")
+const BASE_STEP_MODULATE := Color("00a2ff")
 const MULT_STEP_MODULATE := Color("ff5cf0")
 const DEFAULT_STEP_MODULATE := Color(1, 1, 1, 1)
-const MODULATE_TWEEN_DURATION_SECONDS := 0.15
+const MODULATE_TWEEN_DURATION_SECONDS := 0.05
 
 @onready var hand = $".."
 

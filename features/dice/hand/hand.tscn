@@ -13,6 +13,13 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7n5xe"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pyojo"]
+content_margin_bottom = 100.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_pyojo"]
+font = ExtResource("9_oxaye")
+font_size = 64
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oslr0"]
 content_margin_left = 8.0
 content_margin_top = 8.0
@@ -34,8 +41,14 @@ font = ExtResource("9_oxaye")
 font_size = 28
 
 [node name="Hand" type="PanelContainer" unique_id=649644491]
-offset_right = 612.0
-offset_bottom = 148.0
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -306.0
+offset_right = 306.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxEmpty_7n5xe")
@@ -59,10 +72,18 @@ script = ExtResource("7_pyojo")
 play_hand = NodePath("../HBoxContainer/ButtonContainer/play")
 re_roll = NodePath("../HBoxContainer/ButtonContainer/roll")
 
+[node name="Hand Type" type="Label" parent="." unique_id=59646504]
+z_index = 1
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_pyojo")
+text = "Hand Type"
+label_settings = SubResource("LabelSettings_pyojo")
+horizontal_alignment = 1
+
 [node name="HBoxContainer" type="VBoxContainer" parent="." unique_id=2047717781]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_vertical = 8
 theme_override_constants/separation = 12
 alignment = 1
 

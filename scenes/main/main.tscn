@@ -71,7 +71,7 @@ theme_override_constants/margin_bottom = 25
 [node name="Hand" parent="MarginContainer" unique_id=703883539 instance=ExtResource("2_0wfyh")]
 layout_mode = 2
 size_flags_horizontal = 6
-size_flags_vertical = 8
+size_flags_vertical = 1
 
 [node name="ScoreBar" parent="MarginContainer" unique_id=1425863518 instance=ExtResource("4_tbgi4")]
 layout_mode = 2
