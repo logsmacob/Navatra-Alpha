@@ -50,12 +50,12 @@ func refresh_hand_preview() -> void:
 	_score_bar.preview_hand(current_hand)
 
 ## Handles the global reroll refresh signal emitted after [Hand.roll_hand].
-## Special case: when the hand is already in its post-play reset, only refresh round state UI.
+## Special case: during the post-play reset we still refresh preview data so the main hand label
+## stays in sync with the newly rolled dice, while the math columns remain hidden until the reset completes.
 func handle_roll_all_dice_requested() -> void:
-	if _hand != null and _hand.is_resolving_play_reset:
-		_score_bar.update_state()
-		return
 	refresh_hand_preview()
+	if _score_bar == null:
+		return
 	_score_bar.update_state()
 
 ## Clears the played-hand math columns as soon as the post-play reset phase begins.
