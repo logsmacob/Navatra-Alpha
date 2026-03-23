@@ -42,8 +42,8 @@ func play_hand(target_dice: Array[DieUI]) -> void:
 func animate_played_dice_score_colors(target_dice: Array[DieUI]) -> void:
 	if target_dice.is_empty():
 		return
+	hand.hand_type_label._show()
 	await get_tree().create_timer(SCORE_STEP_DURATION_SECONDS).timeout
-	hand.hand_type_label.show()
 	set_hand_type_label_color(BASE_STEP_MODULATE)
 	_tween_dice_modulate(target_dice, BASE_STEP_MODULATE)
 	await get_tree().create_timer(SCORE_STEP_DURATION_SECONDS).timeout

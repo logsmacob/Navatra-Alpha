@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://do820f0ijjot7" path="res://features/dice/hand/hand_button_manager.gd" id="7_pyojo"]
 [ext_resource type="Texture2D" uid="uid://da6286dj3m538" path="res://assets/UI/Buttons/Texture/Light Button.png" id="8_ttxp3"]
 [ext_resource type="Script" uid="uid://cax8kir2bmkvu" path="res://features/dice/hand/hand_type_effect.gd" id="9_g5tl8"]
+[ext_resource type="Script" uid="uid://b5v4u6ekodn8p" path="res://core/services/wave_effect.gd" id="9_hnj3f"]
 [ext_resource type="FontFile" uid="uid://bfmc8ldjpblsv" path="res://assets/fonts/pixeloid-font/PixeloidSansBold-1jpBg.ttf" id="9_oxaye"]
 [ext_resource type="Texture2D" uid="uid://dsvnbe4nbpocq" path="res://assets/UI/Buttons/Texture/Dark Button.png" id="9_pyojo"]
 
@@ -16,6 +17,10 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pyojo"]
 content_margin_bottom = 100.0
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_mh44k"]
+script = ExtResource("9_hnj3f")
+metadata/_custom_type_script = "uid://b5v4u6ekodn8p"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oslr0"]
 content_margin_left = 8.0
@@ -70,17 +75,22 @@ play_hand = NodePath("../HBoxContainer/ButtonContainer/play")
 re_roll = NodePath("../HBoxContainer/ButtonContainer/roll")
 
 [node name="Hand Type" type="RichTextLabel" parent="." unique_id=1241228263]
+visible = false
 z_index = 1
 custom_minimum_size = Vector2(0, 150)
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("9_oxaye")
 theme_override_font_sizes/normal_font_size = 64
 theme_override_styles/normal = SubResource("StyleBoxEmpty_pyojo")
+bbcode_enabled = true
 text = "Hand Type"
-fit_content = true
+scroll_active = false
+autowrap_mode = 0
 horizontal_alignment = 1
 vertical_alignment = 1
+custom_effects = [SubResource("RichTextEffect_mh44k")]
 script = ExtResource("9_g5tl8")
+reveal_speed = 60.0
 
 [node name="HBoxContainer" type="VBoxContainer" parent="." unique_id=2047717781]
 layout_mode = 2
