@@ -121,17 +121,17 @@ score_controller = NodePath("ScoreController")
 [node name="MetaController" type="Node" parent="." unique_id=1373326188 node_paths=PackedStringArray("corner_label", "main_score", "general_modifiers_label_path")]
 script = ExtResource("5_meta")
 corner_label = NodePath("../Corner Label")
-main_score = NodePath("../Math Label")
+main_score = NodePath("../Main Score Label")
 general_modifiers_label_path = NodePath("../VBoxContainer/GeneralModifiers")
 
 [node name="MathController" type="Node" parent="." unique_id=819144153 node_paths=PackedStringArray("main_score")]
 script = ExtResource("6_math")
-main_score = NodePath("../Math Label")
+main_score = NodePath("../Main Score Label")
 
 [node name="ScoreController" type="Node" parent="." unique_id=1081461992]
 script = ExtResource("7_score")
 
-[node name="Math Label" type="PanelContainer" parent="." unique_id=49875857 node_paths=PackedStringArray("_quota_label", "_hand_type_label", "_base_label", "_mult_label", "_result_label")]
+[node name="Main Score Label" type="PanelContainer" parent="." unique_id=49875857 node_paths=PackedStringArray("_quota_label", "_hand_type_label", "_base_label", "_mult_label", "_result_label")]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
@@ -143,28 +143,28 @@ _base_label = NodePath("center/HBoxContainer/Base/HandTypeBase")
 _mult_label = NodePath("center/HBoxContainer/Mult/HandTypeMult")
 _result_label = NodePath("center/HBoxContainer/Total/HandTypeValue")
 
-[node name="center" type="VBoxContainer" parent="Math Label" unique_id=2012008888]
+[node name="center" type="VBoxContainer" parent="Main Score Label" unique_id=2012008888]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 
-[node name="Quota title" type="Label" parent="Math Label/center" unique_id=1981677644]
+[node name="Quota title" type="Label" parent="Main Score Label/center" unique_id=1981677644]
 modulate = Color(1, 1, 1, 0.49019608)
 layout_mode = 2
 text = "Quota:"
 label_settings = SubResource("LabelSettings_p1r1p")
 horizontal_alignment = 1
 
-[node name="Quota Value" type="Label" parent="Math Label/center" unique_id=598673048]
+[node name="Quota Value" type="Label" parent="Main Score Label/center" unique_id=598673048]
 layout_mode = 2
 text = "Quota"
 label_settings = SubResource("LabelSettings_l3q4t")
 horizontal_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Math Label/center" unique_id=672250400]
+[node name="VBoxContainer" type="VBoxContainer" parent="Main Score Label/center" unique_id=672250400]
 layout_mode = 2
 
-[node name="HandType" type="Label" parent="Math Label/center/VBoxContainer" unique_id=301125834]
+[node name="HandType" type="Label" parent="Main Score Label/center/VBoxContainer" unique_id=301125834]
 modulate = Color(1, 1, 1, 0.49019608)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -172,28 +172,28 @@ text = "Hand Type:"
 label_settings = SubResource("LabelSettings_vywcl")
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Math Label/center" unique_id=1094779636]
+[node name="HBoxContainer" type="HBoxContainer" parent="Main Score Label/center" unique_id=1094779636]
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="Base" type="VBoxContainer" parent="Math Label/center/HBoxContainer" unique_id=562162007]
+[node name="Base" type="VBoxContainer" parent="Main Score Label/center/HBoxContainer" unique_id=562162007]
 layout_mode = 2
 
-[node name="Base" type="Label" parent="Math Label/center/HBoxContainer/Base" unique_id=1246912044]
+[node name="Base" type="Label" parent="Main Score Label/center/HBoxContainer/Base" unique_id=1246912044]
 layout_mode = 2
 text = "BASE"
 label_settings = SubResource("LabelSettings_swtl4")
 horizontal_alignment = 1
 
-[node name="HandTypeBase" type="Label" parent="Math Label/center/HBoxContainer/Base" unique_id=100196331]
+[node name="HandTypeBase" type="Label" parent="Main Score Label/center/HBoxContainer/Base" unique_id=100196331]
 layout_mode = 2
 theme_override_styles/normal = ExtResource("4_p1r1p")
 text = "Hand Type Base"
 label_settings = SubResource("LabelSettings_swtl4")
 horizontal_alignment = 1
 
-[node name="X" type="Label" parent="Math Label/center/HBoxContainer" unique_id=265610456]
+[node name="X" type="Label" parent="Main Score Label/center/HBoxContainer" unique_id=265610456]
 layout_mode = 2
 size_flags_vertical = 8
 text = "X"
@@ -201,23 +201,23 @@ label_settings = SubResource("LabelSettings_bw8x2")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Mult" type="VBoxContainer" parent="Math Label/center/HBoxContainer" unique_id=193614913]
+[node name="Mult" type="VBoxContainer" parent="Main Score Label/center/HBoxContainer" unique_id=193614913]
 layout_mode = 2
 
-[node name="Mult" type="Label" parent="Math Label/center/HBoxContainer/Mult" unique_id=872422517]
+[node name="Mult" type="Label" parent="Main Score Label/center/HBoxContainer/Mult" unique_id=872422517]
 layout_mode = 2
 text = "Mult"
 label_settings = SubResource("LabelSettings_vt01p")
 horizontal_alignment = 1
 
-[node name="HandTypeMult" type="Label" parent="Math Label/center/HBoxContainer/Mult" unique_id=1416433062]
+[node name="HandTypeMult" type="Label" parent="Main Score Label/center/HBoxContainer/Mult" unique_id=1416433062]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_swtl4")
 text = "Hand Type Mult"
 label_settings = SubResource("LabelSettings_vt01p")
 horizontal_alignment = 1
 
-[node name="=" type="Label" parent="Math Label/center/HBoxContainer" unique_id=1529105603]
+[node name="=" type="Label" parent="Main Score Label/center/HBoxContainer" unique_id=1529105603]
 layout_mode = 2
 size_flags_vertical = 8
 text = "="
@@ -225,17 +225,17 @@ label_settings = SubResource("LabelSettings_bw8x2")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Total" type="VBoxContainer" parent="Math Label/center/HBoxContainer" unique_id=716555270]
+[node name="Total" type="VBoxContainer" parent="Main Score Label/center/HBoxContainer" unique_id=716555270]
 layout_mode = 2
 
-[node name="Total" type="Label" parent="Math Label/center/HBoxContainer/Total" unique_id=1877683715]
+[node name="Total" type="Label" parent="Main Score Label/center/HBoxContainer/Total" unique_id=1877683715]
 layout_mode = 2
 size_flags_vertical = 8
 text = "Total"
 label_settings = SubResource("LabelSettings_bw8x2")
 horizontal_alignment = 1
 
-[node name="HandTypeValue" type="Label" parent="Math Label/center/HBoxContainer/Total" unique_id=1845529967]
+[node name="HandTypeValue" type="Label" parent="Main Score Label/center/HBoxContainer/Total" unique_id=1845529967]
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_styles/normal = SubResource("StyleBoxFlat_p1r1p")
