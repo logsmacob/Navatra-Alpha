@@ -8,6 +8,9 @@ class_name Hand
 @onready var hand_dice_pool: HandDicePool = $HandDicePool
 @onready var hand_currency_bonus_service: HandCurrencyBonusService = $HandCurrencyBonusService
 @onready var hand_button_manager: HandButtonManager = $"Button Manager"
+@onready var hand_type_label: Label = $"Hand Type"
+
+const DEFAULT_HAND_TYPE_LABEL := "Hand Type"
 
 ## Packed die scene used by [HandDicePool] to build the visible hand.
 @export var die_ui_scene: PackedScene
@@ -66,6 +69,7 @@ func roll_hand() -> void:
 		hand_button_manager.enable_buttons()
 		is_hand_ready = true
 		EventBus.roll_all_dice_requested.emit()
+		reset_hand_type_label()
 		update_buttons()
 
 ## Starts the play flow and emits [signal played_hand_ready] once scoring data is available.
@@ -79,6 +83,7 @@ func _on_play_pressed() -> void:
 		is_hand_ready = true
 		return
 	hand_button_manager.disable_buttons()
+	set_hand_type_label(hand_scoring_selector.get_hand_type_name(dice))
 	await hand_animator.play_hand(hand_scoring_selector.get_scoring_dice(dice))
 	hand_dice_pool.clear_selection()
 	played_hand_ready.emit(hand_scoring_selector.build_dice_hand(dice))
@@ -126,3 +131,14 @@ func _on_play_hold_started() -> void:
 ## Forwards the button-manager hold-release event.
 func _on_play_hold_ended() -> void:
 	play_hold_ended.emit()
+
+
+func set_hand_type_label(value: String) -> void:
+	if hand_type_label == null:
+		return
+	hand_type_label.text = value
+
+func reset_hand_type_label() -> void:
+	set_hand_type_label(DEFAULT_HAND_TYPE_LABEL)
+	if hand_animator != null:
+		hand_animator.set_hand_type_label_color_default()

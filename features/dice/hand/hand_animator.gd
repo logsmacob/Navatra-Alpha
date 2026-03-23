@@ -43,12 +43,16 @@ func animate_played_dice_score_colors(target_dice: Array[DieUI]) -> void:
 	if target_dice.is_empty():
 		return
 	await get_tree().create_timer(SCORE_STEP_DURATION_SECONDS).timeout
+	set_hand_type_label_color(BASE_STEP_MODULATE)
 	_tween_dice_modulate(target_dice, BASE_STEP_MODULATE)
 	await get_tree().create_timer(SCORE_STEP_DURATION_SECONDS).timeout
+	set_hand_type_label_color(MULT_STEP_MODULATE)
 	_tween_dice_modulate(target_dice, MULT_STEP_MODULATE)
 	await get_tree().create_timer(SCORE_STEP_DURATION_SECONDS).timeout
+	set_hand_type_label_color(BASE_STEP_MODULATE)
 	_tween_dice_modulate(target_dice, BASE_STEP_MODULATE)
 	await get_tree().create_timer(SCORE_STEP_DURATION_SECONDS).timeout
+	set_hand_type_label_color_default()
 	_tween_dice_modulate(target_dice, DEFAULT_STEP_MODULATE)
 
 func _tween_dice_modulate(target_dice: Array[DieUI], color: Color) -> void:
@@ -67,3 +71,13 @@ func _on_hand_played_hand_finished() -> void:
 	for tween in tweens:
 		await tween.finished
 	hand_reset_ready.emit()
+
+
+func set_hand_type_label_color(color: Color) -> void:
+	if hand == null or hand.hand_type_label == null:
+		return
+	var tween := create_tween()
+	tween.tween_property(hand.hand_type_label, "modulate", color, MODULATE_TWEEN_DURATION_SECONDS)
+
+func set_hand_type_label_color_default() -> void:
+	set_hand_type_label_color(DEFAULT_STEP_MODULATE)

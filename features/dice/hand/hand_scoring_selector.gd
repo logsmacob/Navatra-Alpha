@@ -56,3 +56,9 @@ func _get_counts_needed(details: HandDetails) -> Dictionary:
 			for value in group_values:
 				counts_needed[value] = int(counts_needed.get(value, 0)) + 1
 	return counts_needed
+
+
+func get_hand_type_name(dice: Array[DieUI]) -> String:
+	var hand := build_dice_hand(dice)
+	var hand_type := hand_evaluator.evaluate_hand(hand.to_array())
+	return HandEvaluatorService.HandType.keys()[hand_type]
