@@ -53,6 +53,12 @@ func animate_played_hand(tree: SceneTree, breakdown: Dictionary) -> void:
 	if main_score != null:
 		main_score.set_result(final_score)
 
+func animate_quota_update(tree: SceneTree, projected_quota: int) -> void:
+	if main_score == null:
+		return
+	await tree.create_timer(CALCULATION_DELAY_SECONDS).timeout
+	main_score.set_quota(max(projected_quota, 0))
+
 func reset_display() -> void:
 	_preview_breakdown.clear()
 	_show_preview_math = false

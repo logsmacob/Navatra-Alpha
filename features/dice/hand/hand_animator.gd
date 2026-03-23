@@ -3,6 +3,12 @@ extends Node
 ## Hand animator script: coordinates this part of the game's behavior.
 class_name HandAnimator
 
+const SCORE_STEP_DURATION_SECONDS := 0.5
+const BASE_STEP_MODULATE := Color("8be9ff")
+const MULT_STEP_MODULATE := Color("ff5cf0")
+const DEFAULT_STEP_MODULATE := Color(1, 1, 1, 1)
+const MODULATE_TWEEN_DURATION_SECONDS := 0.15
+
 @onready var hand = $".."
 
 signal play_animation_finished
@@ -31,6 +37,26 @@ func play_hand(target_dice: Array[DieUI]) -> void:
 		await tween.finished
 
 	play_animation_finished.emit()
+
+
+func animate_played_dice_score_colors(target_dice: Array[DieUI]) -> void:
+	if target_dice.is_empty():
+		return
+	await get_tree().create_timer(SCORE_STEP_DURATION_SECONDS).timeout
+	_tween_dice_modulate(target_dice, BASE_STEP_MODULATE)
+	await get_tree().create_timer(SCORE_STEP_DURATION_SECONDS).timeout
+	_tween_dice_modulate(target_dice, MULT_STEP_MODULATE)
+	await get_tree().create_timer(SCORE_STEP_DURATION_SECONDS).timeout
+	_tween_dice_modulate(target_dice, BASE_STEP_MODULATE)
+	await get_tree().create_timer(SCORE_STEP_DURATION_SECONDS).timeout
+	_tween_dice_modulate(target_dice, DEFAULT_STEP_MODULATE)
+
+func _tween_dice_modulate(target_dice: Array[DieUI], color: Color) -> void:
+	for die in target_dice:
+		if die == null:
+			continue
+		var tween := create_tween()
+		tween.tween_property(die, "modulate", color, MODULATE_TWEEN_DURATION_SECONDS)
 
 func _on_hand_played_hand_finished() -> void:
 	var tweens: Array[Tween] = []
