@@ -1,6 +1,8 @@
 extends RichTextEffect
 class_name WaveEffect
 
+var bbcode := "wave"
+
 @export var amplitude: float = 10.0
 @export var frequency: float = 6.0
 @export var speed: float = 6.0

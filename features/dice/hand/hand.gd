@@ -133,7 +133,7 @@ func _on_play_hold_ended() -> void:
 func set_hand_type_label(value: String) -> void:
 	if hand_type_label == null:
 		return
-	hand_type_label.text = value
+	hand_type_label.text = "[wave]%s[/wave]" % value
 
 func reset_hand_type_label() -> void:
 	set_hand_type_label(DEFAULT_HAND_TYPE_LABEL)
