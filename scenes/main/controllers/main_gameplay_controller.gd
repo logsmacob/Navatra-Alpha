@@ -28,6 +28,7 @@ func handle_played_hand_ready(hand_data: DiceHand) -> void:
 		_hand.complete_play_resolution()
 		return
 
+	_hand.animate_scoring_dice_score_colors()
 	var play_result = await _score_bar.play_previewed_hand()
 	var applied_score := int(play_result.get("applied_score", 0))
 	await _score_bar.animate_quota_update(applied_score)

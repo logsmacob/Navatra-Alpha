@@ -92,6 +92,11 @@ func get_scoring_material_currency_bonus() -> int:
 	var scoring_dice := hand_scoring_selector.get_scoring_dice(dice)
 	return hand_currency_bonus_service.get_scoring_material_currency_bonus(scoring_dice)
 
+## Starts the played-dice score-color sequence so the dice pulse in sync with the score-bar math animation.
+func animate_scoring_dice_score_colors() -> void:
+	var scoring_dice := hand_scoring_selector.get_scoring_dice(dice)
+	hand_animator.animate_played_dice_score_colors(scoring_dice)
+
 ## Public bridge used by gameplay orchestration once score resolution is finished.
 ## This replaces external calls to the private finish handler so the signal chain is easier to follow.
 func complete_play_resolution() -> void:
