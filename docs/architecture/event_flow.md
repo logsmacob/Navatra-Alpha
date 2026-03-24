@@ -19,7 +19,7 @@ Play button pressed
 -> Hand emits play_reset_started
 -> MainGameplayController zeroes Score Bar Base, Mult, Result
 -> Hand rolls non-held dice
--> EventBus emits roll_all_dice_requested
+-> Hand emits roll_completed
 -> MainGameplayController refreshes preview/state
 -> Hand emits reset_roll_finished
 -> MainGameplayController clears post-play preview UI
@@ -27,9 +27,10 @@ Play button pressed
 
 ```text
 Roll button pressed
--> Hand consumes reroll from GameState
+-> Hand emits roll_requested
+-> MainGameplayController consumes reroll from GameState
 -> Hand rolls non-held dice
--> EventBus emits roll_all_dice_requested
+-> Hand emits roll_completed
 -> MainGameplayController refreshes preview/state
 ```
 
@@ -51,11 +52,11 @@ Round cleared in GameState
 
 | Step | Emitter | Signal / Trigger | Receiver | Next action |
 | --- | --- | --- | --- | --- |
-| 1 | Roll button in `Hand` scene | `pressed` | `Hand._on_roll_pressed()` | Requests a reroll from `GameState`. |
-| 2 | `Hand` | direct call `roll_hand()` | `HandAnimator` | Starts roll animation timing for non-held dice. |
-| 3 | `Hand` | `EventBus.roll_all_dice_requested` | `MainGameplayController.handle_roll_all_dice_requested()` | Rebuilds preview math and refreshes score-bar state. |
+| 1 | Roll button in `Hand` scene | `pressed` | `Hand._on_roll_pressed()` | Emits `roll_requested` intent. |
+| 2 | `Hand` | `roll_requested` | `MainGameplayController.handle_roll_requested()` | Attempts `GameState.consume_reroll()` and triggers `Hand.roll_hand()` when successful. |
+| 3 | `Hand` | `roll_completed` | `MainGameplayController.handle_roll_completed()` | Rebuilds preview math and refreshes score-bar state. |
 
-**Important note:** the reroll refresh depends on `MainGameplayController` listening to a global `EventBus` signal instead of a hand-local signal. That works, but it is a hidden dependency for this scene flow.
+**Important note:** reroll refresh now uses a hand-local signal, so sender/receiver wiring stays visible in the main scene graph.
 
 ### B. Play flow
 
@@ -69,7 +70,7 @@ Round cleared in GameState
 | 6 | `Hand` | `played_hand_finished` | `HandAnimator._on_hand_played_hand_finished()` | Dice return to their resting positions. |
 | 7 | `HandAnimator` | `hand_reset_ready` | `Hand._on_hand_reset_ready()` | Starts the automatic post-play reroll/reset. |
 | 8 | `Hand` | `play_reset_started` | `MainGameplayController.handle_play_reset_started()` | Zeroes the score-bar Base/Mult/Result columns before the automatic reroll starts. |
-| 9 | `Hand` | `EventBus.roll_all_dice_requested` | `MainGameplayController.handle_roll_all_dice_requested()` | Refreshes state during the reset roll. |
+| 9 | `Hand` | `roll_completed` | `MainGameplayController.handle_roll_completed()` | Refreshes state during the reset roll. |
 | 10 | `Hand` | `reset_roll_finished` | `MainGameplayController.handle_reset_roll_finished()` | Clears score-bar preview leftovers from the played hand. |
 
 **Important note:** this is the longest signal chain in the current project. It is still manageable, but it crosses several nodes (`Hand -> MainGameplayController -> GameState -> Hand -> HandAnimator -> Hand -> MainGameplayController`). Keep it documented whenever you extend it.
@@ -107,12 +108,9 @@ Round cleared in GameState
 
 ## 4. Current risks and hidden dependencies
 
-### Hidden dependency: `EventBus.roll_all_dice_requested`
+### Local dependency: `Hand.roll_completed`
 
-The reroll refresh path is conceptually local to the hand/main-scene gameplay flow, but it currently depends on a global event bus listener in `MainGameplayController`.
-
-- This is fine if the signal is intended to stay project-wide.
-- It becomes harder to trace because the emitter (`Hand`) and receiver (`MainGameplayController`) do not live in the same local scene wiring section.
+The reroll refresh path is conceptually local to hand/main-scene gameplay flow and now uses a hand-local signal to keep emitter (`Hand`) and receiver (`MainGameplayController`) wiring explicit in `main.gd`.
 
 ### Longest chain: play resolution
 
@@ -156,7 +154,7 @@ These suggestions preserve the current signal-based architecture.
    If a controller must tell another node to continue a flow, use a clearly named public method such as `complete_play_resolution()` instead of calling an underscore-prefixed handler.
 
 3. **Use scene-local signals when the event is only local.**  
-   `EventBus.roll_all_dice_requested` currently works, but if this event never needs to leave the main gameplay scene, a hand-local signal would be easier to trace. This is an optional cleanup, not a required rewrite.
+   The reroll refresh now follows this pattern via `Hand.roll_completed`. Keep using local signals for local-only flows, and reserve `EventBus` for app-wide broadcasts.
 
 4. **Keep one node responsible for describing each phase.**  
    Right now the roles are mostly good:
@@ -189,7 +187,7 @@ Useful places to log temporarily:
 - `Hand._on_play_pressed()`
 - `MainGameplayController.handle_played_hand_ready()`
 - `Hand._on_hand_reset_ready()`
-- `MainGameplayController.handle_roll_all_dice_requested()`
+- `MainGameplayController.handle_roll_completed()`
 - `GameState.process_played_hand()`
 
 ---

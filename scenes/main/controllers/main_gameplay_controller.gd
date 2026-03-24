@@ -55,6 +55,13 @@ func handle_played_hand_ready(hand_data: DiceHand) -> void:
 func _can_continue_resolution() -> bool:
 	return is_instance_valid(_hand) and is_instance_valid(_score_bar) and is_inside_tree()
 
+## Attempts to consume a reroll and trigger the hand-roll flow.
+func handle_roll_requested() -> void:
+	if _hand == null:
+		return
+	if GameState.consume_reroll():
+		_hand.roll_hand()
+
 ## Rebuilds the preview math from the currently visible dice.
 func refresh_hand_preview() -> void:
 	if _hand == null:
@@ -62,10 +69,10 @@ func refresh_hand_preview() -> void:
 	var current_hand: DiceHand = _hand.get_current_hand()
 	_score_bar.preview_hand(current_hand)
 
-## Handles the global reroll refresh signal emitted after [Hand.roll_hand].
-## Special case: during the post-play reset we still refresh preview data so the main hand label
-## stays in sync with the newly rolled dice, while the math columns remain hidden until the reset completes.
-func handle_roll_all_dice_requested() -> void:
+## Handles local reroll-refresh event emitted after [Hand.roll_hand].
+## Special case: during post-play reset we still refresh preview data so the main hand label
+## stays in sync with newly rolled dice while math columns remain hidden until reset completes.
+func handle_roll_completed() -> void:
 	refresh_hand_preview()
 	if _score_bar == null:
 		return

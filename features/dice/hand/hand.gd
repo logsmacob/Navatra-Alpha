@@ -39,6 +39,10 @@ signal play_hold_started
 signal play_hold_ended
 ## Emitted after the post-play reset roll finishes and UI can clear preview state.
 signal reset_roll_finished
+## Emitted when the roll button requests a reroll attempt from gameplay orchestration.
+signal roll_requested
+## Emitted after a hand roll animation completes and preview/state should refresh.
+signal roll_completed
 
 func _ready() -> void:
 	hand_dice_pool.setup(die_ui_scene, dice_per_hand, hand_container)
@@ -49,16 +53,14 @@ func _ready() -> void:
 	is_hand_ready = true
 
 ## Consumes a reroll and starts the hand roll flow.
-## Flow: roll button -> consume reroll -> [method roll_hand] -> EventBus update.
+## Flow: roll button -> [signal roll_requested] -> gameplay controller consumes reroll -> [method roll_hand].
 func _on_roll_pressed() -> void:
 	if not is_hand_ready:
 		return
+	roll_requested.emit()
 
-	if GameState.consume_reroll():
-		roll_hand()
-
-## Rolls all non-held dice, waits for animation timing, then broadcasts the refresh event.
-## Hidden dependency note: [MainGameplayController] refreshes score preview after [EventBus.roll_all_dice_requested].
+## Rolls all non-held dice, waits for animation timing, then emits [signal roll_completed].
+## [MainGameplayController] listens and refreshes score preview/state.
 func roll_hand() -> void:
 	if hand_animator.is_roll_finished:
 		is_hand_ready = false
@@ -68,7 +70,7 @@ func roll_hand() -> void:
 		_set_dice_interaction_enabled(true)
 		hand_button_manager.enable_buttons()
 		is_hand_ready = true
-		EventBus.roll_all_dice_requested.emit()
+		roll_completed.emit()
 		reset_hand_type_label()
 		update_buttons()
 

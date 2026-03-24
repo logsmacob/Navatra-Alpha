@@ -29,6 +29,8 @@ func _ready() -> void:
 
 	# Hand -> gameplay/score-bar flow.
 	hand.played_hand_ready.connect(gameplay_controller.handle_played_hand_ready)
+	hand.roll_requested.connect(gameplay_controller.handle_roll_requested)
+	hand.roll_completed.connect(gameplay_controller.handle_roll_completed)
 	hand.play_reset_started.connect(gameplay_controller.handle_play_reset_started)
 	hand.reset_roll_finished.connect(gameplay_controller.handle_reset_roll_finished)
 	hand.play_hold_started.connect(score_bar.show_preview_math)
@@ -42,7 +44,6 @@ func _ready() -> void:
 	GameState.run_won.connect(run_end_controller.handle_run_won)
 
 	# Cross-feature events.
-	EventBus.roll_all_dice_requested.connect(gameplay_controller.handle_roll_all_dice_requested)
 	hand_type_upgrades.upgrade_selected.connect(round_flow_controller.handle_upgrade_selected)
 	hand_type_upgrades.reroll_requested.connect(round_flow_controller.handle_upgrade_reroll_requested)
 	win_back_button.pressed.connect(run_end_controller.handle_back_to_title_pressed)
