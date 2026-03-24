@@ -42,6 +42,7 @@ signal reset_roll_finished
 
 func _ready() -> void:
 	hand_dice_pool.setup(die_ui_scene, dice_per_hand, hand_container)
+	_set_dice_interaction_enabled(true)
 	hand_button_manager.play_hold_started.connect(_on_play_hold_started)
 	hand_button_manager.play_hold_ended.connect(_on_play_hold_ended)
 	update_buttons()
@@ -61,8 +62,10 @@ func _on_roll_pressed() -> void:
 func roll_hand() -> void:
 	if hand_animator.is_roll_finished:
 		is_hand_ready = false
+		_set_dice_interaction_enabled(false)
 		hand_button_manager.disable_buttons()
 		await hand_animator.roll_hand()
+		_set_dice_interaction_enabled(true)
 		hand_button_manager.enable_buttons()
 		is_hand_ready = true
 		EventBus.roll_all_dice_requested.emit()
@@ -79,6 +82,7 @@ func _on_play_pressed() -> void:
 		push_error("HandAnimator node is missing or has incorrect script.")
 		is_hand_ready = true
 		return
+	_set_dice_interaction_enabled(false)
 	hand_button_manager.disable_buttons()
 	set_hand_type_label(hand_scoring_selector.get_hand_type_name(dice))
 	await hand_animator.play_hand(hand_scoring_selector.get_scoring_dice(dice))
@@ -129,6 +133,11 @@ func _on_play_hold_started() -> void:
 func _on_play_hold_ended() -> void:
 	play_hold_ended.emit()
 
+func _set_dice_interaction_enabled(enabled: bool) -> void:
+	for die: DieUI in dice:
+		if die == null:
+			continue
+		die.set_interaction_enabled(enabled)
 
 func set_hand_type_label(value: String) -> void:
 	if hand_type_label == null:

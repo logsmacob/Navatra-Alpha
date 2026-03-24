@@ -37,18 +37,24 @@ func _on_die_die_rolled(face: FaceData) -> void:
 	face_sprite.frame_coords.x = face.value - 1
 
 func _on_button_mouse_entered() -> void:
+	if die == null or not die.is_interaction_enabled:
+		return
 	if !die.is_selected:
 		hover_die(die, -0.25)
 	else:
 		hover_die(die, -0.85)
 
 func _on_button_mouse_exited() -> void:
+	if die == null or not die.is_interaction_enabled:
+		return
 	if !die.is_selected:
 		hover_die(die, 0)
 	else:
 		hover_die(die, -1.1)
 
 func _on_button_pressed() -> void:
+	if die == null or not die.is_interaction_enabled:
+		return
 	animate_die_selection(die)
 
 func animate_die_selection(die_ui: DieUI) -> void:
