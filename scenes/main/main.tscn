@@ -13,8 +13,8 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jyhfs"]
 shader = ExtResource("2_sugp2")
-shader_parameter/color_a = Color(0.046400003, 0.0748, 0.16, 1)
-shader_parameter/color_b = Color(0.102, 0.165, 0.353, 1)
+shader_parameter/color_a = Color(0.039, 0.055, 0.231, 1)
+shader_parameter/color_b = Color(0.09, 0.137, 0.431, 1)
 shader_parameter/edge_color = Color(0, 0, 0, 1)
 shader_parameter/hexes_across = 60.0000026125
 shader_parameter/speed = 0.90400003968012
