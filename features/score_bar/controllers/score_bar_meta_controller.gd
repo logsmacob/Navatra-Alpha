@@ -6,18 +6,18 @@ const GENERAL_MODIFIER_ROWS := [
 	{"key": "base_marbles_per_round", "label": "Base Marbles per Round"},
 	{"key": "shop_rerolls", "label": "Re-Rolls"},
 	{"key": "shop_playable_hands", "label": "Playable Hands"},
-	{"key": "base_1_value", "label": "Base 1 Value"},
-	{"key": "base_2_value", "label": "Base 2 Value"},
-	{"key": "base_3_value", "label": "Base 3 Value"},
-	{"key": "base_4_value", "label": "Base 4 Value"},
-	{"key": "base_5_value", "label": "Base 5 Value"},
-	{"key": "base_6_value", "label": "Base 6 Value"},
-	{"key": "mult_1_value", "label": "Mult 1 Value"},
-	{"key": "mult_2_value", "label": "Mult 2 Value"},
-	{"key": "mult_3_value", "label": "Mult 3 Value"},
-	{"key": "mult_4_value", "label": "Mult 4 Value"},
-	{"key": "mult_5_value", "label": "Mult 5 Value"},
-	{"key": "mult_6_value", "label": "Mult 6 Value"},
+	{"key": "base_1_value", "label": "Face Value [1]"},
+	{"key": "base_2_value", "label": "Face Value [2]"},
+	{"key": "base_3_value", "label": "Face Value [3]"},
+	{"key": "base_4_value", "label": "Face Value [4]"},
+	{"key": "base_5_value", "label": "Face Value [5]"},
+	{"key": "base_6_value", "label": "Face Value [6]"},
+	{"key": "mult_1_value", "label": "Face Value [1]"},
+	{"key": "mult_2_value", "label": "Face Value [2]"},
+	{"key": "mult_3_value", "label": "Face Value [3]"},
+	{"key": "mult_4_value", "label": "Face Value [4]"},
+	{"key": "mult_5_value", "label": "Face Value [5]"},
+	{"key": "mult_6_value", "label": "Face Value [6]"},
 ]
 
 @export var corner_label: CornerLabel
@@ -35,8 +35,22 @@ func update_state(state: Dictionary, general_modifiers: Dictionary) -> void:
 func _build_general_modifier_text(modifiers: Dictionary) -> String:
 	var lines: Array[String] = ["General Modifiers:"]
 	for row in GENERAL_MODIFIER_ROWS:
-		lines.append("- %s: %d" % [str(row.label), int(modifiers.get(row.key, 0))])
+		var value := int(modifiers.get(row.key, 0))
+		lines.append("- %s" % _format_general_modifier_line(str(row.key), str(row.label), value))
 	return "\n".join(lines)
+
+func _format_signed_modifier(value: int) -> String:
+	if value > 0:
+		return "+%d" % value
+	return "%d" % value
+
+func _format_general_modifier_line(key: String, label: String, value: int) -> String:
+	var signed_value := _format_signed_modifier(value)
+	if key.begins_with("base_") and key.ends_with("_value"):
+		return "%s %s Base" % [label, signed_value]
+	if key.begins_with("mult_") and key.ends_with("_value"):
+		return "%s %s Mult" % [label, signed_value]
+	return "%s %s" % [label, signed_value]
 
 func _get_general_modifiers_label() -> Label:
 	return general_modifiers_label_path

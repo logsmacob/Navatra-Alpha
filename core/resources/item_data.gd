@@ -14,18 +14,18 @@ const GENERAL_MODIFIER_LABELS := {
 	"base_marbles_per_round": "Base Marbles per Round",
 	"shop_rerolls": "Re-Rolls",
 	"shop_playable_hands": "Playable Hands",
-	"base_1_value": "Base 1 Value",
-	"base_2_value": "Base 2 Value",
-	"base_3_value": "Base 3 Value",
-	"base_4_value": "Base 4 Value",
-	"base_5_value": "Base 5 Value",
-	"base_6_value": "Base 6 Value",
-	"mult_1_value": "Mult 1 Value",
-	"mult_2_value": "Mult 2 Value",
-	"mult_3_value": "Mult 3 Value",
-	"mult_4_value": "Mult 4 Value",
-	"mult_5_value": "Mult 5 Value",
-	"mult_6_value": "Mult 6 Value",
+	"base_1_value": "Face Value [1]",
+	"base_2_value": "Face Value [2]",
+	"base_3_value": "Face Value [3]",
+	"base_4_value": "Face Value [4]",
+	"base_5_value": "Face Value [5]",
+	"base_6_value": "Face Value [6]",
+	"mult_1_value": "Face Value [1]",
+	"mult_2_value": "Face Value [2]",
+	"mult_3_value": "Face Value [3]",
+	"mult_4_value": "Face Value [4]",
+	"mult_5_value": "Face Value [5]",
+	"mult_6_value": "Face Value [6]",
 }
 
 @export var id: String = ""
@@ -93,10 +93,18 @@ func get_display_discription() -> String:
 		var value := int(get_general_modifier_changes()[key])
 		if value == 0:
 			continue
-		effects.append("%s %s" % [GENERAL_MODIFIER_LABELS.get(key, key), _format_signed_modifier(value)])
+		effects.append(_get_modifier_effect_text(key, value))
 	if effects.is_empty():
 		return "No effect"
 	return "\n".join(effects)
+
+func _get_modifier_effect_text(key: String, value: int) -> String:
+	var signed_value := _format_signed_modifier(value)
+	if key.begins_with("base_") and key.ends_with("_value"):
+		return "%s %s Base" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
+	if key.begins_with("mult_") and key.ends_with("_value"):
+		return "%s %s Mult" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
+	return "%s %s" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
 
 func is_available_for_round(round_number: int) -> bool:
 	return round_number >= min_round and round_number <= max_round
