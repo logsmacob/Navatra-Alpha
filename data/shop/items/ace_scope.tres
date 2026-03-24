@@ -7,6 +7,5 @@ script = ExtResource("1")
 id = "ace_scope"
 item_name = "Ace Scope"
 cost = 6
-mult_6_value = 1
 weight = 8.0
 rarity = 1

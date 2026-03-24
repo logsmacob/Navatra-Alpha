@@ -8,6 +8,5 @@ id = "loaded_pip"
 item_name = "Loaded Pip"
 cost = 6
 base_6_value = 2
-mult_6_value = 1
 weight = 7.0
 min_round = 2

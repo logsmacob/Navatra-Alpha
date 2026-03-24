@@ -7,7 +7,6 @@ script = ExtResource("1")
 id = "dealers_chalk"
 item_name = "Dealer's Chalk"
 cost = 6
-mult_3_value = 1
 weight = 7.0
 rarity = 1
 min_round = 2
