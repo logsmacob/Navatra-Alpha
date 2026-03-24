@@ -26,9 +26,9 @@ The goal is to keep systems modular, testable, and loosely coupled.
 - No direct node dependencies
 
 Examples:
-- Player stats
-- Inventory data
-- Game state
+- Round quota, hands remaining, and rerolls in `GameState`
+- Player currency and owned trinkets/upgrades in run/player managers
+- Hand evaluation inputs/outputs (`DiceHand`, scoring context)
 
 ---
 
@@ -38,9 +38,9 @@ Examples:
 - Must NOT contain gameplay logic
 
 Examples:
-- HUD
-- Menus
-- Health bars
+- `ui/hud/hud.tscn` and HUD labels/bars
+- `features/score_bar` visual score and quota display
+- `scenes/shop/shop.tscn` item list and button visuals
 
 ---
 
@@ -50,8 +50,9 @@ Examples:
 - Listens to events and updates UI
 
 Examples:
-- UI controllers
-- Scene coordinators
+- `scenes/main/controllers/main_round_flow_controller.gd`
+- `scenes/main/controllers/main_gameplay_controller.gd`
+- `features/score_bar/controllers/*` bridging score data to UI
 
 ---
 
@@ -65,8 +66,10 @@ Examples:
 
 ```gdscript
 # BAD (tight coupling)
-player.take_damage(10)
-ui.update_health(player.health)
+GameStateRunManager.submit_hand(dice_values)
+$HUD/QuotaLabel.text = str(GameState.run.quota_remaining)
 
 # GOOD (event-driven)
-player.emit_signal("damaged", 10)
+EventBus.emit_signal("hand_submitted", dice_values)
+# HUD/score bar listen to EventBus/GameState signals and refresh themselves.
+```
