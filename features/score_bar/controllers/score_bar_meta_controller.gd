@@ -12,6 +12,12 @@ const GENERAL_MODIFIER_ROWS := [
 	{"key": "base_4_value", "label": "Base 4 Value"},
 	{"key": "base_5_value", "label": "Base 5 Value"},
 	{"key": "base_6_value", "label": "Base 6 Value"},
+	{"key": "mult_1_value", "label": "Mult 1 Value"},
+	{"key": "mult_2_value", "label": "Mult 2 Value"},
+	{"key": "mult_3_value", "label": "Mult 3 Value"},
+	{"key": "mult_4_value", "label": "Mult 4 Value"},
+	{"key": "mult_5_value", "label": "Mult 5 Value"},
+	{"key": "mult_6_value", "label": "Mult 6 Value"},
 ]
 
 @export var corner_label: CornerLabel

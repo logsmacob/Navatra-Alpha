@@ -20,6 +20,12 @@ const GENERAL_MODIFIER_LABELS := {
 	"base_4_value": "Base 4 Value",
 	"base_5_value": "Base 5 Value",
 	"base_6_value": "Base 6 Value",
+	"mult_1_value": "Mult 1 Value",
+	"mult_2_value": "Mult 2 Value",
+	"mult_3_value": "Mult 3 Value",
+	"mult_4_value": "Mult 4 Value",
+	"mult_5_value": "Mult 5 Value",
+	"mult_6_value": "Mult 6 Value",
 }
 
 @export var id: String = ""
@@ -41,6 +47,12 @@ const GENERAL_MODIFIER_LABELS := {
 @export var base_4_value: int = 0
 @export var base_5_value: int = 0
 @export var base_6_value: int = 0
+@export var mult_1_value: int = 0
+@export var mult_2_value: int = 0
+@export var mult_3_value: int = 0
+@export var mult_4_value: int = 0
+@export var mult_5_value: int = 0
+@export var mult_6_value: int = 0
 
 @export_range(0.0, 999.0, 0.1) var weight: float = 1.0
 @export var rarity: ItemRarity = ItemRarity.COMMON
@@ -62,6 +74,12 @@ func get_general_modifier_changes() -> Dictionary:
 		"base_4_value": base_4_value,
 		"base_5_value": base_5_value,
 		"base_6_value": base_6_value,
+		"mult_1_value": mult_1_value,
+		"mult_2_value": mult_2_value,
+		"mult_3_value": mult_3_value,
+		"mult_4_value": mult_4_value,
+		"mult_5_value": mult_5_value,
+		"mult_6_value": mult_6_value,
 	}
 
 func _format_signed_modifier(value: int) -> String:
@@ -71,12 +89,6 @@ func _format_signed_modifier(value: int) -> String:
 
 func get_display_discription() -> String:
 	var effects: Array[String] = []
-	if base != 0 or mult != 0:
-		effects.append("%s: %+d base, %+d mult" % [
-			HandEvaluatorService.HandType.keys()[hand_type],
-			base,
-			mult,
-		])
 	for key in get_general_modifier_changes().keys():
 		var value := int(get_general_modifier_changes()[key])
 		if value == 0:

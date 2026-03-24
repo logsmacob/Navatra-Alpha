@@ -7,6 +7,5 @@ script = ExtResource("1")
 id = "pair_gloves"
 item_name = "Pair Gloves"
 cost = 5
-hand_type = 1
-base = 1
+base_2_value = 1
 weight = 10.0

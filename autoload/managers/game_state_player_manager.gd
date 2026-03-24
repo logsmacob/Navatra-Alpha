@@ -19,6 +19,12 @@ const DEFAULT_GENERAL_MODIFIERS := {
 	"base_4_value": 4,
 	"base_5_value": 5,
 	"base_6_value": 6,
+	"mult_1_value": 0,
+	"mult_2_value": 0,
+	"mult_3_value": 0,
+	"mult_4_value": 0,
+	"mult_5_value": 0,
+	"mult_6_value": 0,
 }
 
 var hand_type_upgrades: Dictionary = {}

@@ -7,5 +7,5 @@ script = ExtResource("1")
 id = "sparking_ring"
 item_name = "Sparking Ring"
 cost = 5
-base = 1
+base_1_value = 1
 weight = 10.0
