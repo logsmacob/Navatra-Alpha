@@ -3,6 +3,8 @@ extends Node
 ## Main run end controller script: coordinates this part of the game's behavior.
 class_name MainRunEndController
 
+signal title_requested
+
 var _hand: Hand
 var _score_bar: ScoreBar
 var _hand_type_upgrades: HandTypeUpgradesView
@@ -72,5 +74,4 @@ func handle_back_to_title_pressed() -> void:
 		_score_bar.visible = true
 	_win_screen.visible = false
 	_lose_screen.visible = false
-	GameState.start_new_run()
-	get_tree().change_scene_to_file("res://scenes/title screen/title_screen.tscn")
+	title_requested.emit()

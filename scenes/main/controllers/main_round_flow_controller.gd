@@ -3,6 +3,8 @@ extends Node
 ## Main round flow controller script: coordinates this part of the game's behavior.
 class_name MainRoundFlowController
 
+signal shop_requested
+
 var _hand_type_upgrades: HandTypeUpgradesView
 var _hand_type_upgrade_service: HandTypeUpgradeService
 
@@ -26,7 +28,7 @@ func handle_reward_phase_started() -> void:
 func handle_upgrade_selected(upgrade: HandTypeUpgradeDefinition) -> void:
 	_hand_type_upgrade_service.apply_upgrade(upgrade, GameState)
 	_hand_type_upgrades.visible = false
-	get_tree().change_scene_to_file("res://scenes/shop/shop.tscn")
+	shop_requested.emit()
 
 func handle_upgrade_reroll_requested() -> void:
 	refresh_upgrade_options()

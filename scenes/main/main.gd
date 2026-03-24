@@ -47,6 +47,8 @@ func _ready() -> void:
 	hand_type_upgrades.reroll_requested.connect(round_flow_controller.handle_upgrade_reroll_requested)
 	win_back_button.pressed.connect(run_end_controller.handle_back_to_title_pressed)
 	lose_back_button.pressed.connect(run_end_controller.handle_back_to_title_pressed)
+	round_flow_controller.shop_requested.connect(_on_shop_requested)
+	run_end_controller.title_requested.connect(_on_title_requested)
 
 	gameplay_controller.refresh_hand_preview()
 	score_bar.update_state()
@@ -58,3 +60,10 @@ func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -
 	lose_screen.visible = false
 	gameplay_controller.refresh_hand_preview()
 	score_bar.update_state()
+
+func _on_shop_requested() -> void:
+	get_tree().change_scene_to_file("res://scenes/shop/shop.tscn")
+
+func _on_title_requested() -> void:
+	GameState.start_new_run()
+	get_tree().change_scene_to_file("res://scenes/title screen/title_screen.tscn")

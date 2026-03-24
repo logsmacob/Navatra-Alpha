@@ -15,6 +15,8 @@ func setup(hand: Hand, score_bar: ScoreBar) -> void:
 ## Flow: [Hand.signal played_hand_ready] -> score preview/apply -> [Hand.complete_play_resolution].
 ## Hidden dependency note: this controller expects [Hand] to own the next animation step.
 func handle_played_hand_ready(hand_data: DiceHand) -> void:
+	if _hand == null or _score_bar == null:
+		return
 	_score_bar.zero_math_display()
 	_score_bar.preview_hand(hand_data)
 	var scene_tree := get_tree()
@@ -30,8 +32,12 @@ func handle_played_hand_ready(hand_data: DiceHand) -> void:
 
 	_hand.animate_scoring_dice_score_colors()
 	var play_result = await _score_bar.play_previewed_hand()
+	if not _can_continue_resolution():
+		return
 	var applied_score := int(play_result.get("applied_score", 0))
 	await _score_bar.animate_quota_update(applied_score)
+	if not _can_continue_resolution():
+		return
 	var material_currency_bonus := _hand.get_scoring_material_currency_bonus()
 	if material_currency_bonus > 0:
 		GameState.add_currency(material_currency_bonus)
@@ -42,7 +48,12 @@ func handle_played_hand_ready(hand_data: DiceHand) -> void:
 	GameState.process_played_hand(applied_score)
 
 	await scene_tree.create_timer(1).timeout
+	if not _can_continue_resolution():
+		return
 	_hand.complete_play_resolution()
+
+func _can_continue_resolution() -> bool:
+	return is_instance_valid(_hand) and is_instance_valid(_score_bar) and is_inside_tree()
 
 ## Rebuilds the preview math from the currently visible dice.
 func refresh_hand_preview() -> void:
