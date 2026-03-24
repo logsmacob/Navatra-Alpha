@@ -1,7 +1,7 @@
 extends Node
 class_name ScoreBarMathController
 
-const CALCULATION_DELAY_SECONDS := 0.2
+const CALCULATION_DELAY_SECONDS := 0.5
 
 @export var main_score: MainScore
 

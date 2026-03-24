@@ -255,6 +255,7 @@ size_flags_vertical = 8
 theme_override_styles/normal = SubResource("StyleBoxFlat_p1r1p")
 text = "Value"
 label_settings = SubResource("LabelSettings_bw8x2")
+horizontal_alignment = 1
 
 [node name="Corner Label" type="PanelContainer" parent="." unique_id=2111127552 node_paths=PackedStringArray("_round_index_label", "_marble_label")]
 layout_mode = 2
