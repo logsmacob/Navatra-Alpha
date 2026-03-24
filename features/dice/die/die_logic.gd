@@ -12,6 +12,12 @@ var is_selected: bool = false
 func set_die(new_die: DieInstance) -> void:
 	die = new_die
 
+func set_selected(selected: bool) -> void:
+	if is_selected == selected:
+		return
+	is_selected = selected
+	die_selected.emit(is_selected)
+
 func roll_if_not_selected() -> FaceData:
 	if is_selected:
 		return null
@@ -28,5 +34,4 @@ func roll_if_not_selected() -> FaceData:
 	return roll_face
 
 func toggle_selected() -> void:
-	is_selected = !is_selected
-	die_selected.emit(is_selected)
+	set_selected(!is_selected)

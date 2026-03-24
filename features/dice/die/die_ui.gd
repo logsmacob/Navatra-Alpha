@@ -19,7 +19,7 @@ var is_selected: bool:
 	get:
 		return die_logic.is_selected
 	set(value):
-		die_logic.is_selected = value
+		die_logic.set_selected(value)
 
 func set_die(new_die: DieInstance) -> void:
 	die_logic.set_die(new_die)

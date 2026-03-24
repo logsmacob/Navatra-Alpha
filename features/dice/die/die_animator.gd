@@ -10,6 +10,7 @@ class_name DieVisuals
 
 signal anim_roll_finished(die : DieUI)
 
+var _y_tween: Tween
 
 func play_roll_animation(face_value: int, duration: float):
 	await animate_roll(duration, face_value)
@@ -52,10 +53,14 @@ func _on_button_pressed() -> void:
 
 func animate_die_selection(die_ui: DieUI) -> void:
 	var target_y : float = (-die_ui.size.y * 1.1) if die_ui.is_selected else 0.0
-	var tween := create_tween()
-	tween.tween_property(die_ui, "position:y", target_y, 0.2)
+	_tween_position_y(die_ui, target_y, 0.2)
 
 func hover_die(die_ui: DieUI, distance: float):
 	var target_y : float = distance * die_ui.size.y
-	var tween := create_tween()
-	tween.tween_property(die_ui, "position:y", target_y, 0.1)
+	_tween_position_y(die_ui, target_y, 0.1)
+
+func _tween_position_y(die_ui: DieUI, target_y: float, duration: float) -> void:
+	if _y_tween != null and _y_tween.is_valid():
+		_y_tween.kill()
+	_y_tween = create_tween()
+	_y_tween.tween_property(die_ui, "position:y", target_y, duration)
