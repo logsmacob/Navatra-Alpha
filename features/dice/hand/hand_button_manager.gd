@@ -12,6 +12,10 @@ const PLAY_HOLD_DELAY_SECONDS := 0.5
 @export var play_hand: TextureButton
 ## Reroll button reference used for reroll interactions.
 @export var re_roll: TextureButton
+## Label used by the play button.
+@export var play_label: Label
+## Label used by the reroll button.
+@export var reroll_label: Label
 
 var _button_tweens: Dictionary = {}
 var _play_hold_timer: SceneTreeTimer
@@ -24,8 +28,19 @@ signal play_hold_ended
 
 ## Connects visual/input handlers for the exported buttons.
 func _ready() -> void:
+	_validate_button_refs()
 	_setup_button(play_hand)
 	_setup_button(re_roll)
+
+func _validate_button_refs() -> void:
+	if play_hand == null:
+		push_error("HandButtonManager: play_hand is not assigned.")
+	if re_roll == null:
+		push_error("HandButtonManager: re_roll is not assigned.")
+	if play_label == null:
+		push_error("HandButtonManager: play_label is not assigned.")
+	if reroll_label == null:
+		push_error("HandButtonManager: reroll_label is not assigned.")
 
 ## Adds shared hover/press listeners to a button.
 func _setup_button(button: TextureButton) -> void:
@@ -90,6 +105,8 @@ func _animate_button_scale(button: TextureButton, target_scale: Vector2, duratio
 
 ## Disables hand buttons during roll/play resolution and clears hold-preview state.
 func disable_buttons() -> void:
+	if play_hand == null or re_roll == null:
+		return
 	play_hand.disabled = true
 	re_roll.disabled = true
 	_stop_play_hold_tracking()
@@ -100,12 +117,16 @@ func disable_buttons() -> void:
 
 ## Re-enables hand buttons once the current action has completed.
 func enable_buttons() -> void:
+	if play_hand == null or re_roll == null:
+		return
 	play_hand.disabled = false
 	re_roll.disabled = false
 	play_hand.modulate = Color.WHITE
 	re_roll.modulate = Color.WHITE
 
-## Updates button labels using the latest round-state counters from [GameState].
-func update_button_labels() -> void:
-	play_hand.get_child(0).text = "Play Hand\nx%d" % int(GameState.get_round_state().get("hands_remaining", 0))
-	re_roll.get_child(0).text = "Re-Roll\nx%d" % int(GameState.get_round_state().get("rerolls_remaining", 0))
+## Updates button labels using round-state counters supplied by the caller.
+func update_button_labels(round_state: Dictionary) -> void:
+	if play_label != null:
+		play_label.text = "Play Hand\nx%d" % int(round_state.get("hands_remaining", 0))
+	if reroll_label != null:
+		reroll_label.text = "Re-Roll\nx%d" % int(round_state.get("rerolls_remaining", 0))

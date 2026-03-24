@@ -71,10 +71,12 @@ script = ExtResource("5_dice_pool")
 [node name="HandCurrencyBonusService" type="Node" parent="." unique_id=194727312]
 script = ExtResource("6_currency_bonus")
 
-[node name="Button Manager" type="Node" parent="." unique_id=1485120218 node_paths=PackedStringArray("play_hand", "re_roll")]
+[node name="Button Manager" type="Node" parent="." unique_id=1485120218 node_paths=PackedStringArray("play_hand", "re_roll", "play_label", "reroll_label")]
 script = ExtResource("7_pyojo")
 play_hand = NodePath("../HBoxContainer/ButtonContainer/play")
 re_roll = NodePath("../HBoxContainer/ButtonContainer/roll")
+play_label = NodePath("../HBoxContainer/ButtonContainer/play/Label")
+reroll_label = NodePath("../HBoxContainer/ButtonContainer/roll/Label")
 
 [node name="Hand Type" type="RichTextLabel" parent="." unique_id=1241228263]
 visible = false

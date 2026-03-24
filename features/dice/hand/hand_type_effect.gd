@@ -21,12 +21,12 @@ func _process(delta: float) -> void:
 	if _is_hiding and _visible_chars <= 0.0:
 		super.hide()
 
-func _show() -> void:
+func show_with_reveal() -> void:
 	super.show()
 	_is_hiding = false
 	_visible_chars = 0.0
 	visible_characters = 0
 
-func _hide() -> void:
+func hide_with_reveal() -> void:
 	# Start reverse animation instead of instantly hiding
 	_is_hiding = true

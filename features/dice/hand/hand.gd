@@ -41,10 +41,10 @@ signal play_hold_ended
 signal reset_roll_finished
 
 func _ready() -> void:
-	update_buttons()
 	hand_dice_pool.setup(die_ui_scene, dice_per_hand, hand_container)
 	hand_button_manager.play_hold_started.connect(_on_play_hold_started)
 	hand_button_manager.play_hold_ended.connect(_on_play_hold_ended)
+	update_buttons()
 	is_hand_ready = true
 
 ## Consumes a reroll and starts the hand roll flow.
@@ -119,7 +119,7 @@ func _on_hand_reset_ready() -> void:
 
 ## Refreshes button labels from the latest round state.
 func update_buttons() -> void:
-	hand_button_manager.update_button_labels()
+	hand_button_manager.update_button_labels(GameState.get_round_state())
 
 ## Forwards the button-manager hold event so parent scenes can react without reaching into the child node.
 func _on_play_hold_started() -> void:
@@ -139,3 +139,19 @@ func reset_hand_type_label() -> void:
 	set_hand_type_label(DEFAULT_HAND_TYPE_LABEL)
 	if hand_animator != null:
 		hand_animator.set_hand_type_label_color_default()
+
+func show_hand_type_label() -> void:
+	if hand_type_label == null:
+		return
+	if hand_type_label.has_method("show_with_reveal"):
+		hand_type_label.show_with_reveal()
+	else:
+		hand_type_label.show()
+
+func hide_hand_type_label() -> void:
+	if hand_type_label == null:
+		return
+	if hand_type_label.has_method("hide_with_reveal"):
+		hand_type_label.hide_with_reveal()
+	else:
+		hand_type_label.hide()
