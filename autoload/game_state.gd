@@ -163,6 +163,11 @@ func add_general_modifiers(modifier_changes: Dictionary) -> Dictionary:
 func get_general_modifiers() -> Dictionary:
 	return _player_manager.get_general_modifiers()
 
+func get_mapped_face_value(face_value: int) -> int:
+	var safe_face_value := maxi(face_value, 1)
+	var mapped_key := "face_%d_to" % safe_face_value
+	return int(get_general_modifiers().get(mapped_key, safe_face_value))
+
 func get_base_marbles_per_round() -> int:
 	return int(get_general_modifiers().get("base_marbles_per_round", 0))
 

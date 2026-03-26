@@ -21,6 +21,12 @@ const GENERAL_MODIFIER_LABELS := {
 	"base_marbles_per_round": "Base Marbles per Round",
 	"shop_rerolls": "Re-Rolls",
 	"shop_playable_hands": "Playable Hands",
+	"face_1_to": "Face [1] Result",
+	"face_2_to": "Face [2] Result",
+	"face_3_to": "Face [3] Result",
+	"face_4_to": "Face [4] Result",
+	"face_5_to": "Face [5] Result",
+	"face_6_to": "Face [6] Result",
 	"base_1_value": "Face Value [1]",
 	"base_2_value": "Face Value [2]",
 	"base_3_value": "Face Value [3]",
@@ -50,6 +56,12 @@ const GENERAL_MODIFIER_LABELS := {
 @export var base_marbles_per_round: int = 0
 @export var shop_rerolls: int = 0
 @export var shop_playable_hands: int = 0
+@export var face_1_to: int = 0
+@export var face_2_to: int = 0
+@export var face_3_to: int = 0
+@export var face_4_to: int = 0
+@export var face_5_to: int = 0
+@export var face_6_to: int = 0
 @export var base_1_value: int = 0
 @export var base_2_value: int = 0
 @export var base_3_value: int = 0
@@ -92,6 +104,12 @@ func get_general_modifier_changes() -> Dictionary:
 		"base_marbles_per_round": base_marbles_per_round,
 		"shop_rerolls": shop_rerolls,
 		"shop_playable_hands": shop_playable_hands,
+		"face_1_to": face_1_to,
+		"face_2_to": face_2_to,
+		"face_3_to": face_3_to,
+		"face_4_to": face_4_to,
+		"face_5_to": face_5_to,
+		"face_6_to": face_6_to,
 		"base_1_value": base_1_value,
 		"base_2_value": base_2_value,
 		"base_3_value": base_3_value,
@@ -142,6 +160,9 @@ func _get_modifier_effect_text(key: String, value: int) -> String:
 
 	if key.begins_with("mult_") and key.ends_with("_value"):
 		return "%s %s Mult" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
+
+	if key.begins_with("face_") and key.ends_with("_to"):
+		return "%s %s" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
 
 	return "%s %s" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
 

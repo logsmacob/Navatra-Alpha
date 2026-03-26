@@ -13,7 +13,7 @@ func get_scoring_dice(dice: Array[DieUI]) -> Array[DieUI]:
 	for die: DieUI in dice:
 		if die.die == null or die.die.current_face == null:
 			continue
-		values.append(die.die.current_face.value)
+		values.append(GameState.get_mapped_face_value(die.die.current_face.value))
 
 	if values.size() != dice.size():
 		return dice.duplicate()
@@ -30,7 +30,7 @@ func get_scoring_dice(dice: Array[DieUI]) -> Array[DieUI]:
 	for die: DieUI in dice:
 		if die.die == null or die.die.current_face == null:
 			continue
-		var value := die.die.current_face.value
+		var value := GameState.get_mapped_face_value(die.die.current_face.value)
 		var remaining := int(counts_needed.get(value, 0))
 		if remaining > 0:
 			scoring_dice.append(die)
@@ -45,7 +45,7 @@ func build_dice_hand(dice: Array[DieUI]) -> DiceHand:
 	var values: Array[int] = []
 	for die_ui in dice:
 		if die_ui.die != null and die_ui.die.current_face != null:
-			values.append(die_ui.die.current_face.value)
+			values.append(GameState.get_mapped_face_value(die_ui.die.current_face.value))
 	return DiceHand.new(values)
 
 func _get_counts_needed(details: HandDetails) -> Dictionary:
