@@ -30,8 +30,12 @@ func roll_if_not_selected() -> FaceData:
 	if roll_face == null:
 		return null
 
-	die_rolled.emit(roll_face)
-	return roll_face
+	var mapped_face := FaceData.new()
+	mapped_face.value = GameState.get_mapped_face_value(roll_face.value)
+	die.current_face = mapped_face
+
+	die_rolled.emit(mapped_face)
+	return mapped_face
 
 func toggle_selected() -> void:
 	set_selected(!is_selected)
