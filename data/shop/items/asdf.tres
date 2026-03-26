@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://dw5hc6ev014hq"]
+
+[ext_resource type="Script" uid="uid://1aoacss5301g" path="res://core/resources/item_data.gd" id="1_rb83v"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_cktjk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_12m81"]
+atlas = ExtResource("2_cktjk")
+region = Rect2(0, 0, 16, 16)
+
+[resource]
+script = ExtResource("1_rb83v")
+texture = SubResource("AtlasTexture_12m81")
+id = "one_=_six"
+item_name = "Copper Horseshoe"
+cost = 6
+luck = 1
+base_marbles_per_round = 1
+weight = 7.0

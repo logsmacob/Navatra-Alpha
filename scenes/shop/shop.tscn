@@ -1,30 +1,20 @@
 [gd_scene format=3 uid="uid://crwh35rpcjt2y"]
 
 [ext_resource type="Script" uid="uid://b6uq5mc6daglp" path="res://scenes/shop/shop.gd" id="1"]
-[ext_resource type="Resource" uid="uid://c8dhlkinhc1ws" path="res://data/shop/items/sparking_ring.tres" id="2"]
 [ext_resource type="Script" uid="uid://1aoacss5301g" path="res://core/resources/item_data.gd" id="2_dww4p"]
 [ext_resource type="PackedScene" uid="uid://mejnjhlwumme" path="res://features/ItemButton/item_button.tscn" id="2_g6lcs"]
-[ext_resource type="Resource" uid="uid://dunp4xnt3hwp3" path="res://data/shop/items/pair_gloves.tres" id="4"]
-[ext_resource type="Resource" uid="uid://c66j1g8pyceyl" path="res://data/shop/items/house_banner.tres" id="5"]
-[ext_resource type="Resource" uid="uid://72qf2tv7c236" path="res://data/shop/items/street_bet.tres" id="6"]
-[ext_resource type="Resource" uid="uid://yqqpjomstu7f" path="res://data/shop/items/triple_badge.tres" id="7"]
-[ext_resource type="Resource" uid="uid://dmfaqb4d1phdg" path="res://data/shop/items/flush_charm.tres" id="8"]
-[ext_resource type="Resource" uid="uid://bx7q6etxbs6dj" path="res://data/shop/items/high_roller.tres" id="9"]
-[ext_resource type="Resource" uid="uid://8xy0ak5qwjn1" path="res://data/shop/items/full_house_manual.tres" id="10"]
-[ext_resource type="Resource" uid="uid://jwbvraptmwkg" path="res://data/shop/items/oddity_ink.tres" id="11"]
-[ext_resource type="Resource" uid="uid://dx5s7sgaii0rk" path="res://data/shop/items/lucky_marble.tres" id="12"]
-[ext_resource type="Resource" uid="uid://dx5s7oappw0rl" path="res://data/shop/items/copper_horseshoe.tres" id="13"]
-[ext_resource type="Resource" uid="uid://dx5s7y77hw0rm" path="res://data/shop/items/snake_eye_charm.tres" id="14"]
-[ext_resource type="Resource" uid="uid://chrdk2r7ccrbn" path="res://data/shop/items/pocket_abacus.tres" id="15"]
-[ext_resource type="Resource" uid="uid://chrd3as546rbp" path="res://data/shop/items/tandem_ribbon.tres" id="17"]
-[ext_resource type="Resource" uid="uid://chrdwgr7tvrbq" path="res://data/shop/items/loaded_pip.tres" id="18"]
-[ext_resource type="Resource" uid="uid://dx5s7mapdw0rr" path="res://data/shop/items/forge_seal.tres" id="19"]
-[ext_resource type="Resource" uid="uid://dx5s7yav640rs" path="res://data/shop/items/royal_jelly.tres" id="20"]
-[ext_resource type="Resource" uid="uid://chrdv5vbubrcj" path="res://data/shop/items/quota_ledger.tres" id="21"]
+[ext_resource type="Resource" uid="uid://dw5hc6ev014hq" path="res://data/shop/items/asdf.tres" id="4_xoc10"]
+[ext_resource type="Resource" uid="uid://bin0jhnb1nxrb" path="res://data/shop/items/esrfcdx.tres" id="5_k5co3"]
+[ext_resource type="Resource" uid="uid://uo3a2p8mc13p" path="res://data/shop/items/regsv.tres" id="7_6kbe7"]
+[ext_resource type="Resource" uid="uid://dx5s7oappw0rl" path="res://data/shop/items/one_=_six.tres" id="13"]
 [ext_resource type="PackedScene" uid="uid://bde80fe0ex30q" path="res://features/score_bar/corner_label.tscn" id="23_bnu54"]
 [ext_resource type="StyleBox" uid="uid://btv01nysx3vum" path="res://assets/UI/style_boxes/header.tres" id="24_f8gqx"]
 [ext_resource type="Shader" uid="uid://64giuyue21qd" path="res://assets/shaders/hex_background.gdshader" id="24_noimi"]
 [ext_resource type="FontFile" uid="uid://bfmc8ldjpblsv" path="res://assets/fonts/pixeloid-font/PixeloidSansBold-1jpBg.ttf" id="25_wjgtv"]
+[ext_resource type="FontFile" uid="uid://cnci0773b7q4d" path="res://assets/fonts/pixeloid-font/PixeloidSans-lxa3y.ttf" id="26_8jxaa"]
+[ext_resource type="StyleBox" uid="uid://dmxqifk746d81" path="res://assets/UI/style_boxes/dark pannel.tres" id="27_ncc2j"]
+[ext_resource type="PackedScene" uid="uid://cwj2re802kfqb" path="res://features/hover_animation.tscn" id="28_a1v00"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="29_ncc2j"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f8gqx"]
 shader = ExtResource("24_noimi")
@@ -53,7 +43,15 @@ fill_from = Vector2(0.5, 0.5)
 font = ExtResource("25_wjgtv")
 font_size = 96
 
-[node name="Shop" type="Control" unique_id=1773375267 node_paths=PackedStringArray("currency_label", "inventory_label", "offers_container", "reroll_button", "continue_button")]
+[sub_resource type="LabelSettings" id="LabelSettings_a1v00"]
+font = ExtResource("26_8jxaa")
+font_size = 32
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4yy74"]
+atlas = ExtResource("29_ncc2j")
+region = Rect2(0, 16, 16, 16)
+
+[node name="Shop" type="Control" unique_id=1773375267 node_paths=PackedStringArray("currency_label", "inventory_label", "offers_container", "reroll_button", "roll_price", "continue_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -66,9 +64,10 @@ currency_label = NodePath("Margin/VBox/Header/Corner Label")
 inventory_label = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Inventory")
 offers_container = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers")
 reroll_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton")
+roll_price = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton/HBoxContainer/Label")
 continue_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/Buttons/ContinueButton")
 item_button = ExtResource("2_g6lcs")
-item_pool = Array[ExtResource("2_dww4p")]([ExtResource("2"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9"), ExtResource("10"), ExtResource("11"), ExtResource("12"), ExtResource("13"), ExtResource("14"), ExtResource("15"), ExtResource("17"), ExtResource("18"), ExtResource("19"), ExtResource("20"), ExtResource("21")])
+item_pool = Array[ExtResource("2_dww4p")]([ExtResource("4_xoc10"), ExtResource("5_k5co3"), ExtResource("13"), ExtResource("7_6kbe7")])
 
 [node name="HexBackground" type="ColorRect" parent="." unique_id=237340093]
 material = SubResource("ShaderMaterial_f8gqx")
@@ -138,10 +137,45 @@ theme_override_constants/separation = 64
 custom_minimum_size = Vector2(200, 150)
 layout_mode = 2
 size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("26_8jxaa")
 theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("27_ncc2j")
+theme_override_styles/pressed = ExtResource("27_ncc2j")
+theme_override_styles/hover = ExtResource("27_ncc2j")
+theme_override_styles/disabled = ExtResource("27_ncc2j")
+theme_override_styles/focus = ExtResource("27_ncc2j")
 text = "Reroll 
 trinkets"
 autowrap_mode = 2
+
+[node name="Hover animation" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton" unique_id=251388993 instance=ExtResource("28_a1v00")]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton" unique_id=1365593028]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -74.0
+offset_top = -50.0
+offset_right = 74.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+
+[node name="Label" type="Label" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton/HBoxContainer" unique_id=888643515]
+layout_mode = 2
+text = "123"
+label_settings = SubResource("LabelSettings_a1v00")
+
+[node name="TextureRect" type="TextureRect" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton/HBoxContainer" unique_id=953454608]
+texture_filter = 1
+layout_mode = 2
+texture = SubResource("AtlasTexture_4yy74")
+expand_mode = 2
+stretch_mode = 4
 
 [node name="Offers" type="HBoxContainer" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer" unique_id=138849438]
 custom_minimum_size = Vector2(1300, 400)
@@ -182,5 +216,13 @@ theme_override_constants/separation = 128
 [node name="ContinueButton" type="Button" parent="Margin/VBox/MarginContainer/VBoxContainer/Buttons" unique_id=1112151495]
 custom_minimum_size = Vector2(300, 150)
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("26_8jxaa")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = ExtResource("27_ncc2j")
+theme_override_styles/pressed = ExtResource("27_ncc2j")
+theme_override_styles/hover = ExtResource("27_ncc2j")
+theme_override_styles/disabled = ExtResource("27_ncc2j")
+theme_override_styles/focus = ExtResource("27_ncc2j")
 text = "Continue"
+
+[node name="Hover animation" parent="Margin/VBox/MarginContainer/VBoxContainer/Buttons/ContinueButton" unique_id=444198184 instance=ExtResource("28_a1v00")]

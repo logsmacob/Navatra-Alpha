@@ -5,6 +5,7 @@ extends Control
 @export var inventory_label: Label
 @export var offers_container: HBoxContainer
 @export var reroll_button: Button
+@export var roll_price: Label
 @export var continue_button: Button
 @export var item_button: PackedScene
 
@@ -45,7 +46,10 @@ func _rebuild_offer_buttons() -> void:
 		button.set_discription(offer.get_display_discription())
 		button.set_price(offer.cost)
 		button.set_rarity(ItemData.ItemRarity.keys()[offer.rarity])
+		button.set_texture(offer._get_texture())
+		button.set_border_color(offer.get_rarity_color())
 		button.pressed.connect(_on_offer_button_pressed.bind(i))
+		
 		offers_container.add_child(button)
 
 func _on_offer_button_pressed(index: int) -> void:
@@ -82,8 +86,8 @@ func _on_general_modifiers_changed(_modifiers: Dictionary) -> void:
 func _refresh_view() -> void:
 	if currency_label:
 		currency_label.set_marbles(GameState.currency)
-	if reroll_button:
-		reroll_button.text = "Reroll\ntrinkets\n(%d marbles)" % REROLL_COST
+	if roll_price:
+		roll_price.text = "%d" % REROLL_COST
 	var item_counts: Dictionary = GameState.get_shop_item_counts()
 	var lines: Array[String] = ["Owned trinkets:"]
 	for key in item_counts.keys():

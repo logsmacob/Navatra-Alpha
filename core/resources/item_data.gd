@@ -1,5 +1,4 @@
 class_name ItemData
-
 extends Resource
 
 enum ItemRarity {
@@ -7,6 +6,14 @@ enum ItemRarity {
 	UNCOMMON,
 	RARE,
 	EPIC,
+}
+
+# Rarity Colors
+const RARITY_COLORS := {
+	ItemRarity.COMMON: Color(0.8, 0.8, 0.8),      # Gray
+	ItemRarity.UNCOMMON: Color(0.2, 0.8, 0.2),    # Green
+	ItemRarity.RARE: Color(0.2, 0.4, 1.0),        # Blue
+	ItemRarity.EPIC: Color(0.7, 0.3, 1.0),        # Purple
 }
 
 const GENERAL_MODIFIER_LABELS := {
@@ -27,6 +34,8 @@ const GENERAL_MODIFIER_LABELS := {
 	"mult_5_value": "Face Value [5]",
 	"mult_6_value": "Face Value [6]",
 }
+
+@export var texture: AtlasTexture
 
 @export var id: String = ""
 @export var item_name: String = ""
@@ -59,9 +68,24 @@ const GENERAL_MODIFIER_LABELS := {
 @export_range(1, 999, 1) var min_round: int = 1
 @export_range(1, 999, 1) var max_round: int = 999
 
+
+# 🎨 Get rarity color
+func get_rarity_color() -> Color:
+	return RARITY_COLORS.get(rarity, Color.WHITE)
+
+
+# 🏷 Display name
 func get_display_name() -> String:
 	return item_name if not item_name.is_empty() else id
 
+
+# 🎨 Colored name (for RichTextLabel)
+func get_colored_name() -> String:
+	var color := get_rarity_color().to_html()
+	return "[color=%s]%s[/color]" % [color, get_display_name()]
+
+
+# 📊 Modifier dictionary
 func get_general_modifier_changes() -> Dictionary:
 	return {
 		"luck": luck,
@@ -82,33 +106,52 @@ func get_general_modifier_changes() -> Dictionary:
 		"mult_6_value": mult_6_value,
 	}
 
+
+# ➕ Format + / -
 func _format_signed_modifier(value: int) -> String:
 	if value > 0:
 		return "+%d" % value
 	return "%d" % value
 
+
+func _get_texture():
+	return texture
+
+
+# 📝 Description
 func get_display_discription() -> String:
 	var effects: Array[String] = []
+
 	for key in get_general_modifier_changes().keys():
 		var value := int(get_general_modifier_changes()[key])
 		if value == 0:
 			continue
 		effects.append(_get_modifier_effect_text(key, value))
+
 	if effects.is_empty():
 		return "No effect"
+
 	return "\n".join(effects)
+
 
 func _get_modifier_effect_text(key: String, value: int) -> String:
 	var signed_value := _format_signed_modifier(value)
+
 	if key.begins_with("base_") and key.ends_with("_value"):
 		return "%s %s Base" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
+
 	if key.begins_with("mult_") and key.ends_with("_value"):
 		return "%s %s Mult" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
+
 	return "%s %s" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
 
+
+# 🎯 Availability
 func is_available_for_round(round_number: int) -> bool:
 	return round_number >= min_round and round_number <= max_round
 
+
+# 📦 Full effect text
 func get_effect_text() -> String:
 	return "%s | Cost %d | %s" % [
 		get_display_name(),
