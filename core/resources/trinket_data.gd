@@ -198,6 +198,10 @@ func roll_trigger_chance(has_already_triggered: bool = false) -> bool:
 func get_display_discription() -> String:
 	var effects: Array[String] = []
 	effects.append("Trigger: %s" % get_trigger_summary())
+	if base != 0:
+		effects.append("Triggered Base %+d" % base)
+	if mult != 0:
+		effects.append("Triggered Mult %+d" % mult)
 
 	for key in get_general_modifier_changes().keys():
 		var value := int(get_general_modifier_changes()[key])
