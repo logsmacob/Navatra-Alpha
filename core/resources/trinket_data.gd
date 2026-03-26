@@ -8,6 +8,12 @@ enum TrinketRarity {
 	EPIC,
 }
 
+enum TriggerType {
+	ALWAYS,
+	ON_HAND_TYPE,
+	ON_FACE_VALUE,
+}
+
 # Rarity Colors
 const RARITY_COLORS := {
 	TrinketRarity.COMMON: Color(0.8, 0.8, 0.8),      # Gray
@@ -41,33 +47,49 @@ const GENERAL_MODIFIER_LABELS := {
 	"mult_6_value": "Face Value [6]",
 }
 
+@export_group("Display")
 @export var texture: AtlasTexture
-
 @export var id: String = ""
 @export var item_name: String = ""
+
+@export_group("Economy")
 @export var cost: int = 0
+@export_range(0.0, 999.0, 0.1) var weight: float = 1.0
+@export var rarity: TrinketRarity = TrinketRarity.COMMON
 
+@export_group("Trigger")
+@export var trigger_type: TriggerType = TriggerType.ALWAYS
+@export_range(0.0, 100.0, 0.1) var trigger_chance_percent: float = 100.0
 @export var hand_type: HandEvaluatorService.HandType = HandEvaluatorService.HandType.HIGH_DIE
+@export_range(1, 6, 1) var trigger_face_value: int = 1
 
+@export_group("Scoring")
 @export var base: int = 0
 @export var mult: int = 0
 
+@export_subgroup("Run Modifiers")
 @export var luck: int = 0
 @export var base_marbles_per_round: int = 0
 @export var shop_rerolls: int = 0
 @export var shop_playable_hands: int = 0
+
+@export_subgroup("Face Mapping")
 @export var face_1_to: int = 0
 @export var face_2_to: int = 0
 @export var face_3_to: int = 0
 @export var face_4_to: int = 0
 @export var face_5_to: int = 0
 @export var face_6_to: int = 0
+
+@export_subgroup("Face Base Bonuses")
 @export var base_1_value: int = 0
 @export var base_2_value: int = 0
 @export var base_3_value: int = 0
 @export var base_4_value: int = 0
 @export var base_5_value: int = 0
 @export var base_6_value: int = 0
+
+@export_subgroup("Face Mult Bonuses")
 @export var mult_1_value: int = 0
 @export var mult_2_value: int = 0
 @export var mult_3_value: int = 0
@@ -75,8 +97,7 @@ const GENERAL_MODIFIER_LABELS := {
 @export var mult_5_value: int = 0
 @export var mult_6_value: int = 0
 
-@export_range(0.0, 999.0, 0.1) var weight: float = 1.0
-@export var rarity: TrinketRarity = TrinketRarity.COMMON
+@export_group("Availability")
 @export_range(1, 999, 1) var min_round: int = 1
 @export_range(1, 999, 1) var max_round: int = 999
 
@@ -137,10 +158,46 @@ func _format_face_modifier(value: int) -> String:
 func _get_texture():
 	return texture
 
+func get_trigger_summary() -> String:
+	var chance_text := "%s%%" % str(snappedf(trigger_chance_percent, 0.1))
+	match trigger_type:
+		TriggerType.ON_HAND_TYPE:
+			return "%s on %s" % [chance_text, HandEvaluatorService.HandType.keys()[hand_type]]
+		TriggerType.ON_FACE_VALUE:
+			return "%s on face [%d]" % [chance_text, trigger_face_value]
+		_:
+			return "%s once" % chance_text
+
+func is_single_activation_trigger() -> bool:
+	return trigger_type == TriggerType.ALWAYS
+
+func can_trigger_for_context(triggered_hand_type: HandEvaluatorService.HandType, rolled_face_value: int, has_already_triggered: bool = false) -> bool:
+	if is_single_activation_trigger() and has_already_triggered:
+		return false
+
+	match trigger_type:
+		TriggerType.ON_HAND_TYPE:
+			return triggered_hand_type == hand_type
+		TriggerType.ON_FACE_VALUE:
+			return rolled_face_value == trigger_face_value
+		_:
+			return true
+
+func roll_trigger_chance(has_already_triggered: bool = false) -> bool:
+	if is_single_activation_trigger() and has_already_triggered:
+		return false
+
+	if trigger_chance_percent >= 100.0:
+		return true
+	if trigger_chance_percent <= 0.0:
+		return false
+	return randf() <= (trigger_chance_percent / 100.0)
+
 
 # Description
 func get_display_discription() -> String:
 	var effects: Array[String] = []
+	effects.append("Trigger: %s" % get_trigger_summary())
 
 	for key in get_general_modifier_changes().keys():
 		var value := int(get_general_modifier_changes()[key])
