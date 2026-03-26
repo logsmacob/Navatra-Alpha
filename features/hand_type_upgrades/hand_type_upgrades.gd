@@ -33,6 +33,10 @@ func show_upgrades(upgrades: Array[HandTypeUpgradeDefinition]) -> void:
 	get_tree().paused = true
 	visible = true
 
+func set_reroll_price(price: int, can_afford: bool) -> void:
+	reroll_button.text = "Reroll (%d)" % max(price, 0)
+	reroll_button.disabled = not can_afford
+
 func _on_upgrade_pressed(upgrade: HandTypeUpgradeDefinition) -> void:
 	get_tree().paused = false
 	upgrade_selected.emit(upgrade)
