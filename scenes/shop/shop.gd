@@ -7,9 +7,9 @@ extends Control
 @export var reroll_button: Button
 @export var roll_price: Label
 @export var continue_button: Button
-@export var item_button: PackedScene
+@export var trinket_button: PackedScene
 
-@export var item_pool: Array[TrinketData] = []
+@export var trinket_pool: Array[TrinketData] = []
 @export_range(1, 12, 1) var offer_count: int = 4
 
 const REROLL_COST: int = 3
@@ -30,7 +30,7 @@ func _ready() -> void:
 	GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
 
 func _roll_offers() -> void:
-	_offers = _offer_service.roll_weighted_offers(item_pool, max(GameState.round_index, 1), offer_count, true)
+	_offers = _offer_service.roll_weighted_offers(trinket_pool, max(GameState.round_index, 1), offer_count, true)
 	_rebuild_offer_buttons()
 
 func _rebuild_offer_buttons() -> void:
@@ -41,7 +41,7 @@ func _rebuild_offer_buttons() -> void:
 
 	for i in range(_offers.size()):
 		var offer: TrinketData = _offers[i]
-		var button := item_button.instantiate()
+		var button := trinket_button.instantiate()
 		button.set_title(offer.get_display_name())
 		button.set_discription(offer.get_display_discription())
 		button.set_price(offer.cost)
@@ -88,11 +88,11 @@ func _refresh_view() -> void:
 		currency_label.set_marbles(GameState.currency)
 	if roll_price:
 		roll_price.text = "%d" % REROLL_COST
-	var item_counts: Dictionary = GameState.get_shop_item_counts()
+	var trinket_counts: Dictionary = GameState.get_shop_item_counts()
 	var lines: Array[String] = ["Owned trinkets:"]
-	for key in item_counts.keys():
-		lines.append("- %s x%d" % [str(key), int(item_counts[key])])
-	if item_counts.is_empty():
+	for key in trinket_counts.keys():
+		lines.append("- %s x%d" % [str(key), int(trinket_counts[key])])
+	if trinket_counts.is_empty():
 		lines.append("- none")
 	if inventory_label:
 		inventory_label.text = "\n".join(lines)

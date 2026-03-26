@@ -66,8 +66,8 @@ offers_container = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxConta
 reroll_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton")
 roll_price = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton/HBoxContainer/Label")
 continue_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/Buttons/ContinueButton")
-item_button = ExtResource("2_g6lcs")
-item_pool = Array[ExtResource("2_dww4p")]([ExtResource("4_xoc10"), ExtResource("5_k5co3"), ExtResource("13"), ExtResource("7_6kbe7")])
+trinket_button = ExtResource("2_g6lcs")
+trinket_pool = Array[ExtResource("2_dww4p")]([ExtResource("4_xoc10"), ExtResource("5_k5co3"), ExtResource("13"), ExtResource("7_6kbe7")])
 offer_count = null
 
 [node name="HexBackground" type="ColorRect" parent="." unique_id=237340093]
@@ -185,19 +185,19 @@ size_flags_horizontal = 0
 theme_override_constants/separation = 6
 alignment = 1
 
-[node name="ItemButton" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers" unique_id=311372442 instance=ExtResource("2_g6lcs")]
+[node name="TrinketButton" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers" unique_id=311372442 instance=ExtResource("2_g6lcs")]
 layout_mode = 2
 size_flags_horizontal = 1
 
-[node name="ItemButton2" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers" unique_id=582814773 instance=ExtResource("2_g6lcs")]
+[node name="TrinketButton2" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers" unique_id=582814773 instance=ExtResource("2_g6lcs")]
 layout_mode = 2
 size_flags_horizontal = 1
 
-[node name="ItemButton3" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers" unique_id=1348740676 instance=ExtResource("2_g6lcs")]
+[node name="TrinketButton3" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers" unique_id=1348740676 instance=ExtResource("2_g6lcs")]
 layout_mode = 2
 size_flags_horizontal = 1
 
-[node name="ItemButton4" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers" unique_id=1186931286 instance=ExtResource("2_g6lcs")]
+[node name="TrinketButton4" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers" unique_id=1186931286 instance=ExtResource("2_g6lcs")]
 layout_mode = 2
 size_flags_horizontal = 1
 
