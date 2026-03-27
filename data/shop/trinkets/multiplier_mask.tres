@@ -15,7 +15,6 @@ item_name = "Multiplier Mask"
 cost = 6
 weight = 5.0
 rarity = 1
-mult = 6
 mult_5_value = 2
 mult_6_value = 3
 min_round = 2

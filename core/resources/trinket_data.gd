@@ -26,10 +26,6 @@ const RARITY_COLORS := {
 @export_range(0.0, 999.0, 0.1) var weight: float = 1.0
 @export var rarity: TrinketRarity = TrinketRarity.COMMON
 
-@export_group("Scoring")
-@export var base: int = 0
-@export var mult: int = 0
-
 @export_subgroup("Run Modifiers")
 @export var luck: int = 0
 @export var base_marbles_per_round: int = 0
@@ -95,11 +91,7 @@ func get_general_modifier_changes() -> Dictionary:
 	}
 
 func get_runtime_scoring_bonus(_play_context: Dictionary) -> Dictionary:
-	return {
-		"base": base,
-		"mult": mult,
-		"currency": 0,
-	}
+	return {"base": 0, "mult": 0, "currency": 0}
 
 func apply_purchase_effects(game_state: Node) -> void:
 	# Child classes can override this for one-time side-effects.
@@ -121,11 +113,6 @@ func _get_texture():
 # Description
 func get_display_description() -> String:
 	var effects: Array[String] = []
-	if base != 0:
-		effects.append("Triggered Base %+d" % base)
-	if mult != 0:
-		effects.append("Triggered Mult %+d" % mult)
-
 	var modifiers := get_general_modifier_changes()
 	for key in ModifierSchema.get_general_modifier_keys():
 		var value := int(modifiers.get(key, 0))
