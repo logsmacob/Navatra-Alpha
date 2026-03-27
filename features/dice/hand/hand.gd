@@ -100,6 +100,24 @@ func get_scoring_material_currency_bonus() -> int:
 	var scoring_dice := hand_scoring_selector.get_scoring_dice(dice)
 	return hand_currency_bonus_service.get_scoring_material_currency_bonus(scoring_dice)
 
+func get_scoring_face_values() -> Array[int]:
+	var scoring_dice := hand_scoring_selector.get_scoring_dice(dice)
+	var values: Array[int] = []
+	for die_ui: DieUI in scoring_dice:
+		if die_ui == null or die_ui.die == null or die_ui.die.current_face == null:
+			continue
+		values.append(die_ui.die.current_face.value)
+	return values
+
+func get_scoring_die_materials() -> Array[String]:
+	var scoring_dice := hand_scoring_selector.get_scoring_dice(dice)
+	var materials: Array[String] = []
+	for die_ui: DieUI in scoring_dice:
+		if die_ui == null or die_ui.die == null or die_ui.die.data == null:
+			continue
+		materials.append(str(die_ui.die.data.material))
+	return materials
+
 ## Starts the played-dice score-color sequence so the dice pulse in sync with the score-bar math animation.
 func animate_scoring_dice_score_colors() -> void:
 	var scoring_dice := hand_scoring_selector.get_scoring_dice(dice)

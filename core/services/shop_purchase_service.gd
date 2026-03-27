@@ -15,8 +15,11 @@ func apply_purchase(game_state: Node, offer: TrinketData) -> bool:
 	if game_state.has_method("add_general_modifiers"):
 		game_state.call("add_general_modifiers", offer.get_general_modifier_changes())
 	_apply_triggered_scoring_modifiers(game_state, offer)
+	offer.apply_purchase_effects(game_state)
 	if game_state.has_method("add_shop_item"):
 		game_state.call("add_shop_item", offer.id)
+	if game_state.has_method("add_owned_trinket"):
+		game_state.call("add_owned_trinket", offer)
 	return true
 
 func _apply_triggered_scoring_modifiers(game_state: Node, offer: TrinketData) -> void:

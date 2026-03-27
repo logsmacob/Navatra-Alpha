@@ -145,6 +145,19 @@ func get_general_modifier_changes() -> Dictionary:
 		"mult_6_value": mult_6_value,
 	}
 
+func get_runtime_scoring_bonus(_play_context: Dictionary) -> Dictionary:
+	return {
+		"base": base,
+		"mult": mult,
+		"currency": 0,
+	}
+
+func apply_purchase_effects(game_state: Node) -> void:
+	# Child classes can override this for one-time side-effects.
+	# Example: converting a specific die to a custom material.
+	if game_state == null:
+		return
+
 
 # Format + / -
 func _format_signed_modifier(value: int) -> String:
