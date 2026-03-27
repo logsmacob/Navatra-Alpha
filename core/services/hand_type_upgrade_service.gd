@@ -3,11 +3,29 @@ extends RefCounted
 ## Hand type upgrade service script: coordinates this part of the game's behavior.
 class_name HandTypeUpgradeService
 
-const RARITY_BONUSES := {
+const DEFAULT_RARITY_BONUSES := {
 	HandTypeUpgradeDefinition.UpgradeRarity.COMMON: {"base": 4, "mult": 1},
 	HandTypeUpgradeDefinition.UpgradeRarity.RARE: {"base": 9, "mult": 2},
 	HandTypeUpgradeDefinition.UpgradeRarity.EPIC: {"base": 16, "mult": 3},
 }
+
+var _rarity_bonuses: Dictionary = DEFAULT_RARITY_BONUSES.duplicate(true)
+var _rarity_roll_weights := {
+	HandTypeUpgradeDefinition.UpgradeRarity.COMMON: 0.6,
+	HandTypeUpgradeDefinition.UpgradeRarity.RARE: 0.3,
+	HandTypeUpgradeDefinition.UpgradeRarity.EPIC: 0.1,
+}
+
+func set_rarity_bonuses(rarity_bonuses: Dictionary) -> void:
+	if rarity_bonuses.is_empty():
+		_rarity_bonuses = DEFAULT_RARITY_BONUSES.duplicate(true)
+		return
+	_rarity_bonuses = rarity_bonuses.duplicate(true)
+
+func set_rarity_roll_weights(rarity_roll_weights: Dictionary) -> void:
+	if rarity_roll_weights.is_empty():
+		return
+	_rarity_roll_weights = rarity_roll_weights.duplicate(true)
 
 func generate_upgrades(count: int) -> Array[HandTypeUpgradeDefinition]:
 	if count <= 0:
@@ -36,7 +54,7 @@ func apply_upgrade(upgrade: HandTypeUpgradeDefinition, game_state: Node) -> void
 		game_state.call("add_hand_type_upgrade", upgrade.hand_type, upgrade.base_bonus, upgrade.mult_bonus)
 
 func _create_upgrade(hand_type: int, rarity: HandTypeUpgradeDefinition.UpgradeRarity) -> HandTypeUpgradeDefinition:
-	var bonus: Dictionary = RARITY_BONUSES[rarity]
+	var bonus: Dictionary = _rarity_bonuses.get(rarity, {"base": 0, "mult": 0})
 	var upgrade := HandTypeUpgradeDefinition.new()
 	upgrade.id = "%s_%s" % [HandEvaluatorService.HandType.keys()[hand_type].to_lower(), HandTypeUpgradeDefinition.UpgradeRarity.keys()[rarity].to_lower()]
 	upgrade.hand_type = hand_type
@@ -48,9 +66,11 @@ func _create_upgrade(hand_type: int, rarity: HandTypeUpgradeDefinition.UpgradeRa
 
 func _roll_rarity() -> HandTypeUpgradeDefinition.UpgradeRarity:
 	var roll := randf()
-	if roll < 0.6:
+	var common_weight := float(_rarity_roll_weights.get(HandTypeUpgradeDefinition.UpgradeRarity.COMMON, 0.6))
+	var rare_weight := float(_rarity_roll_weights.get(HandTypeUpgradeDefinition.UpgradeRarity.RARE, 0.3))
+	if roll < common_weight:
 		return HandTypeUpgradeDefinition.UpgradeRarity.COMMON
-	if roll < 0.9:
+	if roll < common_weight + rare_weight:
 		return HandTypeUpgradeDefinition.UpgradeRarity.RARE
 	return HandTypeUpgradeDefinition.UpgradeRarity.EPIC
 
