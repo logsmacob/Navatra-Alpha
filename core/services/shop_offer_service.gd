@@ -35,14 +35,14 @@ func get_available_items_for_round(item_pool: Array[TrinketData], current_round:
 func pick_weighted_item(pool: Array[TrinketData]) -> TrinketData:
 	var total_weight: float = 0.0
 	for item: TrinketData in pool:
-		total_weight += max(item.weight, 0.0)
+		total_weight += item.get_shop_weight()
 	if total_weight <= 0.0:
 		return null
 
 	var roll: float = randf_range(0.0, total_weight)
 	var running_weight: float = 0.0
 	for item: TrinketData in pool:
-		running_weight += max(item.weight, 0.0)
+		running_weight += item.get_shop_weight()
 		if roll <= running_weight:
 			return item
 

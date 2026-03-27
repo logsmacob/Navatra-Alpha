@@ -16,6 +16,13 @@ const RARITY_COLORS := {
 	TrinketRarity.EPIC: Color(0.7, 0.3, 1.0),        # Purple
 }
 
+const SHOP_RARITY_WEIGHTS := {
+	TrinketRarity.COMMON: 70.0,
+	TrinketRarity.UNCOMMON: 22.0,
+	TrinketRarity.RARE: 7.0,
+	TrinketRarity.EPIC: 1.0,
+}
+
 @export_group("Display")
 @export var texture: AtlasTexture
 @export var id: String = ""
@@ -23,7 +30,6 @@ const RARITY_COLORS := {
 
 @export_group("Economy")
 @export var cost: int = 0
-@export_range(0.0, 999.0, 0.1) var weight: float = 1.0
 @export var rarity: TrinketRarity = TrinketRarity.COMMON
 
 @export_subgroup("Run Modifiers")
@@ -76,6 +82,10 @@ func get_shop_tracking_key() -> String:
 	if not resource_path.is_empty():
 		return resource_path
 	return get_display_name()
+
+
+func get_shop_weight() -> float:
+	return float(SHOP_RARITY_WEIGHTS.get(rarity, 1.0))
 
 
 # Modifier dictionary
