@@ -8,12 +8,6 @@ enum TrinketRarity {
 	EPIC,
 }
 
-enum TriggerType {
-	ALWAYS,
-	ON_HAND_TYPE,
-	ON_FACE_VALUE,
-}
-
 # Rarity Colors
 const RARITY_COLORS := {
 	TrinketRarity.COMMON: Color(0.8, 0.8, 0.8),      # Gray
@@ -56,12 +50,6 @@ const GENERAL_MODIFIER_LABELS := {
 @export var cost: int = 0
 @export_range(0.0, 999.0, 0.1) var weight: float = 1.0
 @export var rarity: TrinketRarity = TrinketRarity.COMMON
-
-@export_group("Trigger")
-@export var trigger_type: TriggerType = TriggerType.ALWAYS
-@export_range(0.0, 100.0, 0.1) var trigger_chance_percent: float = 100.0
-@export var hand_type: HandEvaluatorService.HandType = HandEvaluatorService.HandType.HIGH_DIE
-@export_range(1, 6, 1) var trigger_face_value: int = 1
 
 @export_group("Scoring")
 @export var base: int = 0
@@ -145,6 +133,19 @@ func get_general_modifier_changes() -> Dictionary:
 		"mult_6_value": mult_6_value,
 	}
 
+func get_runtime_scoring_bonus(_play_context: Dictionary) -> Dictionary:
+	return {
+		"base": base,
+		"mult": mult,
+		"currency": 0,
+	}
+
+func apply_purchase_effects(game_state: Node) -> void:
+	# Child classes can override this for one-time side-effects.
+	# Example: converting a specific die to a custom material.
+	if game_state == null:
+		return
+
 
 # Format + / -
 func _format_signed_modifier(value: int) -> String:
@@ -158,46 +159,10 @@ func _format_face_modifier(value: int) -> String:
 func _get_texture():
 	return texture
 
-func get_trigger_summary() -> String:
-	var chance_text := "%s%%" % str(snappedf(trigger_chance_percent, 0.1))
-	match trigger_type:
-		TriggerType.ON_HAND_TYPE:
-			return "%s on %s" % [chance_text, HandEvaluatorService.HandType.keys()[hand_type]]
-		TriggerType.ON_FACE_VALUE:
-			return "%s on face [%d]" % [chance_text, trigger_face_value]
-		_:
-			return "%s once" % chance_text
-
-func is_single_activation_trigger() -> bool:
-	return trigger_type == TriggerType.ALWAYS
-
-func can_trigger_for_context(triggered_hand_type: HandEvaluatorService.HandType, rolled_face_value: int, has_already_triggered: bool = false) -> bool:
-	if is_single_activation_trigger() and has_already_triggered:
-		return false
-
-	match trigger_type:
-		TriggerType.ON_HAND_TYPE:
-			return triggered_hand_type == hand_type
-		TriggerType.ON_FACE_VALUE:
-			return rolled_face_value == trigger_face_value
-		_:
-			return true
-
-func roll_trigger_chance(has_already_triggered: bool = false) -> bool:
-	if is_single_activation_trigger() and has_already_triggered:
-		return false
-
-	if trigger_chance_percent >= 100.0:
-		return true
-	if trigger_chance_percent <= 0.0:
-		return false
-	return randf() <= (trigger_chance_percent / 100.0)
-
 
 # Description
 func get_display_discription() -> String:
 	var effects: Array[String] = []
-	effects.append("Trigger: %s" % get_trigger_summary())
 	if base != 0:
 		effects.append("Triggered Base %+d" % base)
 	if mult != 0:

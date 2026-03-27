@@ -35,10 +35,13 @@ func handle_played_hand_ready(hand_data: DiceHand) -> void:
 	if not _can_continue_resolution():
 		return
 	var applied_score := int(play_result.get("applied_score", 0))
+	var trinket_bonus := _apply_runtime_trinket_bonuses(hand_data)
+	applied_score += int(trinket_bonus.get("base", 0))
+	applied_score += int(trinket_bonus.get("mult", 0))
 	await _score_bar.animate_quota_update(applied_score)
 	if not _can_continue_resolution():
 		return
-	var material_currency_bonus := _hand.get_scoring_material_currency_bonus()
+	var material_currency_bonus := _hand.get_scoring_material_currency_bonus() + int(trinket_bonus.get("currency", 0))
 	if material_currency_bonus > 0:
 		GameState.add_currency(material_currency_bonus)
 	print(
@@ -89,3 +92,25 @@ func handle_reset_roll_finished() -> void:
 	if _score_bar == null:
 		return
 	_score_bar.clear_after_play_reset()
+
+func _apply_runtime_trinket_bonuses(hand_data: DiceHand) -> Dictionary:
+	if _hand == null or hand_data == null or hand_data.is_empty():
+		return {"base": 0, "mult": 0, "currency": 0}
+
+	var hand_type := HandEvaluatorService.new().evaluate_hand(hand_data.to_array())
+	var play_context := {
+		"hand_type": hand_type,
+		"scoring_face_values": _hand.get_scoring_face_values(),
+		"scoring_die_materials": _hand.get_scoring_die_materials(),
+	}
+
+	var total := {"base": 0, "mult": 0, "currency": 0}
+	for trinket: TrinketData in GameState.get_owned_trinkets():
+		if trinket == null:
+			continue
+		var bonus := trinket.get_runtime_scoring_bonus(play_context)
+		total["base"] = int(total.get("base", 0)) + int(bonus.get("base", 0))
+		total["mult"] = int(total.get("mult", 0)) + int(bonus.get("mult", 0))
+		total["currency"] = int(total.get("currency", 0)) + int(bonus.get("currency", 0))
+
+	return total
