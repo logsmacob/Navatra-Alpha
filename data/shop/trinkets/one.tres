@@ -14,5 +14,3 @@ id = "one"
 item_name = "One"
 cost = 1
 weight = 7.0
-base = 1
-mult = 2

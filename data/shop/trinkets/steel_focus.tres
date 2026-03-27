@@ -15,7 +15,6 @@ item_name = "Steel Focus"
 cost = 8
 weight = 3.0
 rarity = 2
-mult = 5
 selected_die_index = 2
 target_material = "steel"
 marbles_per_matching_die = 3

@@ -1,6 +1,10 @@
 class_name ChanceTrinketData
 extends TrinketData
 
+@export_group("Triggered Scoring")
+@export var base: int = 0
+@export var mult: int = 0
+
 @export_group("Chance Variant")
 @export_range(0.0, 100.0, 0.1) var activation_chance_percent: float = 100.0
 @export var use_hand_type_condition: bool = true
@@ -19,7 +23,20 @@ func get_trigger_summary() -> String:
 	return "%s each played hand" % chance_text
 
 func get_display_description() -> String:
-	var description := super.get_display_description()
+	var effects: Array[String] = []
+	if base != 0:
+		effects.append("Triggered Base %+d" % base)
+	if mult != 0:
+		effects.append("Triggered Mult %+d" % mult)
+
+	var modifiers := get_general_modifier_changes()
+	for key in ModifierSchema.get_general_modifier_keys():
+		var value := int(modifiers.get(key, 0))
+		if value == 0:
+			continue
+		effects.append(_get_modifier_effect_text(key, value))
+
+	var description := "No effect" if effects.is_empty() else "\n".join(effects)
 	var trigger_summary := get_trigger_summary()
 	var chance_details := "Activation: %s." % trigger_summary
 	if description == "No effect":
