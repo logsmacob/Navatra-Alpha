@@ -3,9 +3,10 @@ extends Node
 class_name ShopController
 
 const MAIN_SCENE_PATH := "res://scenes/main/main.tscn"
-const REROLL_BASE_COST: int = 3
-const ROUND_COST_MULTIPLIER_STEP: float = 0.2
-const SHOP_REROLL_ESCALATION_STEP: int = 1
+const REROLL_BASE_COST: int = 1
+const ROUND_COST_MULTIPLIER_STEP: float = 0.1
+const SHOP_REROLL_ESCALATION_STEP: int = 0
+const SHOP_COST_DISCOUNT_FACTOR: float = 0.75
 const TRINKET_DATA_ROOT := "res://data/shop/trinkets"
 
 @export var shop_view: ShopView
@@ -110,7 +111,7 @@ func _get_scaled_cost(base_cost: int) -> int:
 		return 0
 	var current_round = max(GameState.round_index, 1)
 	var round_multiplier := 1.0 + (float(current_round - 1) * ROUND_COST_MULTIPLIER_STEP)
-	return maxi(int(ceil(float(base_cost) * round_multiplier)), 1)
+	return maxi(int(ceil(float(base_cost) * round_multiplier * SHOP_COST_DISCOUNT_FACTOR)), 1)
 
 func _populate_trinket_pool_from_data() -> void:
 	var discovered_trinkets := _load_trinkets_recursive(TRINKET_DATA_ROOT)

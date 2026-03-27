@@ -2,6 +2,13 @@ extends RefCounted
 
 class_name ShopOfferService
 
+const RARITY_ROLL_ORDER: Array[TrinketData.TrinketRarity] = [
+	TrinketData.TrinketRarity.COMMON,
+	TrinketData.TrinketRarity.UNCOMMON,
+	TrinketData.TrinketRarity.RARE,
+	TrinketData.TrinketRarity.EPIC,
+]
+
 func roll_weighted_offers(item_pool: Array[TrinketData], current_round: int, target_count: int, avoid_duplicates: bool = true, owned_item_counts: Dictionary = {}) -> Array[TrinketData]:
 	if target_count <= 0:
 		return []
@@ -33,17 +40,61 @@ func get_available_items_for_round(item_pool: Array[TrinketData], current_round:
 	return available_items
 
 func pick_weighted_item(pool: Array[TrinketData]) -> TrinketData:
+	if pool.is_empty():
+		return null
+	var rolled_rarity := _roll_rarity_by_weight()
+	var rarity_pool := _build_pool_for_rarity(pool, rolled_rarity)
+	if rarity_pool.is_empty():
+		rarity_pool = pool
+
 	var total_weight: float = 0.0
-	for item: TrinketData in pool:
+	for item: TrinketData in rarity_pool:
 		total_weight += item.get_shop_weight()
 	if total_weight <= 0.0:
 		return null
 
 	var roll: float = randf_range(0.0, total_weight)
 	var running_weight: float = 0.0
-	for item: TrinketData in pool:
+	for item: TrinketData in rarity_pool:
 		running_weight += item.get_shop_weight()
 		if roll <= running_weight:
 			return item
 
-	return pool.back() if not pool.is_empty() else null
+	return rarity_pool.back() if not rarity_pool.is_empty() else null
+
+func _roll_rarity_by_weight() -> TrinketData.TrinketRarity:
+	var total_weight := 0.0
+	for rarity in RARITY_ROLL_ORDER:
+		total_weight += float(TrinketData.SHOP_RARITY_WEIGHTS.get(rarity, 0.0))
+	if total_weight <= 0.0:
+		return TrinketData.TrinketRarity.COMMON
+
+	var roll := randf_range(0.0, total_weight)
+	var running_weight := 0.0
+	for rarity in RARITY_ROLL_ORDER:
+		running_weight += float(TrinketData.SHOP_RARITY_WEIGHTS.get(rarity, 0.0))
+		if roll <= running_weight:
+			return rarity
+
+	return TrinketData.TrinketRarity.COMMON
+
+func _build_pool_for_rarity(pool: Array[TrinketData], rarity: TrinketData.TrinketRarity) -> Array[TrinketData]:
+	var exact_match_pool: Array[TrinketData] = []
+	for item: TrinketData in pool:
+		if item.rarity == rarity:
+			exact_match_pool.append(item)
+	if not exact_match_pool.is_empty():
+		return exact_match_pool
+
+	var ordered_pool: Array[TrinketData] = []
+	var sorted_by_distance := pool.duplicate()
+	sorted_by_distance.sort_custom(func(a: TrinketData, b: TrinketData) -> bool:
+		var distance_a := abs(int(a.rarity) - int(rarity))
+		var distance_b := abs(int(b.rarity) - int(rarity))
+		if distance_a == distance_b:
+			return int(a.rarity) < int(b.rarity)
+		return distance_a < distance_b
+	)
+	for item: TrinketData in sorted_by_distance:
+		ordered_pool.append(item)
+	return ordered_pool

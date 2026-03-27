@@ -5,7 +5,7 @@ class_name MainRoundFlowController
 
 signal shop_requested
 
-const UPGRADE_REROLL_BASE_COST: int = 2
+const UPGRADE_REROLL_BASE_COST: int = 1
 
 var _hand_type_upgrades: HandTypeUpgradesView
 var _hand_type_upgrade_service: HandTypeUpgradeService
