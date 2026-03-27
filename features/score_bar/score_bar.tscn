@@ -11,10 +11,6 @@
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p1r1p"]
 
-[sub_resource type="LabelSettings" id="LabelSettings_vywcl"]
-font = ExtResource("2_l3q4t")
-font_size = 32
-
 [sub_resource type="LabelSettings" id="LabelSettings_nwx5f"]
 font = ExtResource("2_l3q4t")
 font_size = 24
@@ -58,10 +54,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 8
-
-[node name="break" type="Label" parent="VBoxContainer" unique_id=1568508805]
-layout_mode = 2
-label_settings = SubResource("LabelSettings_vywcl")
 
 [node name="GeneralModifiers" type="Label" parent="VBoxContainer" unique_id=214748365]
 custom_minimum_size = Vector2(520, 0)
