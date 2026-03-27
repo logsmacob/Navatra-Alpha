@@ -73,7 +73,7 @@ func _remove_replaced_die_material_trinkets(new_trinket: TrinketData) -> void:
 	var new_material_trinket := new_trinket as DieMaterialTrinketData
 	if new_material_trinket == null:
 		return
-	var target_die_index := max(new_material_trinket.selected_die_index, 0)
+	var target_die_index = max(new_material_trinket.selected_die_index, 0)
 	for index in range(owned_trinkets.size() - 1, -1, -1):
 		var existing_material_trinket := owned_trinkets[index] as DieMaterialTrinketData
 		if existing_material_trinket == null:

@@ -108,7 +108,7 @@ func _get_scaled_shop_reroll_cost() -> int:
 func _get_scaled_cost(base_cost: int) -> int:
 	if base_cost <= 0:
 		return 0
-	var current_round := max(GameState.round_index, 1)
+	var current_round = max(GameState.round_index, 1)
 	var round_multiplier := 1.0 + (float(current_round - 1) * ROUND_COST_MULTIPLIER_STEP)
 	return maxi(int(ceil(float(base_cost) * round_multiplier)), 1)
 
