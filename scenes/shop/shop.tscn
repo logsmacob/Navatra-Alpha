@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://crwh35rpcjt2y"]
 
 [ext_resource type="Script" uid="uid://b6uq5mc6daglp" path="res://scenes/shop/shop.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/shop/controllers/shop_controller.gd" id="1_shop_controller"]
 [ext_resource type="Script" uid="uid://1aoacss5301g" path="res://core/resources/trinket_data.gd" id="2_dww4p"]
 [ext_resource type="PackedScene" uid="uid://mejnjhlwumme" path="res://features/ItemButton/item_button.tscn" id="2_g6lcs"]
 [ext_resource type="Resource" path="res://data/shop/trinkets/lucky_charm.tres" id="4_lucky"]
@@ -73,8 +74,14 @@ reroll_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContaine
 roll_price = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton/HBoxContainer/Label")
 continue_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/Buttons/ContinueButton")
 trinket_button = ExtResource("2_g6lcs")
+
+[node name="Controllers" type="Node" parent="." unique_id=987650101]
+
+[node name="ShopController" type="Node" parent="Controllers" node_paths=PackedStringArray("shop_view") unique_id=987650102]
+script = ExtResource("1_shop_controller")
+shop_view = NodePath("../../")
 trinket_pool = Array[ExtResource("2_dww4p")]([ExtResource("4_lucky"), ExtResource("5_reroll"), ExtResource("6_quota"), ExtResource("7_multi"), ExtResource("8_highroller"), ExtResource("9_marble"), ExtResource("10_steel"), ExtResource("11_spark"), ExtResource("12_snake"), ExtResource("13_sixth")])
-offer_count = null
+offer_count = 4
 
 [node name="HexBackground" type="ColorRect" parent="." unique_id=237340093]
 material = SubResource("ShaderMaterial_f8gqx")

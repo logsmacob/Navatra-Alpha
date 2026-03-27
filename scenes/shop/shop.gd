@@ -1,8 +1,10 @@
 extends Control
-## Shop script: coordinates this part of the game's behavior.
+## Shop view script: renders shop data and emits user intent signals.
+class_name ShopView
 
-signal purchase_requested(index: int)
-signal purchase_completed(offer_id: String)
+signal offer_purchase_requested(index: int)
+signal reroll_requested
+signal continue_requested
 
 @export var currency_label: CornerLabel
 @export var inventory_label: Label
@@ -12,43 +14,50 @@ signal purchase_completed(offer_id: String)
 @export var continue_button: Button
 @export var trinket_button: PackedScene
 
-@export var trinket_pool: Array[TrinketData] = []
-@export_range(1, 12, 1) var offer_count: int = 4
-
-const REROLL_COST: int = 3
-
 var _offers: Array[TrinketData] = []
 var _offer_buttons: Array[Button] = []
-var _offer_service: ShopOfferService = ShopOfferService.new()
-var _purchase_service: ShopPurchaseService = ShopPurchaseService.new()
-var _transaction_port: ShopTransactionPort
 
 func _ready() -> void:
-	_transaction_port = GameStateShopTransactionPort.new(GameState)
-	_roll_offers()
-	_refresh_view()
-
 	if reroll_button:
 		reroll_button.pressed.connect(_on_reroll_pressed)
 	if continue_button:
 		continue_button.pressed.connect(_on_continue_pressed)
-	purchase_requested.connect(_on_purchase_requested)
-	GameState.currency_changed.connect(_on_currency_changed)
-	GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
 
-func _roll_offers() -> void:
-	_offers = _offer_service.roll_weighted_offers(
-		trinket_pool,
-		max(GameState.round_index, 1),
-		offer_count,
-		true,
-		GameState.get_shop_item_counts()
-	)
-	_rebuild_offer_buttons()
+func set_roll_cost(cost: int) -> void:
+	if roll_price:
+		roll_price.text = "%d" % cost
 
-func _rebuild_offer_buttons() -> void:
+func set_currency_display(amount: int) -> void:
+	if currency_label:
+		currency_label.set_marbles(amount)
+
+func set_offers(offers: Array[TrinketData], currency_amount: int) -> void:
+	_offers = offers.duplicate()
+	_rebuild_offer_buttons(currency_amount)
+
+func set_inventory_lines(lines: Array[String]) -> void:
+	if inventory_label:
+		inventory_label.text = "\n".join(lines)
+
+func set_reroll_enabled(enabled: bool) -> void:
+	if reroll_button:
+		reroll_button.disabled = not enabled
+
+func refresh_offer_affordability(currency_amount: int) -> void:
+	for i in range(_offer_buttons.size()):
+		var button := _offer_buttons[i]
+		if button == null:
+			continue
+		if i < 0 or i >= _offers.size():
+			button.disabled = true
+			continue
+		var offer := _offers[i]
+		button.disabled = currency_amount < offer.cost
+
+func _rebuild_offer_buttons(currency_amount: int) -> void:
 	if offers_container == null:
 		return
+
 	_offer_buttons.clear()
 	for child in offers_container.get_children():
 		child.queue_free()
@@ -70,83 +79,16 @@ func _rebuild_offer_buttons() -> void:
 		button.set_border_color(offer.get_rarity_color())
 		button.pressed.connect(_on_offer_button_pressed.bind(i))
 		button.tooltip_text = "%s\nCost: %d marbles" % [offer.get_display_name(), offer.cost]
-		
 		offers_container.add_child(button)
 		_offer_buttons.append(button)
 
-	_refresh_offer_affordability()
+	refresh_offer_affordability(currency_amount)
 
 func _on_offer_button_pressed(index: int) -> void:
-	purchase_requested.emit(index)
-
-func _on_purchase_requested(index: int) -> void:
-	_try_buy_offer(index)
-
-func _try_buy_offer(index: int) -> void:
-	if index < 0 or index >= _offers.size():
-		return
-
-	var offer: TrinketData = _offers[index]
-	if not _purchase_service.apply_purchase(_transaction_port, offer):
-		return
-
-	_offers.remove_at(index)
-	purchase_completed.emit(offer.id)
-	_rebuild_offer_buttons()
-	_refresh_view()
+	offer_purchase_requested.emit(index)
 
 func _on_reroll_pressed() -> void:
-	if not _purchase_service.can_afford_purchase(GameState.currency, REROLL_COST):
-		return
-	if not GameState.spend_currency(REROLL_COST):
-		return
-	_roll_offers()
-	_refresh_view()
+	reroll_requested.emit()
 
 func _on_continue_pressed() -> void:
-	GameState.start_next_round()
-	get_tree().change_scene_to_file("res://scenes/main/main.tscn")
-
-func _on_currency_changed(_amount: int) -> void:
-	_refresh_view()
-
-func _on_general_modifiers_changed(_modifiers: Dictionary) -> void:
-	_refresh_view()
-
-func _refresh_view() -> void:
-	if currency_label:
-		currency_label.set_marbles(GameState.currency)
-	if roll_price:
-		roll_price.text = "%d" % REROLL_COST
-	if reroll_button:
-		reroll_button.disabled = not _purchase_service.can_afford_purchase(GameState.currency, REROLL_COST)
-	_refresh_offer_affordability()
-	var trinket_counts: Dictionary = {}
-	for owned_trinket: TrinketData in GameState.get_owned_trinkets():
-		if owned_trinket == null:
-			continue
-		var trinket_name := owned_trinket.get_display_name()
-		trinket_counts[trinket_name] = int(trinket_counts.get(trinket_name, 0)) + 1
-	var lines: Array[String] = ["Owned trinkets:"]
-	var sorted_names: Array = trinket_counts.keys()
-	sorted_names.sort_custom(func(a: Variant, b: Variant) -> bool:
-		return str(a).nocasecmp_to(str(b)) < 0
-	)
-	for key in sorted_names:
-		lines.append("- %s x%d" % [str(key), int(trinket_counts[key])])
-	if trinket_counts.is_empty():
-		lines.append("- none")
-	if inventory_label:
-		inventory_label.text = "\n".join(lines)
-
-func _refresh_offer_affordability() -> void:
-	for i in range(_offer_buttons.size()):
-		var button := _offer_buttons[i]
-		if button == null:
-			continue
-		if i < 0 or i >= _offers.size():
-			button.disabled = true
-			continue
-		var offer := _offers[i]
-		var can_afford := _purchase_service.can_afford_purchase(GameState.currency, offer.cost)
-		button.disabled = not can_afford
+	continue_requested.emit()
