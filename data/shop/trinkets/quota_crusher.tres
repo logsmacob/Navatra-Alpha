@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="TrinketData" format=3]
+
+[ext_resource type="Script" path="res://core/resources/trinket_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/dice icons.png" id="2_icons"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_icons")
+region = Rect2(32, 0, 16, 16)
+
+[resource]
+script = ExtResource("1_script")
+texture = SubResource("AtlasTexture_icon")
+id = "quota_crusher"
+item_name = "Quota Crusher"
+cost = 7
+weight = 4.5
+rarity = 2
+base = 8
+mult = 3
+shop_playable_hands = 1
+min_round = 2
+max_round = 999

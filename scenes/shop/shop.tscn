@@ -3,7 +3,16 @@
 [ext_resource type="Script" uid="uid://b6uq5mc6daglp" path="res://scenes/shop/shop.gd" id="1"]
 [ext_resource type="Script" uid="uid://1aoacss5301g" path="res://core/resources/trinket_data.gd" id="2_dww4p"]
 [ext_resource type="PackedScene" uid="uid://mejnjhlwumme" path="res://features/ItemButton/item_button.tscn" id="2_g6lcs"]
-[ext_resource type="Resource" uid="uid://dw5hc6ev014hq" path="res://data/shop/trinkets/one.tres" id="4_xoc10"]
+[ext_resource type="Resource" path="res://data/shop/trinkets/lucky_charm.tres" id="4_lucky"]
+[ext_resource type="Resource" path="res://data/shop/trinkets/reroll_ring.tres" id="5_reroll"]
+[ext_resource type="Resource" path="res://data/shop/trinkets/quota_crusher.tres" id="6_quota"]
+[ext_resource type="Resource" path="res://data/shop/trinkets/multiplier_mask.tres" id="7_multi"]
+[ext_resource type="Resource" path="res://data/shop/trinkets/highroller_coin.tres" id="8_highroller"]
+[ext_resource type="Resource" path="res://data/shop/trinkets/marble_bank.tres" id="9_marble"]
+[ext_resource type="Resource" path="res://data/shop/trinkets/steel_focus.tres" id="10_steel"]
+[ext_resource type="Resource" path="res://data/shop/trinkets/wild_spark.tres" id="11_spark"]
+[ext_resource type="Resource" path="res://data/shop/trinkets/snakes_eye_lens.tres" id="12_snake"]
+[ext_resource type="Resource" path="res://data/shop/trinkets/sixth_sense.tres" id="13_sixth"]
 [ext_resource type="PackedScene" uid="uid://bde80fe0ex30q" path="res://features/score_bar/corner_label.tscn" id="23_bnu54"]
 [ext_resource type="StyleBox" uid="uid://btv01nysx3vum" path="res://assets/UI/style_boxes/header.tres" id="24_f8gqx"]
 [ext_resource type="Shader" uid="uid://64giuyue21qd" path="res://assets/shaders/hex_background.gdshader" id="24_noimi"]
@@ -64,7 +73,7 @@ reroll_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContaine
 roll_price = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton/HBoxContainer/Label")
 continue_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/Buttons/ContinueButton")
 trinket_button = ExtResource("2_g6lcs")
-trinket_pool = Array[ExtResource("2_dww4p")]([ExtResource("4_xoc10")])
+trinket_pool = Array[ExtResource("2_dww4p")]([ExtResource("4_lucky"), ExtResource("5_reroll"), ExtResource("6_quota"), ExtResource("7_multi"), ExtResource("8_highroller"), ExtResource("9_marble"), ExtResource("10_steel"), ExtResource("11_spark"), ExtResource("12_snake"), ExtResource("13_sixth")])
 offer_count = null
 
 [node name="HexBackground" type="ColorRect" parent="." unique_id=237340093]

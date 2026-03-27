@@ -18,6 +18,18 @@ func get_trigger_summary() -> String:
 		return "%s on face [%d]" % [chance_text, required_face_value]
 	return "%s each played hand" % chance_text
 
+func get_display_description() -> String:
+	var description := super.get_display_description()
+	var trigger_summary := get_trigger_summary()
+	var chance_details := "Activation: %s." % trigger_summary
+	if description == "No effect":
+		return chance_details
+	return "%s\n%s" % [description, chance_details]
+
+# Backward-compatible alias for older callers and scenes.
+func get_display_discription() -> String:
+	return get_display_description()
+
 func get_runtime_scoring_bonus(play_context: Dictionary) -> Dictionary:
 	if not _matches_context(play_context):
 		return {"base": 0, "mult": 0, "currency": 0}

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="TrinketData" format=3]
+
+[ext_resource type="Script" path="res://core/resources/trinket_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/dice icons.png" id="2_icons"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_icons")
+region = Rect2(0, 0, 16, 16)
+
+[resource]
+script = ExtResource("1_script")
+texture = SubResource("AtlasTexture_icon")
+id = "lucky_charm"
+item_name = "Lucky Charm"
+cost = 3
+weight = 8.0
+rarity = 0
+base = 4
+luck = 2
+min_round = 1
+max_round = 999

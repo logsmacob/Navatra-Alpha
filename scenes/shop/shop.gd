@@ -18,6 +18,7 @@ signal purchase_completed(offer_id: String)
 const REROLL_COST: int = 3
 
 var _offers: Array[TrinketData] = []
+var _offer_buttons: Array[Button] = []
 var _offer_service: ShopOfferService = ShopOfferService.new()
 var _purchase_service: ShopPurchaseService = ShopPurchaseService.new()
 var _transaction_port: ShopTransactionPort
@@ -42,8 +43,15 @@ func _roll_offers() -> void:
 func _rebuild_offer_buttons() -> void:
 	if offers_container == null:
 		return
+	_offer_buttons.clear()
 	for child in offers_container.get_children():
 		child.queue_free()
+
+	if _offers.is_empty():
+		var empty_label := Label.new()
+		empty_label.text = "No offers available this round."
+		offers_container.add_child(empty_label)
+		return
 
 	for i in range(_offers.size()):
 		var offer: TrinketData = _offers[i]
@@ -55,8 +63,12 @@ func _rebuild_offer_buttons() -> void:
 		button.set_texture(offer._get_texture())
 		button.set_border_color(offer.get_rarity_color())
 		button.pressed.connect(_on_offer_button_pressed.bind(i))
+		button.tooltip_text = "%s\nCost: %d marbles" % [offer.get_display_name(), offer.cost]
 		
 		offers_container.add_child(button)
+		_offer_buttons.append(button)
+
+	_refresh_offer_affordability()
 
 func _on_offer_button_pressed(index: int) -> void:
 	purchase_requested.emit(index)
@@ -78,6 +90,8 @@ func _try_buy_offer(index: int) -> void:
 	_refresh_view()
 
 func _on_reroll_pressed() -> void:
+	if not _purchase_service.can_afford_purchase(GameState.currency, REROLL_COST):
+		return
 	if not GameState.spend_currency(REROLL_COST):
 		return
 	_roll_offers()
@@ -98,6 +112,9 @@ func _refresh_view() -> void:
 		currency_label.set_marbles(GameState.currency)
 	if roll_price:
 		roll_price.text = "%d" % REROLL_COST
+	if reroll_button:
+		reroll_button.disabled = not _purchase_service.can_afford_purchase(GameState.currency, REROLL_COST)
+	_refresh_offer_affordability()
 	var trinket_counts: Dictionary = {}
 	for owned_trinket: TrinketData in GameState.get_owned_trinkets():
 		if owned_trinket == null:
@@ -105,9 +122,25 @@ func _refresh_view() -> void:
 		var trinket_name := owned_trinket.get_display_name()
 		trinket_counts[trinket_name] = int(trinket_counts.get(trinket_name, 0)) + 1
 	var lines: Array[String] = ["Owned trinkets:"]
-	for key in trinket_counts.keys():
+	var sorted_names: Array = trinket_counts.keys()
+	sorted_names.sort_custom(func(a: Variant, b: Variant) -> bool:
+		return str(a).nocasecmp_to(str(b)) < 0
+	)
+	for key in sorted_names:
 		lines.append("- %s x%d" % [str(key), int(trinket_counts[key])])
 	if trinket_counts.is_empty():
 		lines.append("- none")
 	if inventory_label:
 		inventory_label.text = "\n".join(lines)
+
+func _refresh_offer_affordability() -> void:
+	for i in range(_offer_buttons.size()):
+		var button := _offer_buttons[i]
+		if button == null:
+			continue
+		if i < 0 or i >= _offers.size():
+			button.disabled = true
+			continue
+		var offer := _offers[i]
+		var can_afford := _purchase_service.can_afford_purchase(GameState.currency, offer.cost)
+		button.disabled = not can_afford

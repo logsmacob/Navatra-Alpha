@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="TrinketData" format=3]
+
+[ext_resource type="Script" path="res://core/resources/trinket_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/dice icons.png" id="2_icons"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_icons")
+region = Rect2(48, 0, 16, 16)
+
+[resource]
+script = ExtResource("1_script")
+texture = SubResource("AtlasTexture_icon")
+id = "multiplier_mask"
+item_name = "Multiplier Mask"
+cost = 6
+weight = 5.0
+rarity = 1
+mult = 6
+mult_5_value = 2
+mult_6_value = 3
+min_round = 2
+max_round = 999

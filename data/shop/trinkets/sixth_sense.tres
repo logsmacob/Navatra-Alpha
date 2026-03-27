@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="ChanceTrinketData" format=3]
+
+[ext_resource type="Script" path="res://core/resources/trinkets/chance_trinket_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/dice icons.png" id="2_icons"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_icons")
+region = Rect2(32, 16, 16, 16)
+
+[resource]
+script = ExtResource("1_script")
+texture = SubResource("AtlasTexture_icon")
+id = "sixth_sense"
+item_name = "Sixth Sense"
+cost = 10
+weight = 2.5
+rarity = 3
+base = 20
+mult = 12
+activation_chance_percent = 65.0
+use_hand_type_condition = false
+use_face_condition = true
+required_face_value = 6
+min_round = 5
+max_round = 999
