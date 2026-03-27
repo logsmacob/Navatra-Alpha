@@ -75,7 +75,7 @@ func _rebuild_offer_buttons(currency_amount: int) -> void:
 		button.set_description(offer.get_display_description())
 		button.set_price(offer.cost)
 		button.set_rarity(TrinketData.TrinketRarity.keys()[offer.rarity])
-		button.set_texture(offer._get_texture())
+		button.set_texture(offer.get_texture())
 		button.set_border_color(offer.get_rarity_color())
 		button.pressed.connect(_on_offer_button_pressed.bind(i))
 		button.tooltip_text = "%s\nCost: %d marbles" % [offer.get_display_name(), offer.cost]

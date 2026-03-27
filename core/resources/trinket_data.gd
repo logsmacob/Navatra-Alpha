@@ -125,8 +125,12 @@ func _format_signed_modifier(value: int) -> String:
 		return "+%d" % value
 	return "%d" % value
 
-func _get_texture():
+func get_texture() -> AtlasTexture:
 	return texture
+
+# Backward-compatible alias for older callers and scenes.
+func _get_texture() -> AtlasTexture:
+	return get_texture()
 
 
 # Description
