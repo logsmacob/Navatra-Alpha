@@ -22,6 +22,7 @@ const MAX_ROUNDS: int = GameStateRunManager.MAX_ROUNDS
 const DIE_MATERIAL_STANDARD := GameStatePlayerManager.DIE_MATERIAL_STANDARD
 const DIE_MATERIAL_GOLDEN := GameStatePlayerManager.DIE_MATERIAL_GOLDEN
 const DIE_MATERIAL_STEEL := GameStatePlayerManager.DIE_MATERIAL_STEEL
+const DIE_MATERIAL_MARBLE := GameStatePlayerManager.DIE_MATERIAL_MARBLE
 const MATERIAL_CURRENCY_BONUS := GameStatePlayerManager.MATERIAL_CURRENCY_BONUS
 const DEFAULT_GENERAL_MODIFIERS := GameStatePlayerManager.DEFAULT_GENERAL_MODIFIERS
 
@@ -56,6 +57,10 @@ var hand_type_upgrades: Dictionary:
 var shop_item_counts: Dictionary:
 	get:
 		return _player_manager.shop_item_counts
+
+var owned_trinkets: Array[TrinketData]:
+	get:
+		return _player_manager.get_owned_trinkets()
 
 var general_modifiers: Dictionary:
 	get:
@@ -151,6 +156,12 @@ func get_hand_type_upgrade(hand_type: int) -> Dictionary:
 
 func add_shop_item(item_id: String) -> void:
 	_player_manager.add_shop_item(item_id)
+
+func add_owned_trinket(trinket: TrinketData) -> void:
+	_player_manager.add_owned_trinket(trinket)
+
+func get_owned_trinkets() -> Array[TrinketData]:
+	return _player_manager.get_owned_trinkets()
 
 func get_shop_item_counts() -> Dictionary:
 	return _player_manager.get_shop_item_counts()

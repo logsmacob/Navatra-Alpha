@@ -6,6 +6,7 @@ class_name GameStatePlayerManager
 const DIE_MATERIAL_STANDARD := PlayerHandService.DIE_MATERIAL_STANDARD
 const DIE_MATERIAL_GOLDEN := PlayerHandService.DIE_MATERIAL_GOLDEN
 const DIE_MATERIAL_STEEL := PlayerHandService.DIE_MATERIAL_STEEL
+const DIE_MATERIAL_MARBLE := PlayerHandService.DIE_MATERIAL_MARBLE
 const MATERIAL_CURRENCY_BONUS := PlayerHandService.MATERIAL_CURRENCY_BONUS
 
 const DEFAULT_GENERAL_MODIFIERS := {
@@ -35,6 +36,7 @@ const DEFAULT_GENERAL_MODIFIERS := {
 
 var hand_type_upgrades: Dictionary = {}
 var shop_item_counts: Dictionary = {}
+var owned_trinkets: Array[TrinketData] = []
 var general_modifiers: Dictionary = DEFAULT_GENERAL_MODIFIERS.duplicate(true)
 
 var _player_hand_service: PlayerHandService = PlayerHandService.new()
@@ -73,12 +75,21 @@ func get_hand_type_upgrade(hand_type: int) -> Dictionary:
 
 func clear_shop_items() -> void:
 	shop_item_counts.clear()
+	owned_trinkets.clear()
 
 func add_shop_item(item_id: String) -> void:
 	shop_item_counts[item_id] = int(shop_item_counts.get(item_id, 0)) + 1
 
 func get_shop_item_counts() -> Dictionary:
 	return shop_item_counts.duplicate()
+
+func add_owned_trinket(trinket: TrinketData) -> void:
+	if trinket == null:
+		return
+	owned_trinkets.append(trinket)
+
+func get_owned_trinkets() -> Array[TrinketData]:
+	return owned_trinkets.duplicate()
 
 func reset_general_modifiers() -> void:
 	general_modifiers = DEFAULT_GENERAL_MODIFIERS.duplicate(true)
