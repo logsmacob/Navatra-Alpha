@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="DieMaterialTrinketData" format=3 uid="uid://dgihdght0b460"]
+
+[ext_resource type="Script" uid="uid://d36f2lse5qsv" path="res://core/resources/trinkets/die_material_trinket_data.gd" id="1_om0js"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_1if5g"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gimpn"]
+atlas = ExtResource("2_1if5g")
+region = Rect2(16, 16, 16, 16)
+
+[resource]
+script = ExtResource("1_om0js")
+selected_die_index = 3
+marbles_per_matching_die = 2
+texture = SubResource("AtlasTexture_gimpn")
+id = "marble_die_four"
+item_name = "Marble Die Four"
+cost = 10
+rarity = 2
+metadata/_custom_type_script = "uid://d36f2lse5qsv"

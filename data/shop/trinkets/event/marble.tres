@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ChanceTrinketData" format=3 uid="uid://c5bxpb41kbbnc"]
+
+[ext_resource type="Script" uid="uid://5q71o1b2d1kb" path="res://core/resources/trinkets/chance_trinket_data.gd" id="1_s8w1d"]
+
+[resource]
+script = ExtResource("1_s8w1d")
+metadata/_custom_type_script = "uid://5q71o1b2d1kb"

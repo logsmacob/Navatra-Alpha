@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="DieMaterialTrinketData" format=3 uid="uid://dnqjglhayhg7i"]
+
+[ext_resource type="Script" uid="uid://d36f2lse5qsv" path="res://core/resources/trinkets/die_material_trinket_data.gd" id="1_3kp1f"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_vdnre"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gimpn"]
+atlas = ExtResource("2_vdnre")
+region = Rect2(48, 16, 16, 16)
+
+[resource]
+script = ExtResource("1_3kp1f")
+base = 30
+selected_die_index = 1
+target_material = "blue"
+marbles_per_matching_die = 0
+texture = SubResource("AtlasTexture_gimpn")
+id = "blue_die_two"
+item_name = "Blue Die Two"
+cost = 10
+rarity = 2
+metadata/_custom_type_script = "uid://d36f2lse5qsv"

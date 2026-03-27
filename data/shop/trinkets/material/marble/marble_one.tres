@@ -1,14 +1,14 @@
 [gd_resource type="Resource" script_class="DieMaterialTrinketData" format=3 uid="uid://ckshur50blc2g"]
 
-[ext_resource type="Script" uid="uid://d36f2lse5qsv" path="res://core/resources/trinkets/die_material_trinket_data.gd" id="1_tnip5"]
-[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_prqr6"]
+[ext_resource type="Script" uid="uid://d36f2lse5qsv" path="res://core/resources/trinkets/die_material_trinket_data.gd" id="1_qm6i1"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_ue5om"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gimpn"]
-atlas = ExtResource("2_prqr6")
+atlas = ExtResource("2_ue5om")
 region = Rect2(16, 16, 16, 16)
 
 [resource]
-script = ExtResource("1_tnip5")
+script = ExtResource("1_qm6i1")
 marbles_per_matching_die = 2
 texture = SubResource("AtlasTexture_gimpn")
 id = "marble_die_one"
