@@ -1,6 +1,10 @@
 class_name DieMaterialTrinketData
 extends TrinketData
 
+@export_group("Triggered Scoring")
+@export var base: int = 0
+@export var mult: int = 0
+
 @export_group("Die Material Variant")
 @export var selected_die_index: int = 0
 @export var target_material: String = "marble"
@@ -33,7 +37,20 @@ func get_runtime_scoring_bonus(play_context: Dictionary) -> Dictionary:
 	}
 
 func get_display_description() -> String:
-	var description := super.get_display_description()
+	var effects: Array[String] = []
+	if base != 0:
+		effects.append("Triggered Base %+d" % base)
+	if mult != 0:
+		effects.append("Triggered Mult %+d" % mult)
+
+	var modifiers := get_general_modifier_changes()
+	for key in ModifierSchema.get_general_modifier_keys():
+		var value := int(modifiers.get(key, 0))
+		if value == 0:
+			continue
+		effects.append(_get_modifier_effect_text(key, value))
+
+	var description := "No effect" if effects.is_empty() else "\n".join(effects)
 	var extra := "Converts die #%d to %s. +%d marbles per scoring %s die." % [
 		max(selected_die_index, 0) + 1,
 		target_material,

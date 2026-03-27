@@ -15,7 +15,6 @@ item_name = "Lucky Charm"
 cost = 3
 weight = 8.0
 rarity = 0
-base = 4
 luck = 2
 min_round = 1
 max_round = 999
