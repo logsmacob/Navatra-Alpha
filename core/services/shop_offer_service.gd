@@ -2,12 +2,12 @@ extends RefCounted
 
 class_name ShopOfferService
 
-func roll_weighted_offers(item_pool: Array[TrinketData], current_round: int, target_count: int, avoid_duplicates: bool = true) -> Array[TrinketData]:
+func roll_weighted_offers(item_pool: Array[TrinketData], current_round: int, target_count: int, avoid_duplicates: bool = true, owned_item_counts: Dictionary = {}) -> Array[TrinketData]:
 	if target_count <= 0:
 		return []
 
 	var rolled_offers: Array[TrinketData] = []
-	var candidate_pool := get_available_items_for_round(item_pool, current_round)
+	var candidate_pool := get_available_items_for_round(item_pool, current_round, owned_item_counts)
 
 	while rolled_offers.size() < target_count and not candidate_pool.is_empty():
 		var picked_item := pick_weighted_item(candidate_pool)
@@ -19,13 +19,17 @@ func roll_weighted_offers(item_pool: Array[TrinketData], current_round: int, tar
 
 	return rolled_offers
 
-func get_available_items_for_round(item_pool: Array[TrinketData], current_round: int) -> Array[TrinketData]:
+func get_available_items_for_round(item_pool: Array[TrinketData], current_round: int, owned_item_counts: Dictionary = {}) -> Array[TrinketData]:
 	var available_items: Array[TrinketData] = []
 	for item: TrinketData in item_pool:
 		if item == null:
 			continue
-		if item.is_available_for_round(current_round):
-			available_items.append(item)
+		if not item.is_available_for_round(current_round):
+			continue
+		var item_count := int(owned_item_counts.get(item.get_shop_tracking_key(), 0))
+		if item.has_reached_max_quantity(item_count):
+			continue
+		available_items.append(item)
 	return available_items
 
 func pick_weighted_item(pool: Array[TrinketData]) -> TrinketData:

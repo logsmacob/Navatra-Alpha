@@ -12,6 +12,6 @@ func apply_purchase(transaction_port: ShopTransactionPort, offer: TrinketData) -
 		return false
 	transaction_port.add_general_modifiers(offer.get_general_modifier_changes())
 	transaction_port.apply_trinket_purchase_effects(offer)
-	transaction_port.add_shop_item(offer.id)
+	transaction_port.add_shop_item(offer.get_shop_tracking_key())
 	transaction_port.add_owned_trinket(offer)
 	return true

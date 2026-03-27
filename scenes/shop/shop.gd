@@ -37,7 +37,13 @@ func _ready() -> void:
 	GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
 
 func _roll_offers() -> void:
-	_offers = _offer_service.roll_weighted_offers(trinket_pool, max(GameState.round_index, 1), offer_count, true)
+	_offers = _offer_service.roll_weighted_offers(
+		trinket_pool,
+		max(GameState.round_index, 1),
+		offer_count,
+		true,
+		GameState.get_shop_item_counts()
+	)
 	_rebuild_offer_buttons()
 
 func _rebuild_offer_buttons() -> void:

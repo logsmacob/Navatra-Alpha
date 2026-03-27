@@ -51,6 +51,7 @@ const RARITY_COLORS := {
 @export_group("Availability")
 @export_range(1, 999, 1) var min_round: int = 1
 @export_range(1, 999, 1) var max_round: int = 999
+@export_range(0, 999, 1) var max_quantity: int = 0
 
 
 # Get rarity color
@@ -67,6 +68,14 @@ func get_display_name() -> String:
 func get_colored_name() -> String:
 	var color := get_rarity_color().to_html()
 	return "[color=%s]%s[/color]" % [color, get_display_name()]
+
+
+func get_shop_tracking_key() -> String:
+	if not id.is_empty():
+		return id
+	if not resource_path.is_empty():
+		return resource_path
+	return get_display_name()
 
 
 # Modifier dictionary
@@ -145,6 +154,11 @@ func _get_modifier_effect_text(key: String, value: int) -> String:
 # Availability
 func is_available_for_round(round_number: int) -> bool:
 	return round_number >= min_round and round_number <= max_round
+
+func has_reached_max_quantity(owned_count: int) -> bool:
+	if max_quantity <= 0:
+		return false
+	return owned_count >= max_quantity
 
 
 # Full effect text
