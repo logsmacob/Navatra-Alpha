@@ -5,18 +5,13 @@ class_name ShopPurchaseService
 func can_afford_purchase(currency: int, cost: int) -> bool:
 	return cost >= 0 and currency >= cost
 
-func apply_purchase(game_state: Node, offer: TrinketData) -> bool:
-	if game_state == null or offer == null:
+func apply_purchase(transaction_port: ShopTransactionPort, offer: TrinketData) -> bool:
+	if transaction_port == null or offer == null:
 		return false
-	if not game_state.has_method("spend_currency"):
+	if not transaction_port.spend_currency(offer.cost):
 		return false
-	if not game_state.call("spend_currency", offer.cost):
-		return false
-	if game_state.has_method("add_general_modifiers"):
-		game_state.call("add_general_modifiers", offer.get_general_modifier_changes())
-	offer.apply_purchase_effects(game_state)
-	if game_state.has_method("add_shop_item"):
-		game_state.call("add_shop_item", offer.id)
-	if game_state.has_method("add_owned_trinket"):
-		game_state.call("add_owned_trinket", offer)
+	transaction_port.add_general_modifiers(offer.get_general_modifier_changes())
+	transaction_port.apply_trinket_purchase_effects(offer)
+	transaction_port.add_shop_item(offer.id)
+	transaction_port.add_owned_trinket(offer)
 	return true

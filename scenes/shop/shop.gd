@@ -1,6 +1,9 @@
 extends Control
 ## Shop script: coordinates this part of the game's behavior.
 
+signal purchase_requested(index: int)
+signal purchase_completed(offer_id: String)
+
 @export var currency_label: CornerLabel
 @export var inventory_label: Label
 @export var offers_container: HBoxContainer
@@ -17,8 +20,10 @@ const REROLL_COST: int = 3
 var _offers: Array[TrinketData] = []
 var _offer_service: ShopOfferService = ShopOfferService.new()
 var _purchase_service: ShopPurchaseService = ShopPurchaseService.new()
+var _transaction_port: ShopTransactionPort
 
 func _ready() -> void:
+	_transaction_port = GameStateShopTransactionPort.new(GameState)
 	_roll_offers()
 	_refresh_view()
 
@@ -26,6 +31,7 @@ func _ready() -> void:
 		reroll_button.pressed.connect(_on_reroll_pressed)
 	if continue_button:
 		continue_button.pressed.connect(_on_continue_pressed)
+	purchase_requested.connect(_on_purchase_requested)
 	GameState.currency_changed.connect(_on_currency_changed)
 	GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
 
@@ -43,7 +49,7 @@ func _rebuild_offer_buttons() -> void:
 		var offer: TrinketData = _offers[i]
 		var button := trinket_button.instantiate()
 		button.set_title(offer.get_display_name())
-		button.set_discription(offer.get_display_discription())
+		button.set_description(offer.get_display_description())
 		button.set_price(offer.cost)
 		button.set_rarity(TrinketData.TrinketRarity.keys()[offer.rarity])
 		button.set_texture(offer._get_texture())
@@ -53,6 +59,9 @@ func _rebuild_offer_buttons() -> void:
 		offers_container.add_child(button)
 
 func _on_offer_button_pressed(index: int) -> void:
+	purchase_requested.emit(index)
+
+func _on_purchase_requested(index: int) -> void:
 	_try_buy_offer(index)
 
 func _try_buy_offer(index: int) -> void:
@@ -60,10 +69,11 @@ func _try_buy_offer(index: int) -> void:
 		return
 
 	var offer: TrinketData = _offers[index]
-	if not _purchase_service.apply_purchase(GameState, offer):
+	if not _purchase_service.apply_purchase(_transaction_port, offer):
 		return
 
 	_offers.remove_at(index)
+	purchase_completed.emit(offer.id)
 	_rebuild_offer_buttons()
 	_refresh_view()
 
@@ -88,7 +98,12 @@ func _refresh_view() -> void:
 		currency_label.set_marbles(GameState.currency)
 	if roll_price:
 		roll_price.text = "%d" % REROLL_COST
-	var trinket_counts: Dictionary = GameState.get_shop_item_counts()
+	var trinket_counts: Dictionary = {}
+	for owned_trinket: TrinketData in GameState.get_owned_trinkets():
+		if owned_trinket == null:
+			continue
+		var trinket_name := owned_trinket.get_display_name()
+		trinket_counts[trinket_name] = int(trinket_counts.get(trinket_name, 0)) + 1
 	var lines: Array[String] = ["Owned trinkets:"]
 	for key in trinket_counts.keys():
 		lines.append("- %s x%d" % [str(key), int(trinket_counts[key])])

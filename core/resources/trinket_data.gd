@@ -16,25 +16,6 @@ const RARITY_COLORS := {
 	TrinketRarity.EPIC: Color(0.7, 0.3, 1.0),        # Purple
 }
 
-const GENERAL_MODIFIER_LABELS := {
-	"luck": "Luck",
-	"base_marbles_per_round": "Base Marbles per Round",
-	"shop_rerolls": "Re-Rolls",
-	"shop_playable_hands": "Playable Hands",
-	"base_1_value": "Face Value [1]",
-	"base_2_value": "Face Value [2]",
-	"base_3_value": "Face Value [3]",
-	"base_4_value": "Face Value [4]",
-	"base_5_value": "Face Value [5]",
-	"base_6_value": "Face Value [6]",
-	"mult_1_value": "Face Value [1]",
-	"mult_2_value": "Face Value [2]",
-	"mult_3_value": "Face Value [3]",
-	"mult_4_value": "Face Value [4]",
-	"mult_5_value": "Face Value [5]",
-	"mult_6_value": "Face Value [6]",
-}
-
 @export_group("Display")
 @export var texture: AtlasTexture
 @export var id: String = ""
@@ -138,15 +119,16 @@ func _get_texture():
 
 
 # Description
-func get_display_discription() -> String:
+func get_display_description() -> String:
 	var effects: Array[String] = []
 	if base != 0:
 		effects.append("Triggered Base %+d" % base)
 	if mult != 0:
 		effects.append("Triggered Mult %+d" % mult)
 
-	for key in get_general_modifier_changes().keys():
-		var value := int(get_general_modifier_changes()[key])
+	var modifiers := get_general_modifier_changes()
+	for key in ModifierSchema.get_general_modifier_keys():
+		var value := int(modifiers.get(key, 0))
 		if value == 0:
 			continue
 		effects.append(_get_modifier_effect_text(key, value))
@@ -156,17 +138,21 @@ func get_display_discription() -> String:
 
 	return "\n".join(effects)
 
+# Backward-compatible alias for older callers and scenes.
+func get_display_discription() -> String:
+	return get_display_description()
+
 
 func _get_modifier_effect_text(key: String, value: int) -> String:
 	var signed_value := _format_signed_modifier(value)
 
 	if key.begins_with("base_") and key.ends_with("_value"):
-		return "%s %s Base" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
+		return "%s %s Base" % [ModifierSchema.GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
 
 	if key.begins_with("mult_") and key.ends_with("_value"):
-		return "%s %s Mult" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
+		return "%s %s Mult" % [ModifierSchema.GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
 
-	return "%s %s" % [GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
+	return "%s %s" % [ModifierSchema.GENERAL_MODIFIER_LABELS.get(key, key), signed_value]
 
 
 # Availability
@@ -179,5 +165,5 @@ func get_effect_text() -> String:
 	return "%s | Cost %d | %s" % [
 		get_display_name(),
 		cost,
-		get_display_discription(),
+		get_display_description(),
 	]

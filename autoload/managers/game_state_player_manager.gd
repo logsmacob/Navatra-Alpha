@@ -9,30 +9,7 @@ const DIE_MATERIAL_STEEL := PlayerHandService.DIE_MATERIAL_STEEL
 const DIE_MATERIAL_MARBLE := PlayerHandService.DIE_MATERIAL_MARBLE
 const MATERIAL_CURRENCY_BONUS := PlayerHandService.MATERIAL_CURRENCY_BONUS
 
-const DEFAULT_GENERAL_MODIFIERS := {
-	"luck": 0,
-	"base_marbles_per_round": 0,
-	"shop_rerolls": 3,
-	"shop_playable_hands": 3,
-	"face_1_to": 1,
-	"face_2_to": 2,
-	"face_3_to": 3,
-	"face_4_to": 4,
-	"face_5_to": 5,
-	"face_6_to": 6,
-	"base_1_value": 1,
-	"base_2_value": 2,
-	"base_3_value": 3,
-	"base_4_value": 4,
-	"base_5_value": 5,
-	"base_6_value": 6,
-	"mult_1_value": 0,
-	"mult_2_value": 0,
-	"mult_3_value": 0,
-	"mult_4_value": 0,
-	"mult_5_value": 0,
-	"mult_6_value": 0,
-}
+const DEFAULT_GENERAL_MODIFIERS := ModifierSchema.DEFAULT_GENERAL_MODIFIERS
 
 var hand_type_upgrades: Dictionary = {}
 var shop_item_counts: Dictionary = {}

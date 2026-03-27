@@ -32,8 +32,8 @@ func get_runtime_scoring_bonus(play_context: Dictionary) -> Dictionary:
 		"currency": matching_count * marbles_per_matching_die,
 	}
 
-func get_display_discription() -> String:
-	var description := super.get_display_discription()
+func get_display_description() -> String:
+	var description := super.get_display_description()
 	var extra := "Converts die #%d to %s. +%d marbles per scoring %s die." % [
 		max(selected_die_index, 0) + 1,
 		target_material,
@@ -43,3 +43,7 @@ func get_display_discription() -> String:
 	if description == "No effect":
 		return extra
 	return "%s\n%s" % [description, extra]
+
+# Backward-compatible alias for older callers and scenes.
+func get_display_discription() -> String:
+	return get_display_description()

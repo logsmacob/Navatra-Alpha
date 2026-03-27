@@ -9,8 +9,12 @@ extends Button
 func set_title(title: String):
 	title_label.text = title
 
+func set_description(description: String):
+	discription_label.text = description
+
+# Backward-compatible alias for old call sites.
 func set_discription(discription: String):
-	discription_label.text = discription
+	set_description(discription)
 
 func set_price(price: int):
 	price_label.text = "%d" % price

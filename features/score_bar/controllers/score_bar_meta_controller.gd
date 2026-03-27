@@ -1,30 +1,7 @@
 extends Node
 class_name ScoreBarMetaController
 
-const GENERAL_MODIFIER_ROWS := [
-	{"key": "luck", "label": "Luck"},
-	{"key": "base_marbles_per_round", "label": "Base Marbles per Round"},
-	{"key": "shop_rerolls", "label": "Re-Rolls"},
-	{"key": "shop_playable_hands", "label": "Playable Hands"},
-	{"key": "face_1_to", "label": "Face [1] Result"},
-	{"key": "face_2_to", "label": "Face [2] Result"},
-	{"key": "face_3_to", "label": "Face [3] Result"},
-	{"key": "face_4_to", "label": "Face [4] Result"},
-	{"key": "face_5_to", "label": "Face [5] Result"},
-	{"key": "face_6_to", "label": "Face [6] Result"},
-	{"key": "base_1_value", "label": "Face Value [1]"},
-	{"key": "base_2_value", "label": "Face Value [2]"},
-	{"key": "base_3_value", "label": "Face Value [3]"},
-	{"key": "base_4_value", "label": "Face Value [4]"},
-	{"key": "base_5_value", "label": "Face Value [5]"},
-	{"key": "base_6_value", "label": "Face Value [6]"},
-	{"key": "mult_1_value", "label": "Face Value [1]"},
-	{"key": "mult_2_value", "label": "Face Value [2]"},
-	{"key": "mult_3_value", "label": "Face Value [3]"},
-	{"key": "mult_4_value", "label": "Face Value [4]"},
-	{"key": "mult_5_value", "label": "Face Value [5]"},
-	{"key": "mult_6_value", "label": "Face Value [6]"},
-]
+const GENERAL_MODIFIER_ROWS := ModifierSchema.GENERAL_MODIFIER_ROWS
 
 @export var corner_label: CornerLabel
 @export var main_score: MainScore
