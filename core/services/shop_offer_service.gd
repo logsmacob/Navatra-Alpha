@@ -9,6 +9,14 @@ const RARITY_ROLL_ORDER: Array[TrinketData.TrinketRarity] = [
 	TrinketData.TrinketRarity.EPIC,
 ]
 
+var _rarity_weights: Dictionary = TrinketData.SHOP_RARITY_WEIGHTS.duplicate(true)
+
+func set_rarity_weights(rarity_weights: Dictionary) -> void:
+	if rarity_weights.is_empty():
+		_rarity_weights = TrinketData.SHOP_RARITY_WEIGHTS.duplicate(true)
+		return
+	_rarity_weights = rarity_weights.duplicate(true)
+
 func roll_weighted_offers(item_pool: Array[TrinketData], current_round: int, target_count: int, avoid_duplicates: bool = true, owned_item_counts: Dictionary = {}) -> Array[TrinketData]:
 	if target_count <= 0:
 		return []
@@ -65,14 +73,14 @@ func pick_weighted_item(pool: Array[TrinketData]) -> TrinketData:
 func _roll_rarity_by_weight() -> TrinketData.TrinketRarity:
 	var total_weight := 0.0
 	for rarity in RARITY_ROLL_ORDER:
-		total_weight += float(TrinketData.SHOP_RARITY_WEIGHTS.get(rarity, 0.0))
+		total_weight += float(_rarity_weights.get(rarity, 0.0))
 	if total_weight <= 0.0:
 		return TrinketData.TrinketRarity.COMMON
 
 	var roll := randf_range(0.0, total_weight)
 	var running_weight := 0.0
 	for rarity in RARITY_ROLL_ORDER:
-		running_weight += float(TrinketData.SHOP_RARITY_WEIGHTS.get(rarity, 0.0))
+		running_weight += float(_rarity_weights.get(rarity, 0.0))
 		if roll <= running_weight:
 			return rarity
 

@@ -3,15 +3,12 @@ extends Node
 class_name ShopController
 
 const MAIN_SCENE_PATH := "res://scenes/main/main.tscn"
-const REROLL_BASE_COST: int = 1
-const ROUND_COST_MULTIPLIER_STEP: float = 0.1
-const SHOP_REROLL_ESCALATION_STEP: int = 0
-const SHOP_COST_DISCOUNT_FACTOR: float = 0.75
 const TRINKET_DATA_ROOT := "res://data/shop/trinkets"
+const DEFAULT_BALANCE_CONFIG := preload("res://data/config/balance/shop_balance.tres")
 
 @export var shop_view: ShopView
 @export var trinket_pool: Array[TrinketData] = []
-@export_range(1, 12, 1) var offer_count: int = 4
+@export var balance_config: ShopBalanceConfig = DEFAULT_BALANCE_CONFIG
 
 var _offers: Array[TrinketData] = []
 var _offer_service: ShopOfferService = ShopOfferService.new()
@@ -25,6 +22,7 @@ func _ready() -> void:
 
 	_populate_trinket_pool_from_data()
 	_shop_rerolls_purchased = 0
+	_apply_balance_config()
 	_transaction_port = GameStateShopTransactionPort.new(GameState)
 	shop_view.offer_purchase_requested.connect(_on_offer_purchase_requested)
 	shop_view.reroll_requested.connect(_on_reroll_requested)
@@ -75,7 +73,7 @@ func _roll_offers() -> void:
 	var rolled_offers := _offer_service.roll_weighted_offers(
 		trinket_pool,
 		max(GameState.round_index, 1),
-		offer_count,
+		_get_offer_count(),
 		true,
 		GameState.get_shop_item_counts()
 	)
@@ -104,14 +102,28 @@ func _build_round_scaled_offer(source_offer: TrinketData) -> TrinketData:
 	return priced_offer
 
 func _get_scaled_shop_reroll_cost() -> int:
-	return _get_scaled_cost(REROLL_BASE_COST) + (_shop_rerolls_purchased * SHOP_REROLL_ESCALATION_STEP)
+	var reroll_base_cost := balance_config.reroll_base_cost if balance_config != null else 1
+	var reroll_escalation_step := balance_config.reroll_escalation_step if balance_config != null else 0
+	return _get_scaled_cost(reroll_base_cost) + (_shop_rerolls_purchased * reroll_escalation_step)
 
 func _get_scaled_cost(base_cost: int) -> int:
 	if base_cost <= 0:
 		return 0
 	var current_round = max(GameState.round_index, 1)
-	var round_multiplier := 1.0 + (float(current_round - 1) * ROUND_COST_MULTIPLIER_STEP)
-	return maxi(int(ceil(float(base_cost) * round_multiplier * SHOP_COST_DISCOUNT_FACTOR)), 1)
+	var round_cost_multiplier_step := balance_config.round_cost_multiplier_step if balance_config != null else 0.1
+	var cost_discount_factor := balance_config.cost_discount_factor if balance_config != null else 0.75
+	var round_multiplier := 1.0 + (float(current_round - 1) * round_cost_multiplier_step)
+	return maxi(int(ceil(float(base_cost) * round_multiplier * cost_discount_factor)), 1)
+
+func _get_offer_count() -> int:
+	if balance_config == null:
+		return 4
+	return maxi(balance_config.trinket_option_count, 1)
+
+func _apply_balance_config() -> void:
+	if balance_config == null:
+		return
+	_offer_service.set_rarity_weights(balance_config.get_rarity_weights())
 
 func _populate_trinket_pool_from_data() -> void:
 	var discovered_trinkets := _load_trinkets_recursive(TRINKET_DATA_ROOT)

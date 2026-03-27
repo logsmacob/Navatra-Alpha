@@ -4,6 +4,7 @@ extends RefCounted
 class_name GameStateRunManager
 
 const MAX_ROUNDS: int = 18
+const DEFAULT_RUN_REWARD_BALANCE_CONFIG := preload("res://data/config/balance/run_reward_balance.tres")
 
 var round_index: int = 1
 var quota_remaining: int = 0
@@ -23,6 +24,7 @@ var _next_round_quota_reduction: int = 0
 var _next_round_score_multiplier_bonus: float = 0.0
 
 var _round_progression_service: RoundProgressionService = RoundProgressionService.new()
+var _run_reward_balance_config: RunRewardBalanceConfig = DEFAULT_RUN_REWARD_BALANCE_CONFIG
 
 func reset_run() -> void:
 	round_index = 1
@@ -144,11 +146,13 @@ func get_run_stats() -> Dictionary:
 	}
 
 func calculate_round_reward(overflow_points: int) -> int:
-	var overflow_currency := int(floor(float(overflow_points) / 85.0))
-	var hands_bonus := hands_remaining * 2
-	var rerolls_bonus := rerolls_remaining * 2
-	var progression_bonus := 2 + int(float(round_index - 1) / 3)
-	return maxi(overflow_currency + hands_bonus + rerolls_bonus + progression_bonus, 1)
+	if _run_reward_balance_config == null:
+		var overflow_currency := int(floor(float(overflow_points) / 85.0))
+		var hands_bonus := hands_remaining * 2
+		var rerolls_bonus := rerolls_remaining * 2
+		var progression_bonus := 2 + int(float(round_index - 1) / 3)
+		return maxi(overflow_currency + hands_bonus + rerolls_bonus + progression_bonus, 1)
+	return _run_reward_balance_config.calculate_round_reward(overflow_points, hands_remaining, rerolls_remaining, round_index)
 
 func get_pending_bonus_state() -> Dictionary:
 	return {

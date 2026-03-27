@@ -5,7 +5,9 @@ class_name MainRoundFlowController
 
 signal shop_requested
 
-const UPGRADE_REROLL_BASE_COST: int = 1
+const DEFAULT_BALANCE_CONFIG := preload("res://data/config/balance/hand_upgrade_balance.tres")
+
+@export var balance_config: HandUpgradeBalanceConfig = DEFAULT_BALANCE_CONFIG
 
 var _hand_type_upgrades: HandTypeUpgradesView
 var _hand_type_upgrade_service: HandTypeUpgradeService
@@ -13,6 +15,9 @@ var _upgrade_rerolls_used: int = 0
 
 func _init() -> void:
 	_hand_type_upgrade_service = HandTypeUpgradeService.new()
+
+func _ready() -> void:
+	_apply_balance_config()
 
 func setup(hand_type_upgrades: HandTypeUpgradesView) -> void:
 	_hand_type_upgrades = hand_type_upgrades
@@ -44,7 +49,8 @@ func handle_upgrade_reroll_requested() -> void:
 	refresh_upgrade_options()
 
 func refresh_upgrade_options() -> void:
-	var upgrades := _hand_type_upgrade_service.generate_upgrades(4)
+	var option_count := balance_config.options_per_roll if balance_config != null else 4
+	var upgrades := _hand_type_upgrade_service.generate_upgrades(option_count)
 	_hand_type_upgrades.show_upgrades(upgrades)
 	_refresh_reroll_price()
 
@@ -53,4 +59,12 @@ func _refresh_reroll_price() -> void:
 	_hand_type_upgrades.set_reroll_price(reroll_cost, GameState.currency >= reroll_cost)
 
 func _get_upgrade_reroll_cost() -> int:
-	return UPGRADE_REROLL_BASE_COST + _upgrade_rerolls_used
+	if balance_config == null:
+		return 1 + _upgrade_rerolls_used
+	return balance_config.reroll_base_cost + (_upgrade_rerolls_used * balance_config.reroll_cost_increase_per_use)
+
+func _apply_balance_config() -> void:
+	if balance_config == null:
+		return
+	_hand_type_upgrade_service.set_rarity_bonuses(balance_config.get_rarity_bonuses())
+	_hand_type_upgrade_service.set_rarity_roll_weights(balance_config.get_normalized_rarity_roll_weights())
