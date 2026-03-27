@@ -3,10 +3,7 @@
 [ext_resource type="Script" uid="uid://b6uq5mc6daglp" path="res://scenes/shop/shop.gd" id="1"]
 [ext_resource type="Script" uid="uid://1aoacss5301g" path="res://core/resources/trinket_data.gd" id="2_dww4p"]
 [ext_resource type="PackedScene" uid="uid://mejnjhlwumme" path="res://features/ItemButton/item_button.tscn" id="2_g6lcs"]
-[ext_resource type="Resource" uid="uid://dw5hc6ev014hq" path="res://data/shop/trinkets/asdf.tres" id="4_xoc10"]
-[ext_resource type="Resource" uid="uid://bin0jhnb1nxrb" path="res://data/shop/trinkets/esrfcdx.tres" id="5_k5co3"]
-[ext_resource type="Resource" uid="uid://uo3a2p8mc13p" path="res://data/shop/trinkets/regsv.tres" id="7_6kbe7"]
-[ext_resource type="Resource" uid="uid://dx5s7oappw0rl" path="res://data/shop/trinkets/one_=_six.tres" id="13"]
+[ext_resource type="Resource" uid="uid://dw5hc6ev014hq" path="res://data/shop/trinkets/one.tres" id="4_xoc10"]
 [ext_resource type="PackedScene" uid="uid://bde80fe0ex30q" path="res://features/score_bar/corner_label.tscn" id="23_bnu54"]
 [ext_resource type="StyleBox" uid="uid://btv01nysx3vum" path="res://assets/UI/style_boxes/header.tres" id="24_f8gqx"]
 [ext_resource type="Shader" uid="uid://64giuyue21qd" path="res://assets/shaders/hex_background.gdshader" id="24_noimi"]
@@ -67,7 +64,7 @@ reroll_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContaine
 roll_price = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton/HBoxContainer/Label")
 continue_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/Buttons/ContinueButton")
 trinket_button = ExtResource("2_g6lcs")
-trinket_pool = Array[ExtResource("2_dww4p")]([ExtResource("4_xoc10"), ExtResource("5_k5co3"), ExtResource("13"), ExtResource("7_6kbe7")])
+trinket_pool = Array[ExtResource("2_dww4p")]([ExtResource("4_xoc10")])
 offer_count = null
 
 [node name="HexBackground" type="ColorRect" parent="." unique_id=237340093]

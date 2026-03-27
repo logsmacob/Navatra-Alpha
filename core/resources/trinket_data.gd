@@ -46,7 +46,8 @@ const GENERAL_MODIFIER_LABELS := {
 @export var rarity: TrinketRarity = TrinketRarity.COMMON
 
 @export_group("Scoring")
-@export var base_mult: Vector2i = Vector2i.ZERO
+@export var base: int = 0
+@export var mult: int = 0
 
 @export_subgroup("Run Modifiers")
 @export var luck: int = 0
@@ -114,8 +115,8 @@ func get_general_modifier_changes() -> Dictionary:
 
 func get_runtime_scoring_bonus(_play_context: Dictionary) -> Dictionary:
 	return {
-		"base": base_mult.x,
-		"mult": base_mult.y,
+		"base": base,
+		"mult": mult,
 		"currency": 0,
 	}
 
@@ -139,10 +140,10 @@ func _get_texture():
 # Description
 func get_display_discription() -> String:
 	var effects: Array[String] = []
-	if base_mult.x != 0:
-		effects.append("Triggered Base %+d" % base_mult.x)
-	if base_mult.y != 0:
-		effects.append("Triggered Mult %+d" % base_mult.y)
+	if base != 0:
+		effects.append("Triggered Base %+d" % base)
+	if mult != 0:
+		effects.append("Triggered Mult %+d" % mult)
 
 	for key in get_general_modifier_changes().keys():
 		var value := int(get_general_modifier_changes()[key])
