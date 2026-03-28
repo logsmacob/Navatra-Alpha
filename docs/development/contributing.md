@@ -1,5 +1,11 @@
 # Contributing & Development Notes
 
+## Documentation Status
+
+- Last reviewed: 2026-03-28
+- Review intent: Align wording with current architecture and event-driven conventions.
+
+
 This project is organized to keep UI code separate from gameplay logic.
 
 ## Principles

@@ -1,5 +1,11 @@
 # Navatra
 
+## Documentation Status
+
+- Last reviewed: 2026-03-28
+- Review intent: Align wording with current architecture and event-driven conventions.
+
+
 Navatra is a single-player **dice roguelite** made in **Godot 4**. Each round asks you to reduce a quota to zero before you run out of hands, while balancing rerolls and scaling your score engine.
 
 ## Gameplay Pillars
