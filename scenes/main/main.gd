@@ -3,6 +3,8 @@ extends Control
 
 const DEFAULT_SHOP_SCENE := preload("res://scenes/shop/shop.tscn")
 const DEFAULT_TITLE_SCENE := preload("res://scenes/title screen/title_screen.tscn")
+const SHOP_SCENE_PATH := "res://scenes/shop/shop.tscn"
+const TITLE_SCENE_PATH := "res://scenes/title screen/title_screen.tscn"
 
 @export var shop_scene: PackedScene = DEFAULT_SHOP_SCENE
 @export var title_scene: PackedScene = DEFAULT_TITLE_SCENE
@@ -72,17 +74,29 @@ func _on_shop_requested() -> void:
 	var scene_tree := get_tree()
 	if scene_tree == null:
 		return
-	if shop_scene == null:
-		push_warning("Main: shop_scene is not assigned.")
+	var target_scene := _resolve_scene(shop_scene, DEFAULT_SHOP_SCENE, SHOP_SCENE_PATH)
+	if target_scene == null:
+		push_warning("Main: shop_scene is not assigned or invalid.")
 		return
-	scene_tree.change_scene_to_packed(shop_scene)
+	scene_tree.change_scene_to_packed(target_scene)
 
 func _on_title_requested() -> void:
 	GameState.start_new_run()
 	var scene_tree := get_tree()
 	if scene_tree == null:
 		return
-	if title_scene == null:
-		push_warning("Main: title_scene is not assigned.")
+	var target_scene := _resolve_scene(title_scene, DEFAULT_TITLE_SCENE, TITLE_SCENE_PATH)
+	if target_scene == null:
+		push_warning("Main: title_scene is not assigned or invalid.")
 		return
-	scene_tree.change_scene_to_packed(title_scene)
+	scene_tree.change_scene_to_packed(target_scene)
+
+func _resolve_scene(primary_scene: PackedScene, fallback_scene: PackedScene, fallback_path: String) -> PackedScene:
+	if primary_scene != null and primary_scene.can_instantiate():
+		return primary_scene
+	if fallback_scene != null and fallback_scene.can_instantiate():
+		return fallback_scene
+	var loaded_scene := load(fallback_path) as PackedScene
+	if loaded_scene != null and loaded_scene.can_instantiate():
+		return loaded_scene
+	return null

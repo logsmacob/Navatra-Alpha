@@ -3,6 +3,7 @@ extends Node
 class_name ShopController
 
 const DEFAULT_MAIN_SCENE := preload("res://scenes/main/main.tscn")
+const MAIN_SCENE_PATH := "res://scenes/main/main.tscn"
 const TRINKET_DATA_ROOT := "res://data/shop/trinkets"
 const DEFAULT_BALANCE_CONFIG := preload("res://data/config/balance/shop_balance.tres")
 
@@ -74,6 +75,9 @@ func _resolve_main_scene() -> PackedScene:
 		return main_scene
 	if DEFAULT_MAIN_SCENE != null and DEFAULT_MAIN_SCENE.can_instantiate():
 		return DEFAULT_MAIN_SCENE
+	var loaded_main_scene := load(MAIN_SCENE_PATH) as PackedScene
+	if loaded_main_scene != null and loaded_main_scene.can_instantiate():
+		return loaded_main_scene
 	return null
 
 func _on_currency_changed(_amount: int) -> void:
