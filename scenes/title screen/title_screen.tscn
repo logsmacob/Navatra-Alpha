@@ -6,7 +6,7 @@
 [ext_resource type="Theme" uid="uid://crwvosv3l8ktn" path="res://assets/UI/style_boxes/light pannel theme.tres" id="4_iw6vl"]
 [ext_resource type="Texture2D" uid="uid://cqanecxpnjd0j" path="res://assets/UI/Buttons/Texture/Die anime.png" id="5_tpjfi"]
 [ext_resource type="FontFile" uid="uid://bfmc8ldjpblsv" path="res://assets/fonts/pixeloid-font/PixeloidSansBold-1jpBg.ttf" id="6_iw6vl"]
-[ext_resource type="Script" path="res://scenes/title screen/hover.gd" id="7_isuq1"]
+[ext_resource type="Script" path="res://core/node_classes/hover_effect.gd" id="7_isuq1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mgrm8"]
 shader = ExtResource("1_sa3yf")
@@ -156,8 +156,9 @@ label_settings = SubResource("LabelSettings_isuq1")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Node" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Play" unique_id=1539571824]
+[node name="HoverEffect" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Play" unique_id=1696385669]
 script = ExtResource("7_isuq1")
+metadata/_custom_type_script = "uid://bnyerfbxpaluc"
 
 [node name="Discord" type="TextureButton" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer" unique_id=593208449]
 texture_filter = 1
@@ -181,8 +182,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_trim_flags = 0
 
-[node name="Node2" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Discord" unique_id=492178326]
+[node name="HoverEffect2" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Discord" unique_id=1701143208]
 script = ExtResource("7_isuq1")
+metadata/_custom_type_script = "uid://bnyerfbxpaluc"
 
 [node name="Quit" type="TextureButton" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer" unique_id=1121443149]
 texture_filter = 1
@@ -205,5 +207,6 @@ label_settings = SubResource("LabelSettings_isuq1")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Node3" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Quit" unique_id=273770387]
+[node name="HoverEffect3" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Quit" unique_id=951841896]
 script = ExtResource("7_isuq1")
+metadata/_custom_type_script = "uid://bnyerfbxpaluc"

@@ -4,9 +4,9 @@
 
 [resource]
 script = ExtResource("1_shop_balance")
+reroll_base_cost = 2
 round_cost_multiplier_step = 0.35
 reroll_escalation_step = 1
-reroll_base_cost = 2
 cost_discount_factor = 1.0
 common_weight = 65.0
 uncommon_weight = 23.0
