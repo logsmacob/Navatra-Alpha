@@ -14,14 +14,6 @@ signal anim_roll_finished(die: DieUI)
 var _y_tween: Tween
 
 
-func _ready():
-	# TextureRect uses region
-	if face_Texture:
-		face_Texture.region_enabled = true
-	
-	# TextureButton does NOT use region_enabled
-	# We assume its textures are AtlasTexture already
-
 
 func play_roll_animation(face_value: int, duration: float):
 	await animate_roll(duration, face_value)
