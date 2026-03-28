@@ -51,7 +51,7 @@ func animate_quota_update(applied_score: int) -> void:
 func update_state(state: Dictionary = {}) -> void:
 	if state.is_empty():
 		state = GameState.get_round_state()
-	meta_controller.update_state(state, GameState.get_general_modifiers())
+	meta_controller.update_state(state)
 
 func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -> void:
 	update_state({

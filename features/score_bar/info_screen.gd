@@ -6,12 +6,19 @@ const GENERAL_MODIFIER_ROWS := ModifierSchema.GENERAL_MODIFIER_ROWS
 @export var general_modifiers_label: Label
 
 func _ready() -> void:
-	pass
+	if general_modifiers_label == null:
+		general_modifiers_label = get_node_or_null("GeneralModifiers")
+	if not GameState.general_modifiers_changed.is_connected(_on_general_modifiers_changed):
+		GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
+	_on_general_modifiers_changed(GameState.get_general_modifiers())
 
 func update_general_modifiers(modifiers: Dictionary) -> void:
 	if general_modifiers_label == null:
 		return
 	general_modifiers_label.text = _build_general_modifier_text(modifiers)
+
+func _on_general_modifiers_changed(modifiers: Dictionary) -> void:
+	update_general_modifiers(modifiers)
 
 func _build_general_modifier_text(modifiers: Dictionary) -> String:
 	var lines: Array[String] = ["General Modifiers:"]

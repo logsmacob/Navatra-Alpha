@@ -24,11 +24,10 @@ meta_controller = NodePath("MetaController")
 math_controller = NodePath("MathController")
 score_controller = NodePath("ScoreController")
 
-[node name="MetaController" type="Node" parent="." unique_id=1373326188 node_paths=PackedStringArray("corner_label", "main_score", "info_screen")]
+[node name="MetaController" type="Node" parent="." unique_id=1373326188 node_paths=PackedStringArray("corner_label", "main_score")]
 script = ExtResource("5_meta")
 corner_label = NodePath("../Corner Label")
 main_score = NodePath("../Main Score Label")
-info_screen = NodePath("../InfoScreen")
 
 [node name="ScoreController" type="Node" parent="." unique_id=1081461992]
 script = ExtResource("7_score")
