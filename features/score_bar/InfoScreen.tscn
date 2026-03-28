@@ -7,7 +7,8 @@
 font = ExtResource("1_fck6u")
 font_size = 24
 
-[node name="InfoScreen" type="Control" unique_id=1513268175]
+[node name="InfoScreen" type="Control" unique_id=1513268175 node_paths=PackedStringArray("general_modifiers_label")]
+custom_minimum_size = Vector2(0, 750)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 520.0
@@ -15,6 +16,7 @@ offset_bottom = 30.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
 script = ExtResource("2_info")
+general_modifiers_label = NodePath("GeneralModifiers")
 
 [node name="GeneralModifiers" type="Label" parent="." unique_id=186246805]
 custom_minimum_size = Vector2(520, 0)
