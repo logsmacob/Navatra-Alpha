@@ -1,19 +1,15 @@
 [gd_scene format=3 uid="uid://bgl7d1v3bo6c4"]
 
 [ext_resource type="Script" uid="uid://faikfnryerbf" path="res://features/score_bar/score_bar.gd" id="1_vywcl"]
-[ext_resource type="FontFile" uid="uid://cnci0773b7q4d" path="res://assets/fonts/pixeloid-font/PixeloidSans-lxa3y.ttf" id="2_l3q4t"]
 [ext_resource type="PackedScene" uid="uid://deu77cloriq2w" path="res://features/score_bar/main_score_label.tscn" id="5_bw8x2"]
 [ext_resource type="Script" uid="uid://dmwg53m5jnvb3" path="res://features/score_bar/controllers/score_bar_meta_controller.gd" id="5_meta"]
 [ext_resource type="PackedScene" uid="uid://bde80fe0ex30q" path="res://features/score_bar/corner_label.tscn" id="6_4rkmo"]
 [ext_resource type="StyleBox" uid="uid://btv01nysx3vum" path="res://assets/UI/style_boxes/header.tres" id="6_53ouq"]
 [ext_resource type="Script" uid="uid://c6kbqbjptmmvg" path="res://features/score_bar/controllers/score_bar_math_controller.gd" id="6_math"]
 [ext_resource type="Script" uid="uid://c0mbv3ql0k10e" path="res://features/score_bar/controllers/score_bar_score_controller.gd" id="7_score"]
+[ext_resource type="PackedScene" uid="uid://ckwbd81dafevx" path="res://features/score_bar/InfoScreen.tscn" id="8_4rkmo"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p1r1p"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_nwx5f"]
-font = ExtResource("2_l3q4t")
-font_size = 24
 
 [node name="Score Bar" type="PanelContainer" unique_id=1726318424 node_paths=PackedStringArray("meta_controller", "math_controller", "score_controller")]
 anchors_preset = 15
@@ -28,11 +24,10 @@ meta_controller = NodePath("MetaController")
 math_controller = NodePath("MathController")
 score_controller = NodePath("ScoreController")
 
-[node name="MetaController" type="Node" parent="." unique_id=1373326188 node_paths=PackedStringArray("corner_label", "main_score", "general_modifiers_label_path")]
+[node name="MetaController" type="Node" parent="." unique_id=1373326188 node_paths=PackedStringArray("corner_label", "main_score")]
 script = ExtResource("5_meta")
 corner_label = NodePath("../Corner Label")
 main_score = NodePath("../Main Score Label")
-general_modifiers_label_path = NodePath("../VBoxContainer/GeneralModifiers")
 
 [node name="ScoreController" type="Node" parent="." unique_id=1081461992]
 script = ExtResource("7_score")
@@ -50,14 +45,5 @@ process_mode = 3
 z_index = 1
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1499987703]
+[node name="InfoScreen" parent="." unique_id=1513268175 instance=ExtResource("8_4rkmo")]
 layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 8
-
-[node name="GeneralModifiers" type="Label" parent="VBoxContainer" unique_id=214748365]
-custom_minimum_size = Vector2(520, 0)
-layout_mode = 2
-text = "General Modifiers"
-label_settings = SubResource("LabelSettings_nwx5f")
-autowrap_mode = 3

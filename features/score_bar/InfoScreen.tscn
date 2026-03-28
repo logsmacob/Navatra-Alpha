@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://ckwbd81dafevx"]
+
+[ext_resource type="FontFile" uid="uid://cnci0773b7q4d" path="res://assets/fonts/pixeloid-font/PixeloidSans-lxa3y.ttf" id="1_fck6u"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_nwx5f"]
+font = ExtResource("1_fck6u")
+font_size = 24
+
+[node name="InfoScreen" type="Control" unique_id=1513268175]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 520.0
+offset_bottom = 30.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="GeneralModifiers" type="Label" parent="." unique_id=186246805]
+custom_minimum_size = Vector2(520, 0)
+layout_mode = 0
+offset_right = 520.0
+offset_bottom = 30.0
+text = "General Modifiers"
+label_settings = SubResource("LabelSettings_nwx5f")
+autowrap_mode = 3
