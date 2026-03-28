@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ckwbd81dafevx"]
 
 [ext_resource type="FontFile" uid="uid://cnci0773b7q4d" path="res://assets/fonts/pixeloid-font/PixeloidSans-lxa3y.ttf" id="1_fck6u"]
-[ext_resource type="Script" path="res://features/score_bar/info_screen.gd" id="2_info"]
+[ext_resource type="Script" uid="uid://x6xnqdvcmu6e" path="res://features/score_bar/info_screen.gd" id="2_info"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_nwx5f"]
 font = ExtResource("1_fck6u")
@@ -15,7 +15,6 @@ offset_bottom = 30.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
 script = ExtResource("2_info")
-general_modifiers_label = NodePath("GeneralModifiers")
 
 [node name="GeneralModifiers" type="Label" parent="." unique_id=186246805]
 custom_minimum_size = Vector2(520, 0)

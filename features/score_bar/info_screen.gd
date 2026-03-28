@@ -5,6 +5,9 @@ const GENERAL_MODIFIER_ROWS := ModifierSchema.GENERAL_MODIFIER_ROWS
 
 @export var general_modifiers_label: Label
 
+func _ready() -> void:
+	pass
+
 func update_general_modifiers(modifiers: Dictionary) -> void:
 	if general_modifiers_label == null:
 		return
