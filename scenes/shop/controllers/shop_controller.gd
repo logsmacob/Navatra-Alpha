@@ -2,12 +2,13 @@ extends Node
 ## Shop controller script: handles shop flow orchestration between GameState and ShopView.
 class_name ShopController
 
-const MAIN_SCENE_PATH := "res://scenes/main/main.tscn"
+const DEFAULT_MAIN_SCENE := preload("res://scenes/main/main.tscn")
 const TRINKET_DATA_ROOT := "res://data/shop/trinkets"
 const DEFAULT_BALANCE_CONFIG := preload("res://data/config/balance/shop_balance.tres")
 
 @export var shop_view: ShopView
 @export var trinket_pool: Array[TrinketData] = []
+@export var main_scene: PackedScene = DEFAULT_MAIN_SCENE
 ## Tunable shop economy and rarity settings.
 @export var balance_config: ShopBalanceConfig = DEFAULT_BALANCE_CONFIG
 
@@ -60,9 +61,12 @@ func _on_reroll_requested() -> void:
 
 func _on_continue_requested() -> void:
 	GameState.start_next_round()
+	if main_scene == null:
+		push_warning("ShopController: main_scene is not assigned.")
+		return
 	var scene_tree := get_tree()
 	if scene_tree != null:
-		scene_tree.change_scene_to_file(MAIN_SCENE_PATH)
+		scene_tree.change_scene_to_packed(main_scene)
 
 func _on_currency_changed(_amount: int) -> void:
 	_refresh_view()
