@@ -6,7 +6,7 @@
 [ext_resource type="Theme" uid="uid://crwvosv3l8ktn" path="res://assets/UI/style_boxes/light pannel theme.tres" id="4_iw6vl"]
 [ext_resource type="Texture2D" uid="uid://cqanecxpnjd0j" path="res://assets/UI/Buttons/Texture/Die anime.png" id="5_tpjfi"]
 [ext_resource type="FontFile" uid="uid://bfmc8ldjpblsv" path="res://assets/fonts/pixeloid-font/PixeloidSansBold-1jpBg.ttf" id="6_iw6vl"]
-[ext_resource type="Script" uid="uid://bnyerfbxpaluc" path="res://scenes/title screen/hover.gd" id="7_isuq1"]
+[ext_resource type="Script" uid="uid://bnyerfbxpaluc" path="res://core/node_classes/hover_effect.gd" id="7_isuq1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mgrm8"]
 shader = ExtResource("1_sa3yf")
@@ -156,9 +156,9 @@ label_settings = SubResource("LabelSettings_isuq1")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Hover" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Play" unique_id=1283334360]
+[node name="HoverEffect" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Play" unique_id=1031050176]
 script = ExtResource("7_isuq1")
-hover_amount = -0.15
+metadata/_custom_type_script = "uid://bnyerfbxpaluc"
 
 [node name="Discord" type="TextureButton" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer" unique_id=593208449]
 texture_filter = 1
@@ -182,9 +182,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_trim_flags = 0
 
-[node name="Hover2" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Discord" unique_id=1393252758]
+[node name="HoverEffect2" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Discord" unique_id=1919022127]
 script = ExtResource("7_isuq1")
-hover_amount = -0.15
+metadata/_custom_type_script = "uid://bnyerfbxpaluc"
 
 [node name="Quit" type="TextureButton" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer" unique_id=1121443149]
 texture_filter = 1
@@ -207,6 +207,6 @@ label_settings = SubResource("LabelSettings_isuq1")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Hover3" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Quit" unique_id=311665979]
+[node name="HoverEffect3" type="Node" parent="MarginContainer/VBoxContainer/PanelContainer/HBoxContainer/Quit" unique_id=1017909606]
 script = ExtResource("7_isuq1")
-hover_amount = -0.15
+metadata/_custom_type_script = "uid://bnyerfbxpaluc"

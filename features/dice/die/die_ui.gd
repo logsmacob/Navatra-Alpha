@@ -8,7 +8,6 @@ signal die_selected(selected: bool)
 
 @onready var die_logic: DieLogic = $DieLogic
 @onready var die_visuals: DieVisuals = $DieVisuals
-@onready var input_button: Button = $Button
 
 var die: DieInstance:
 	get:
@@ -51,5 +50,4 @@ func _on_die_visuals_anim_roll_finished(_die: DieUI) -> void:
 
 func set_interaction_enabled(enabled: bool) -> void:
 	is_interaction_enabled = enabled
-	if input_button != null:
-		input_button.disabled = not enabled
+	self.disabled = not enabled

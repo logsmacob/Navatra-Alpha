@@ -1,4 +1,5 @@
 extends Node
+class_name HoverEffect
 
 @export var hover_amount: float = -0.25
 @export var selected_hover_amount: float = -0.85
