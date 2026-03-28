@@ -26,7 +26,7 @@ script = ExtResource("3_logic")
 
 [node name="DieVisuals" type="Node" parent="." unique_id=537555383 node_paths=PackedStringArray("die", "face_sprite", "material_sprite")]
 script = ExtResource("2_b27w3")
-die = NodePath("")
+die = NodePath("..")
 face_sprite = NodePath("../face")
 material_sprite = NodePath("../mat")
 
@@ -58,4 +58,3 @@ flat = true
 [connection signal="anim_roll_finished" from="DieVisuals" to="." method="_on_die_visuals_anim_roll_finished"]
 [connection signal="mouse_entered" from="Button" to="DieVisuals" method="_on_button_mouse_entered"]
 [connection signal="mouse_exited" from="Button" to="DieVisuals" method="_on_button_mouse_exited"]
-[connection signal="pressed" from="Button" to="DieVisuals" method="_on_button_pressed"]
