@@ -1,5 +1,11 @@
 # Godot Large Project Best Practices (UI + Logic Heavy)
 
+## Documentation Status
+
+- Last reviewed: 2026-03-28
+- Review intent: Align wording with current architecture and event-driven conventions.
+
+
 _A practical internal guide for Godot 4.5–4.6 style projects._
 
 ## 1) Project Architecture

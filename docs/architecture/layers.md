@@ -1,5 +1,11 @@
 # Architecture Layers (Godot 4 / GDScript)
 
+## Documentation Status
+
+- Last reviewed: 2026-03-28
+- Review intent: Align wording with current architecture and event-driven conventions.
+
+
 Navatra is structured around layered responsibilities to keep gameplay logic deterministic and UI code lightweight.
 
 ## Layer map

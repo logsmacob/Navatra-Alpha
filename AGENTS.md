@@ -1,3 +1,8 @@
+## Documentation Status
+
+- Last reviewed: 2026-03-28
+- Review intent: Align wording with current architecture and event-driven conventions.
+
 ## Architecture Overview
 
 This project uses a hybrid architecture:
@@ -73,6 +78,14 @@ $HUD/QuotaLabel.text = str(GameState.run.quota_remaining)
 EventBus.emit_signal("hand_submitted", dice_values)
 # HUD/score bar listen to EventBus/GameState signals and refresh themselves.
 ```
+
+---
+
+## Documentation Maintenance
+
+- When gameplay flow changes, update `docs/architecture/event_flow.md` in the same PR.
+- When layer ownership changes, update `docs/architecture/layers.md` and `docs/development/contributing.md`.
+- Keep examples controller/service-first and event-driven.
 
 ---
 

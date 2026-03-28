@@ -1,5 +1,11 @@
 # Navatra Itch Page Kit
 
+## Documentation Status
+
+- Last reviewed: 2026-03-28
+- Review intent: Align wording with current architecture and event-driven conventions.
+
+
 Use this page as a ready-to-copy kit for your Itch.io game page, posts, and promo blurbs.
 
 ---
