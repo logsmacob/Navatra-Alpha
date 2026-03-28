@@ -88,7 +88,6 @@ func _on_play_pressed() -> void:
 	hand_button_manager.disable_buttons()
 	set_hand_type_label(hand_scoring_selector.get_hand_type_name(dice))
 	await hand_animator.play_hand(hand_scoring_selector.get_scoring_dice(dice))
-	hand_dice_pool.clear_selection()
 	played_hand_ready.emit(hand_scoring_selector.build_dice_hand(dice))
 
 ## Returns the hand data currently shown in the UI for preview/evaluation.
@@ -137,6 +136,9 @@ func _on_played_hand_finish() -> void:
 func _on_hand_reset_ready() -> void:
 	is_resolving_play_reset = true
 	play_reset_started.emit()
+	## Clear held dice only when entering the automatic reset-roll phase so
+	## scoring dice that were held can stay visually lifted during play resolution.
+	hand_dice_pool.clear_selection()
 	await roll_hand()
 	is_resolving_play_reset = false
 	reset_roll_finished.emit()

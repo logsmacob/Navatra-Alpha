@@ -23,6 +23,7 @@ Play button pressed
 -> HandAnimator resets dice positions
 -> Hand receives hand_reset_ready
 -> Hand emits play_reset_started
+-> Hand clears held dice selection for reset-roll eligibility
 -> MainGameplayController zeroes Score Bar Base, Mult, Result
 -> Hand rolls non-held dice
 -> Hand emits roll_completed
@@ -76,8 +77,9 @@ Round cleared in GameState
 | 6 | `Hand` | `played_hand_finished` | `HandAnimator._on_hand_played_hand_finished()` | Dice return to their resting positions. |
 | 7 | `HandAnimator` | `hand_reset_ready` | `Hand._on_hand_reset_ready()` | Starts the automatic post-play reroll/reset. |
 | 8 | `Hand` | `play_reset_started` | `MainGameplayController.handle_play_reset_started()` | Zeroes the score-bar Base/Mult/Result columns before the automatic reroll starts. |
-| 9 | `Hand` | `roll_completed` | `MainGameplayController.handle_roll_completed()` | Refreshes state during the reset roll. |
-| 10 | `Hand` | `reset_roll_finished` | `MainGameplayController.handle_reset_roll_finished()` | Clears score-bar preview leftovers from the played hand. |
+| 9 | `Hand` | local method `hand_dice_pool.clear_selection()` | `Hand` | Clears held-state flags immediately before the reset roll so all dice are eligible to reroll. |
+| 10 | `Hand` | `roll_completed` | `MainGameplayController.handle_roll_completed()` | Refreshes state during the reset roll. |
+| 11 | `Hand` | `reset_roll_finished` | `MainGameplayController.handle_reset_roll_finished()` | Clears score-bar preview leftovers from the played hand. |
 
 **Important note:** this is the longest signal chain in the current project. It is still manageable, but it crosses several nodes (`Hand -> MainGameplayController -> GameState -> Hand -> HandAnimator -> Hand -> MainGameplayController`). Keep it documented whenever you extend it.
 
