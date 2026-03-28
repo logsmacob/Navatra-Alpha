@@ -25,6 +25,8 @@ var is_selected: bool:
 var is_interaction_enabled: bool = true
 
 func _ready() -> void:
+	if die_visuals != null and die_visuals.die == null:
+		die_visuals.die = self
 	if not button.pressed.is_connected(_on_pressed):
 		button.pressed.connect(_on_pressed)
 
@@ -48,6 +50,8 @@ func _on_logic_die_rolled(face: FaceData) -> void:
 	die_rolled.emit(face)
 
 func _on_logic_die_selected(selected: bool) -> void:
+	if die_visuals != null:
+		die_visuals.animate_die_selection(self)
 	die_selected.emit(selected)
 
 func _on_die_visuals_anim_roll_finished(_die: DieUI) -> void:
