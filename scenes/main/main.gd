@@ -1,6 +1,12 @@
 extends Control
 ## Main script: coordinates this part of the game's behavior.
 
+const DEFAULT_SHOP_SCENE := preload("res://scenes/shop/shop.tscn")
+const DEFAULT_TITLE_SCENE := preload("res://scenes/title screen/title_screen.tscn")
+
+@export var shop_scene: PackedScene = DEFAULT_SHOP_SCENE
+@export var title_scene: PackedScene = DEFAULT_TITLE_SCENE
+
 @onready var hand: Hand = $MarginContainer/Hand
 @onready var score_bar: ScoreBar = $MarginContainer/ScoreBar
 @onready var hand_type_upgrades: HandTypeUpgradesView = $HandTypeUpgrades
@@ -63,8 +69,20 @@ func _on_round_started(round_index: int, quota: int, hands: int, rerolls: int) -
 	score_bar.update_state()
 
 func _on_shop_requested() -> void:
-	get_tree().change_scene_to_file("res://scenes/shop/shop.tscn")
+	var scene_tree := get_tree()
+	if scene_tree == null:
+		return
+	if shop_scene == null:
+		push_warning("Main: shop_scene is not assigned.")
+		return
+	scene_tree.change_scene_to_packed(shop_scene)
 
 func _on_title_requested() -> void:
 	GameState.start_new_run()
-	get_tree().change_scene_to_file("res://scenes/title screen/title_screen.tscn")
+	var scene_tree := get_tree()
+	if scene_tree == null:
+		return
+	if title_scene == null:
+		push_warning("Main: title_scene is not assigned.")
+		return
+	scene_tree.change_scene_to_packed(title_scene)
