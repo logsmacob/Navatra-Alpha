@@ -1,4 +1,4 @@
-extends Control
+extends TextureButton
 ## Visual/controller wrapper for a single [DieInstance].
 class_name DieUI
 
@@ -22,6 +22,10 @@ var is_selected: bool:
 		die_logic.set_selected(value)
 
 var is_interaction_enabled: bool = true
+
+func _ready() -> void:
+	if not pressed.is_connected(_on_pressed):
+		pressed.connect(_on_pressed)
 
 func set_die(new_die: DieInstance) -> void:
 	die_logic.set_die(new_die)

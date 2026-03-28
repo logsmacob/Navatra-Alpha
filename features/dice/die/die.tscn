@@ -33,10 +33,11 @@ script = ExtResource("1_clpct")
 [node name="DieLogic" type="Node" parent="." unique_id=111781122]
 script = ExtResource("3_logic")
 
-[node name="DieVisuals" type="Node" parent="." unique_id=537555383 node_paths=PackedStringArray("die", "face_Texture")]
+[node name="DieVisuals" type="Node" parent="." unique_id=537555383 node_paths=PackedStringArray("die", "face_Texture", "material_texture")]
 script = ExtResource("2_b27w3")
 die = NodePath("..")
 face_Texture = NodePath("../TextureRect")
+material_texture = NodePath("..")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1995712497]
 layout_mode = 1
