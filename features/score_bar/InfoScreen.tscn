@@ -23,6 +23,6 @@ custom_minimum_size = Vector2(520, 0)
 layout_mode = 0
 offset_right = 520.0
 offset_bottom = 30.0
-text = "General Modifiers"
+text = "Stats"
 label_settings = SubResource("LabelSettings_nwx5f")
 autowrap_mode = 3

@@ -7,7 +7,7 @@ signal reroll_requested
 signal continue_requested
 
 @export var currency_label: CornerLabel
-@export var inventory_label: Label
+@export var inventory_container: VBoxContainer
 @export var offers_container: HBoxContainer
 @export var reroll_button: Button
 @export var roll_price: Label
@@ -35,9 +35,33 @@ func set_offers(offers: Array[TrinketData], currency_amount: int) -> void:
 	_offers = offers.duplicate()
 	_rebuild_offer_buttons(currency_amount)
 
-func set_inventory_lines(lines: Array[String]) -> void:
-	if inventory_label:
-		inventory_label.text = "\n".join(lines)
+func set_inventory_entries(entries: Array[Dictionary]) -> void:
+	if inventory_container == null:
+		return
+
+	for child in inventory_container.get_children():
+		child.queue_free()
+
+	var title_label := Label.new()
+	title_label.text = "Owned trinkets:"
+	title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	inventory_container.add_child(title_label)
+
+	if entries.is_empty():
+		var empty_label := Label.new()
+		empty_label.text = "- none"
+		empty_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		inventory_container.add_child(empty_label)
+		return
+
+	for entry in entries:
+		var item_button := Button.new()
+		item_button.flat = true
+		item_button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		item_button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		item_button.text = "- %s x%d" % [str(entry.get("name", "Unknown")), int(entry.get("count", 0))]
+		item_button.tooltip_text = str(entry.get("description", "No description available."))
+		inventory_container.add_child(item_button)
 
 func set_reroll_enabled(enabled: bool) -> void:
 	if reroll_button:

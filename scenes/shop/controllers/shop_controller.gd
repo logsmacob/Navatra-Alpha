@@ -109,7 +109,7 @@ func _refresh_view() -> void:
 	shop_view.set_roll_cost(reroll_cost)
 	shop_view.set_reroll_enabled(_purchase_service.can_afford_purchase(GameState.currency, reroll_cost))
 	shop_view.refresh_offer_affordability(GameState.currency)
-	shop_view.set_inventory_lines(_build_inventory_lines(GameState.get_owned_trinkets()))
+	shop_view.set_inventory_entries(_build_inventory_entries(GameState.get_owned_trinkets()))
 
 func _build_round_scaled_offer(source_offer: TrinketData) -> TrinketData:
 	var priced_offer := source_offer.duplicate(true) as TrinketData
@@ -199,21 +199,25 @@ func _load_trinkets_recursive(root_path: String) -> Array[TrinketData]:
 	directory.list_dir_end()
 	return loaded
 
-func _build_inventory_lines(owned_trinkets: Array[TrinketData]) -> Array[String]:
-	var trinket_counts: Dictionary = {}
+func _build_inventory_entries(owned_trinkets: Array[TrinketData]) -> Array[Dictionary]:
+	var trinket_stats: Dictionary = {}
 	for owned_trinket: TrinketData in owned_trinkets:
 		if owned_trinket == null:
 			continue
 		var trinket_name := owned_trinket.get_display_name()
-		trinket_counts[trinket_name] = int(trinket_counts.get(trinket_name, 0)) + 1
+		var current_entry: Dictionary = trinket_stats.get(trinket_name, {
+			"name": trinket_name,
+			"count": 0,
+			"description": owned_trinket.get_display_description()
+		})
+		current_entry["count"] = int(current_entry.get("count", 0)) + 1
+		trinket_stats[trinket_name] = current_entry
 
-	var lines: Array[String] = ["Owned trinkets:"]
-	var sorted_names: Array = trinket_counts.keys()
+	var entries: Array[Dictionary] = []
+	var sorted_names: Array = trinket_stats.keys()
 	sorted_names.sort_custom(func(a: Variant, b: Variant) -> bool:
 		return str(a).nocasecmp_to(str(b)) < 0
 	)
 	for key in sorted_names:
-		lines.append("- %s x%d" % [str(key), int(trinket_counts[key])])
-	if trinket_counts.is_empty():
-		lines.append("- none")
-	return lines
+		entries.append(trinket_stats[key])
+	return entries
