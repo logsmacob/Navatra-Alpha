@@ -23,35 +23,44 @@ var _score_rules := HandScoreRulesService.new()
 func _ready() -> void:
 	if general_modifiers_label == null:
 		general_modifiers_label = get_node_or_null("GeneralModifiers")
+	if hand_types_label == null:
+		hand_types_label = get_node_or_null("HandType")
+	if face_label == null:
+		face_label = get_node_or_null("Face")
 	if not GameState.general_modifiers_changed.is_connected(_on_general_modifiers_changed):
 		GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
 	_on_general_modifiers_changed(GameState.get_general_modifiers())
 
 func update_general_modifiers(modifiers: Dictionary) -> void:
-	if general_modifiers_label == null:
-		return
-	general_modifiers_label.text = _build_general_modifier_text(modifiers)
+	if general_modifiers_label != null:
+		general_modifiers_label.text = _build_general_modifier_text(modifiers)
+	if face_label != null:
+		face_label.text = _build_face_values_text(modifiers)
+	if hand_types_label != null:
+		hand_types_label.text = _build_hand_types_text()
 
 func _on_general_modifiers_changed(modifiers: Dictionary) -> void:
 	update_general_modifiers(modifiers)
 
 func _build_general_modifier_text(modifiers: Dictionary) -> String:
-	var lines: Array[String] = ["Stats"]
-	lines.append("")
-	lines.append("Face Values")
-	for face_value in FACE_VALUES:
-		var base_value := int(modifiers.get("base_%d_value" % face_value, face_value))
-		var mult_value := int(modifiers.get("mult_%d_value" % face_value, 0))
-		lines.append("- Face %d: Base %d | Mult %s" % [face_value, base_value, _format_signed_modifier(mult_value)])
-	lines.append("")
-	lines.append("General Modifiers")
+	var lines: Array[String] = ["General Modifiers"]
 	for row in GENERAL_MODIFIER_ROWS:
 		if str(row.key).begins_with("base_") or str(row.key).begins_with("mult_"):
 			continue
 		var value := int(modifiers.get(row.key, 0))
 		lines.append("- %s" % _format_general_modifier_line(str(row.key), str(row.label), value))
-	lines.append("")
-	lines.append("Hand Types")
+	return "\n".join(lines)
+
+func _build_face_values_text(modifiers: Dictionary) -> String:
+	var lines: Array[String] = ["Face Values"]
+	for face_value in FACE_VALUES:
+		var base_value := int(modifiers.get("base_%d_value" % face_value, face_value))
+		var mult_value := int(modifiers.get("mult_%d_value" % face_value, 0))
+		lines.append("- Face %d: Base %d | Mult %s" % [face_value, base_value, _format_signed_modifier(mult_value)])
+	return "\n".join(lines)
+
+func _build_hand_types_text() -> String:
+	var lines: Array[String] = ["Hand Types"]
 	for row in HAND_TYPE_ROWS:
 		var hand_type := int(row.type)
 		var values := _score_rules.get_scoring_values(hand_type)
