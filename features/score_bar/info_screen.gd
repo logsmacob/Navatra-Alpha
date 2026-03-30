@@ -15,6 +15,9 @@ const HAND_TYPE_ROWS := [
 ]
 
 @export var general_modifiers_label: Label
+@export var hand_types_label: Label
+@export var face_label: Label
+
 var _score_rules := HandScoreRulesService.new()
 
 func _ready() -> void:

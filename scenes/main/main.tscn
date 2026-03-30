@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://bgl7d1v3bo6c4" path="res://features/score_bar/score_bar.tscn" id="4_tbgi4"]
 [ext_resource type="Shader" uid="uid://batbn873bu8tu" path="res://features/hand_type_upgrades/blur.gdshader" id="5_blur"]
 [ext_resource type="PackedScene" uid="uid://d3y3lp5ch2l3q" path="res://scenes/lose screen/lose_screen.tscn" id="6_wxrqo"]
+[ext_resource type="PackedScene" uid="uid://ckwbd81dafevx" path="res://features/score_bar/InfoScreen.tscn" id="11_ouso4"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jyhfs"]
 shader = ExtResource("2_sugp2")
@@ -171,4 +172,7 @@ text = "Back to Title Screen"
 
 [node name="LoseScreen" parent="." unique_id=969841653 instance=ExtResource("6_wxrqo")]
 visible = false
+layout_mode = 1
+
+[node name="InfoScreen" parent="." unique_id=1513268175 instance=ExtResource("11_ouso4")]
 layout_mode = 1
