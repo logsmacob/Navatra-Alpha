@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://bgl7d1v3bo6c4" path="res://features/score_bar/score_bar.tscn" id="4_tbgi4"]
 [ext_resource type="Shader" uid="uid://batbn873bu8tu" path="res://features/hand_type_upgrades/blur.gdshader" id="5_blur"]
 [ext_resource type="PackedScene" uid="uid://d3y3lp5ch2l3q" path="res://scenes/lose screen/lose_screen.tscn" id="6_wxrqo"]
+[ext_resource type="Theme" uid="uid://crwvosv3l8ktn" path="res://assets/UI/style_boxes/light pannel theme.tres" id="8_th5th"]
+[ext_resource type="Script" uid="uid://dokibm2mllewt" path="res://scenes/main/button.gd" id="9_7smn1"]
 [ext_resource type="PackedScene" uid="uid://ckwbd81dafevx" path="res://features/score_bar/InfoScreen.tscn" id="11_ouso4"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jyhfs"]
@@ -175,4 +177,20 @@ visible = false
 layout_mode = 1
 
 [node name="InfoScreen" parent="." unique_id=1513268175 instance=ExtResource("11_ouso4")]
+visible = false
 layout_mode = 1
+
+[node name="Button" type="Button" parent="." unique_id=2117591815]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 0
+offset_left = 30.0
+offset_top = 922.0
+offset_right = 158.0
+offset_bottom = 1050.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+theme = ExtResource("8_th5th")
+text = "Info"
+script = ExtResource("9_7smn1")
+
+[connection signal="pressed" from="Button" to="Button" method="_on_pressed"]

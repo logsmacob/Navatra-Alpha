@@ -111,7 +111,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_oslr0")
 
 [node name="HandContainer" type="HBoxContainer" parent="HBoxContainer/Panel" unique_id=1119469658]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="ButtonContainer" type="HBoxContainer" parent="HBoxContainer" unique_id=184635535]
