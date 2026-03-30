@@ -14,9 +14,9 @@ const HAND_TYPE_ROWS := [
 	{"type": HandEvaluatorService.HandType.FIVE_OF_A_KIND, "label": "Five of a Kind", "recipe": "All five dice the same"},
 ]
 
-@export var general_modifiers_label: Label
-@export var hand_types_label: Label
-@export var face_label: Label
+@export var general_modifiers_label: RichTextLabel
+@export var hand_types_label: RichTextLabel
+@export var face_label: RichTextLabel
 
 var _score_rules := HandScoreRulesService.new()
 
@@ -56,7 +56,10 @@ func _build_face_values_text(modifiers: Dictionary) -> String:
 	for face_value in FACE_VALUES:
 		var base_value := int(modifiers.get("base_%d_value" % face_value, face_value))
 		var mult_value := int(modifiers.get("mult_%d_value" % face_value, 0))
-		lines.append("- Face %d: \n   > [Base %d]  [Mult %s]" % [face_value, base_value, _format_signed_modifier(mult_value)])
+		lines.append(
+			"- Face %d: \n   > %s  %s"
+			% [face_value, _format_base_bbcode(base_value), _format_mult_bbcode(_format_signed_modifier(mult_value))]
+		)
 	return "\n".join(lines)
 
 func _build_hand_types_text() -> String:
@@ -67,10 +70,17 @@ func _build_hand_types_text() -> String:
 		var base_value := int(values.get("base", 0))
 		var mult_value := int(values.get("mult", 0))
 		lines.append(
-			"- %s: %s\n   > [Base %d]  [Mult %d]"
-			% [str(row.label), str(row.recipe), base_value, mult_value]
+			"- %s: %s\n   > %s  %s"
+			% [str(row.label), str(row.recipe), _format_base_bbcode(base_value), _format_mult_bbcode(str(mult_value))]
 		)
 	return "\n".join(lines)
+
+
+func _format_base_bbcode(value: Variant) -> String:
+	return "[color=#62A8FF][Base %s][/color]" % str(value)
+
+func _format_mult_bbcode(value: Variant) -> String:
+	return "[color=#FF7AD9][Mult %s][/color]" % str(value)
 
 func _format_signed_modifier(value: int) -> String:
 	if value > 0:

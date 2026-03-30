@@ -27,14 +27,8 @@ corner_radius_bottom_right = 32
 corner_radius_bottom_left = 32
 corner_detail = 1
 
-[sub_resource type="LabelSettings" id="LabelSettings_nwx5f"]
-font = ExtResource("1_fck6u")
 
-[sub_resource type="LabelSettings" id="LabelSettings_kt82y"]
-font = ExtResource("1_fck6u")
 
-[sub_resource type="LabelSettings" id="LabelSettings_3bf31"]
-font = ExtResource("1_fck6u")
 
 [node name="InfoScreen" type="PanelContainer" unique_id=451834390 node_paths=PackedStringArray("general_modifiers_label", "hand_types_label", "face_label")]
 self_modulate = Color(0, 0, 0, 1)
@@ -67,25 +61,34 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_7303h")
 layout_mode = 2
 theme_override_constants/separation = 32
 
-[node name="GeneralModifiers" type="Label" parent="PanelContainer/HBoxContainer" unique_id=186246805]
+[node name="GeneralModifiers" type="RichTextLabel" parent="PanelContainer/HBoxContainer" unique_id=186246805]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 1
+theme_override_fonts/normal_font = ExtResource("1_fck6u")
+bbcode_enabled = true
+scroll_active = false
+fit_content = true
 text = "Test tes tes
 test test test
 testtesttest"
-label_settings = SubResource("LabelSettings_nwx5f")
 
-[node name="HandType" type="Label" parent="PanelContainer/HBoxContainer" unique_id=261608672]
+[node name="HandType" type="RichTextLabel" parent="PanelContainer/HBoxContainer" unique_id=261608672]
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_fck6u")
+bbcode_enabled = true
+scroll_active = false
+fit_content = true
 text = "Test tes tes
 test test test
 testtesttest"
-label_settings = SubResource("LabelSettings_kt82y")
 
-[node name="Face" type="Label" parent="PanelContainer/HBoxContainer" unique_id=826505449]
+[node name="Face" type="RichTextLabel" parent="PanelContainer/HBoxContainer" unique_id=826505449]
 layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("1_fck6u")
+bbcode_enabled = true
+scroll_active = false
+fit_content = true
 text = "Test tes tes
 test test test
 testtesttest"
-label_settings = SubResource("LabelSettings_3bf31")
