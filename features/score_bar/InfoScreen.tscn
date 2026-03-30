@@ -27,9 +27,6 @@ corner_radius_bottom_right = 32
 corner_radius_bottom_left = 32
 corner_detail = 1
 
-
-
-
 [node name="InfoScreen" type="PanelContainer" unique_id=451834390 node_paths=PackedStringArray("general_modifiers_label", "hand_types_label", "face_label")]
 self_modulate = Color(0, 0, 0, 1)
 custom_minimum_size = Vector2(0, 750)
@@ -52,6 +49,7 @@ layout_mode = 2
 color = Color(1, 1, 1, 0.15)
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=1643494845]
+custom_minimum_size = Vector2(750, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -62,33 +60,35 @@ layout_mode = 2
 theme_override_constants/separation = 32
 
 [node name="GeneralModifiers" type="RichTextLabel" parent="PanelContainer/HBoxContainer" unique_id=186246805]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 1
 theme_override_fonts/normal_font = ExtResource("1_fck6u")
 bbcode_enabled = true
-scroll_active = false
-fit_content = true
 text = "Test tes tes
 test test test
 testtesttest"
+fit_content = true
+scroll_active = false
 
 [node name="HandType" type="RichTextLabel" parent="PanelContainer/HBoxContainer" unique_id=261608672]
+custom_minimum_size = Vector2(450, 0)
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("1_fck6u")
 bbcode_enabled = true
-scroll_active = false
-fit_content = true
 text = "Test tes tes
 test test test
 testtesttest"
+fit_content = true
+scroll_active = false
 
 [node name="Face" type="RichTextLabel" parent="PanelContainer/HBoxContainer" unique_id=826505449]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 theme_override_fonts/normal_font = ExtResource("1_fck6u")
 bbcode_enabled = true
-scroll_active = false
-fit_content = true
 text = "Test tes tes
 test test test
 testtesttest"
+fit_content = true
+scroll_active = false
