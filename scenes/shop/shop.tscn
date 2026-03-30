@@ -88,7 +88,7 @@ font_size = 32
 atlas = ExtResource("29_ncc2j")
 region = Rect2(0, 16, 16, 16)
 
-[node name="Shop" type="Control" unique_id=1773375267 node_paths=PackedStringArray("currency_label", "inventory_label", "offers_container", "reroll_button", "roll_price", "continue_button")]
+[node name="Shop" type="Control" unique_id=1773375267 node_paths=PackedStringArray("currency_label", "inventory_container", "offers_container", "reroll_button", "roll_price", "continue_button")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -98,7 +98,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1")
 currency_label = NodePath("Margin/VBox/Header/Corner Label")
-inventory_label = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Inventory")
+inventory_container = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Inventory")
 offers_container = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers")
 reroll_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton")
 roll_price = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton/HBoxContainer/Label")
@@ -243,12 +243,11 @@ size_flags_horizontal = 1
 layout_mode = 2
 size_flags_horizontal = 1
 
-[node name="Inventory" type="Label" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1031834765]
+[node name="Inventory" type="VBoxContainer" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1031834765]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
-autowrap_mode = 3
 
 [node name="Buttons" type="HBoxContainer" parent="Margin/VBox/MarginContainer/VBoxContainer" unique_id=1889713226]
 layout_mode = 2
