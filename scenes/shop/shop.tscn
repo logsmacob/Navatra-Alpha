@@ -88,6 +88,23 @@ font_size = 32
 atlas = ExtResource("29_ncc2j")
 region = Rect2(0, 16, 16, 16)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0272k"]
+bg_color = Color(0.07058824, 0.07058824, 0.07058824, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.5254902, 0.5254902, 0.5254902, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+corner_detail = 1
+expand_margin_left = 16.0
+expand_margin_top = 16.0
+expand_margin_right = 16.0
+expand_margin_bottom = 16.0
+
 [node name="Shop" type="Control" unique_id=1773375267 node_paths=PackedStringArray("currency_label", "inventory_container", "offers_container", "reroll_button", "roll_price", "continue_button")]
 layout_mode = 3
 anchors_preset = 15
@@ -98,7 +115,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 script = ExtResource("1")
 currency_label = NodePath("Margin/VBox/Header/Corner Label")
-inventory_container = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Inventory")
+inventory_container = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer/Inventory")
 offers_container = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/Offers")
 reroll_button = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton")
 roll_price = NodePath("Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/RerollButton/HBoxContainer/Label")
@@ -173,8 +190,9 @@ layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Margin/VBox/MarginContainer/VBoxContainer" unique_id=1900627710]
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 0
-theme_override_constants/separation = 64
+theme_override_constants/separation = 52
 
 [node name="RerollButton" type="Button" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1126190461]
 custom_minimum_size = Vector2(200, 150)
@@ -243,11 +261,14 @@ size_flags_horizontal = 1
 layout_mode = 2
 size_flags_horizontal = 1
 
-[node name="Inventory" type="VBoxContainer" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1031834765]
+[node name="PanelContainer" type="PanelContainer" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1472387693]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0272k")
+
+[node name="Inventory" type="VBoxContainer" parent="Margin/VBox/MarginContainer/VBoxContainer/HBoxContainer/PanelContainer" unique_id=1031834765]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 1
 
 [node name="Buttons" type="HBoxContainer" parent="Margin/VBox/MarginContainer/VBoxContainer" unique_id=1889713226]
 layout_mode = 2
