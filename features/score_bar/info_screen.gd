@@ -32,6 +32,8 @@ func _ready() -> void:
 		face_label = get_node_or_null("Face")
 	if not GameState.general_modifiers_changed.is_connected(_on_general_modifiers_changed):
 		GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
+	if not GameState.hand_type_upgrades_changed.is_connected(_on_hand_type_upgrades_changed):
+		GameState.hand_type_upgrades_changed.connect(_on_hand_type_upgrades_changed)
 	_on_general_modifiers_changed(GameState.get_general_modifiers())
 
 func update_general_modifiers(modifiers: Dictionary) -> void:
@@ -44,6 +46,10 @@ func update_general_modifiers(modifiers: Dictionary) -> void:
 
 func _on_general_modifiers_changed(modifiers: Dictionary) -> void:
 	update_general_modifiers(modifiers)
+
+func _on_hand_type_upgrades_changed(_upgrades: Dictionary) -> void:
+	if hand_types_label != null:
+		hand_types_label.text = _build_hand_types_text()
 
 func _build_general_modifier_text(modifiers: Dictionary) -> String:
 	var lines: Array[String] = [_format_title_bbcode("General Modifiers")]
@@ -70,9 +76,10 @@ func _build_face_values_text(modifiers: Dictionary) -> String:
 
 func _build_hand_types_text() -> String:
 	var lines: Array[String] = [_format_title_bbcode("Hand Types")]
+	var scoring_context := HandScoringContext.new(GameState.hand_type_upgrades, GameState.round_score_multiplier)
 	for row in HAND_TYPE_ROWS:
 		var hand_type := int(row.type)
-		var values := _score_rules.get_scoring_values(hand_type)
+		var values := _score_rules.get_scoring_values(hand_type, scoring_context)
 		var base_value := int(values.get("base", 0))
 		var mult_value := int(values.get("mult", 0))
 		lines.append(

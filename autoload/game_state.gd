@@ -14,6 +14,7 @@ signal run_won(round_index: int, stats: Dictionary)
 signal currency_changed(amount: int)
 signal player_hand_changed(hand_state: Array)
 signal general_modifiers_changed(modifiers: Dictionary)
+signal hand_type_upgrades_changed(upgrades: Dictionary)
 
 const BASE_DICE_PER_HAND: int = 5
 const BASE_DIE_FACE_COUNT: int = 6
@@ -80,6 +81,7 @@ func start_new_run() -> void:
 	initialize_player_hand(BASE_DICE_PER_HAND, BASE_DIE_FACE_COUNT)
 	currency_changed.emit(currency)
 	general_modifiers_changed.emit(get_general_modifiers())
+	hand_type_upgrades_changed.emit(get_hand_type_upgrades())
 	run_started.emit(round_index)
 	start_round(round_index)
 
@@ -150,9 +152,13 @@ func add_next_round_score_multiplier_bonus(amount: float) -> void:
 
 func add_hand_type_upgrade(hand_type: int, base_bonus: int, mult_bonus: int) -> void:
 	_player_manager.add_hand_type_upgrade(hand_type, base_bonus, mult_bonus)
+	hand_type_upgrades_changed.emit(get_hand_type_upgrades())
 
 func get_hand_type_upgrade(hand_type: int) -> Dictionary:
 	return _player_manager.get_hand_type_upgrade(hand_type)
+
+func get_hand_type_upgrades() -> Dictionary:
+	return _player_manager.hand_type_upgrades.duplicate(true)
 
 func add_shop_item(item_id: String) -> void:
 	_player_manager.add_shop_item(item_id)
