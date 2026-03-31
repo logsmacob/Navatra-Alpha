@@ -31,6 +31,10 @@ func set_currency_display(amount: int) -> void:
 	if currency_label:
 		currency_label.set_marbles(amount)
 
+func set_round_display(round_index: int, max_rounds: int) -> void:
+	if currency_label:
+		currency_label.set_round(round_index, max_rounds)
+
 func set_offers(offers: Array[TrinketData], currency_amount: int) -> void:
 	_offers = offers.duplicate()
 	_rebuild_offer_buttons(currency_amount)

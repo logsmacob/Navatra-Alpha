@@ -106,6 +106,7 @@ func _refresh_view() -> void:
 		return
 	var reroll_cost := _get_scaled_shop_reroll_cost()
 	shop_view.set_currency_display(GameState.currency)
+	shop_view.set_round_display(max(GameState.round_index, 1), GameState.MAX_ROUNDS)
 	shop_view.set_roll_cost(reroll_cost)
 	shop_view.set_reroll_enabled(_purchase_service.can_afford_purchase(GameState.currency, reroll_cost))
 	shop_view.refresh_offer_affordability(GameState.currency)
