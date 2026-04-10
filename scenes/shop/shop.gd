@@ -3,6 +3,7 @@ extends Control
 class_name ShopView
 
 signal offer_purchase_requested(index: int)
+signal offer_lock_toggled(index: int, is_locked: bool)
 signal reroll_requested
 signal continue_requested
 
@@ -16,6 +17,7 @@ signal continue_requested
 
 var _offers: Array[TrinketData] = []
 var _offer_buttons: Array[Button] = []
+var _locked_offer_keys: Dictionary = {}
 
 func _ready() -> void:
 	if reroll_button:
@@ -35,8 +37,9 @@ func set_round_display(round_index: int, max_rounds: int) -> void:
 	if currency_label:
 		currency_label.set_round(round_index, max_rounds)
 
-func set_offers(offers: Array[TrinketData], currency_amount: int) -> void:
+func set_offers(offers: Array[TrinketData], currency_amount: int, locked_offer_keys: Dictionary = {}) -> void:
 	_offers = offers.duplicate()
+	_locked_offer_keys = locked_offer_keys.duplicate(true)
 	_rebuild_offer_buttons(currency_amount)
 
 func set_inventory_entries(entries: Array[Dictionary]) -> void:
@@ -106,6 +109,11 @@ func _rebuild_offer_buttons(currency_amount: int) -> void:
 		button.set_texture(offer.get_texture())
 		button.set_border_color(offer.get_rarity_color())
 		button.pressed.connect(_on_offer_button_pressed.bind(i))
+		if button.has_method("set_locked"):
+			var offer_key := offer.get_shop_tracking_key()
+			button.set_locked(bool(_locked_offer_keys.get(offer_key, false)))
+		if button.has_signal("lock_toggled"):
+			button.lock_toggled.connect(_on_offer_lock_toggled.bind(i))
 		button.tooltip_text = "%s\nCost: %d marbles" % [offer.get_display_name(), offer.cost]
 		offers_container.add_child(button)
 		_offer_buttons.append(button)
@@ -114,6 +122,9 @@ func _rebuild_offer_buttons(currency_amount: int) -> void:
 
 func _on_offer_button_pressed(index: int) -> void:
 	offer_purchase_requested.emit(index)
+
+func _on_offer_lock_toggled(is_locked: bool, index: int) -> void:
+	offer_lock_toggled.emit(index, is_locked)
 
 func _on_reroll_pressed() -> void:
 	reroll_requested.emit()

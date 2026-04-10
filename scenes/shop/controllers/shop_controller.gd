@@ -18,6 +18,7 @@ var _offer_service: ShopOfferService = ShopOfferService.new()
 var _purchase_service: ShopPurchaseService = ShopPurchaseService.new()
 var _transaction_port: ShopTransactionPort
 var _shop_rerolls_purchased: int = 0
+var _locked_offer_snapshots: Dictionary = {}
 
 func _ready() -> void:
 	if shop_view == null:
@@ -28,12 +29,14 @@ func _ready() -> void:
 	_apply_balance_config()
 	_transaction_port = GameStateShopTransactionPort.new(GameState)
 	shop_view.offer_purchase_requested.connect(_on_offer_purchase_requested)
+	shop_view.offer_lock_toggled.connect(_on_offer_lock_toggled)
 	shop_view.reroll_requested.connect(_on_reroll_requested)
 	shop_view.continue_requested.connect(_on_continue_requested)
 	GameState.currency_changed.connect(_on_currency_changed)
 	GameState.general_modifiers_changed.connect(_on_general_modifiers_changed)
 
 	shop_view.set_roll_cost(_get_scaled_shop_reroll_cost())
+	_restore_locked_offers()
 	_roll_offers()
 	_refresh_view()
 
@@ -45,8 +48,10 @@ func _on_offer_purchase_requested(index: int) -> void:
 	if not _purchase_service.apply_purchase(_transaction_port, offer):
 		return
 
+	_remove_locked_offer(offer)
 	_offers.remove_at(index)
-	shop_view.set_offers(_offers, GameState.currency)
+	_persist_locked_offers()
+	shop_view.set_offers(_offers, GameState.currency, _get_locked_offer_keys())
 	_refresh_view()
 
 func _on_reroll_requested() -> void:
@@ -86,20 +91,46 @@ func _on_currency_changed(_amount: int) -> void:
 func _on_general_modifiers_changed(_modifiers: Dictionary) -> void:
 	_refresh_view()
 
+func _on_offer_lock_toggled(index: int, is_locked: bool) -> void:
+	if index < 0 or index >= _offers.size():
+		return
+	var offer := _offers[index]
+	if offer == null:
+		return
+	if is_locked:
+		_track_locked_offer(offer)
+	else:
+		_remove_locked_offer(offer)
+	_persist_locked_offers()
+
 func _roll_offers() -> void:
+	var locked_offers := _get_locked_offer_list()
+	var remaining_slots := maxi(_get_offer_count() - locked_offers.size(), 0)
+	var locked_offer_keys := _get_locked_offer_keys()
+	var candidate_pool: Array[TrinketData] = []
+	for trinket: TrinketData in trinket_pool:
+		if trinket == null:
+			continue
+		if locked_offer_keys.has(trinket.get_shop_tracking_key()):
+			continue
+		candidate_pool.append(trinket)
 	var rolled_offers := _offer_service.roll_weighted_offers(
-		trinket_pool,
+		candidate_pool,
 		max(GameState.round_index, 1),
-		_get_offer_count(),
+		remaining_slots,
 		true,
 		GameState.get_shop_item_counts()
 	)
 	_offers.clear()
+	for locked_offer: TrinketData in locked_offers:
+		if locked_offer == null:
+			continue
+		_offers.append(locked_offer)
 	for offer: TrinketData in rolled_offers:
 		if offer == null:
 			continue
 		_offers.append(_build_round_scaled_offer(offer))
-	shop_view.set_offers(_offers, GameState.currency)
+	shop_view.set_offers(_offers, GameState.currency, locked_offer_keys)
 
 func _refresh_view() -> void:
 	if shop_view == null:
@@ -111,6 +142,68 @@ func _refresh_view() -> void:
 	shop_view.set_reroll_enabled(_purchase_service.can_afford_purchase(GameState.currency, reroll_cost))
 	shop_view.refresh_offer_affordability(GameState.currency)
 	shop_view.set_inventory_entries(_build_inventory_entries(GameState.get_owned_trinkets()))
+
+func _track_locked_offer(offer: TrinketData) -> void:
+	if offer == null:
+		return
+	var key := offer.get_shop_tracking_key()
+	var snapshot := {
+		"key": key,
+		"cost": offer.cost,
+	}
+	_locked_offer_snapshots[key] = snapshot
+
+func _remove_locked_offer(offer: TrinketData) -> void:
+	if offer == null:
+		return
+	_locked_offer_snapshots.erase(offer.get_shop_tracking_key())
+
+func _persist_locked_offers() -> void:
+	var entries: Array[Dictionary] = []
+	for snapshot: Dictionary in _locked_offer_snapshots.values():
+		entries.append(snapshot.duplicate(true))
+	GameState.set_locked_shop_offers(entries)
+
+func _restore_locked_offers() -> void:
+	_locked_offer_snapshots.clear()
+	for entry: Dictionary in GameState.get_locked_shop_offers():
+		var key := str(entry.get("key", ""))
+		if key.is_empty():
+			continue
+		_locked_offer_snapshots[key] = {
+			"key": key,
+			"cost": int(entry.get("cost", -1)),
+		}
+
+func _get_locked_offer_keys() -> Dictionary:
+	var keys: Dictionary = {}
+	for key: Variant in _locked_offer_snapshots.keys():
+		keys[key] = true
+	return keys
+
+func _get_locked_offer_list() -> Array[TrinketData]:
+	var locked_offers: Array[TrinketData] = []
+	for snapshot: Dictionary in _locked_offer_snapshots.values():
+		var key := str(snapshot.get("key", ""))
+		if key.is_empty():
+			continue
+		var offer := _build_offer_from_key(key, int(snapshot.get("cost", -1)))
+		if offer == null:
+			continue
+		locked_offers.append(offer)
+	return locked_offers
+
+func _build_offer_from_key(key: String, cost_override: int = -1) -> TrinketData:
+	for trinket: TrinketData in trinket_pool:
+		if trinket == null:
+			continue
+		if trinket.get_shop_tracking_key() != key:
+			continue
+		var offer := _build_round_scaled_offer(trinket)
+		if cost_override >= 0:
+			offer.cost = cost_override
+		return offer
+	return null
 
 func _build_round_scaled_offer(source_offer: TrinketData) -> TrinketData:
 	var priced_offer := source_offer.duplicate(true) as TrinketData

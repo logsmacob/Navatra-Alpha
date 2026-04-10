@@ -51,6 +51,15 @@ Round cleared in GameState
 -> Scene changes to shop
 ```
 
+```text
+Shop lock toggle changed
+-> ItemButton emits lock_toggled(is_locked)
+-> ShopView re-emits offer_lock_toggled(index, is_locked)
+-> ShopController updates locked offer snapshots in GameState
+-> Shop reroll keeps locked offers and only re-rolls remaining slots
+-> Returning to shop restores locked offers from GameState snapshots
+```
+
 ---
 
 ## 2. Signal-by-signal flow
@@ -103,6 +112,16 @@ Round cleared in GameState
 | 3 | `GameState` | `reward_phase_started` | `MainRoundFlowController.handle_reward_phase_started()` | Upgrade UI is refreshed and shown. |
 | 4 | `HandTypeUpgradesView` | `upgrade_selected(upgrade)` | `MainRoundFlowController.handle_upgrade_selected()` | Upgrade is applied and shop scene is opened. |
 | 5 | `HandTypeUpgradesView` | `reroll_requested` | `MainRoundFlowController.handle_upgrade_reroll_requested()` | Replacement upgrades are generated. |
+
+### E. Shop lock flow
+
+| Step | Emitter | Signal | Receiver | Next action |
+| --- | --- | --- | --- | --- |
+| 1 | `ItemButton` | `lock_toggled(is_locked)` | `ShopView._on_offer_lock_toggled()` | Converts button-local lock state into offer-index intent. |
+| 2 | `ShopView` | `offer_lock_toggled(index, is_locked)` | `ShopController._on_offer_lock_toggled()` | Stores/removes locked-offer snapshot by shop tracking key. |
+| 3 | `ShopController` | direct call `GameState.set_locked_shop_offers(entries)` | `GameState` | Persists locked-offer snapshots for later shop visits in the same run. |
+| 4 | Shop reroll button | `reroll_requested` | `ShopController._on_reroll_requested()` | Re-rolls only unlocked slots and keeps locked offers in the next render. |
+| 5 | Shop scene `_ready()` | controller restore call | `ShopController._restore_locked_offers()` | Rehydrates locked offers and rebuilds the mixed (locked + rolled) offer list. |
 
 ---
 

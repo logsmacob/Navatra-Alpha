@@ -69,6 +69,7 @@ var general_modifiers: Dictionary:
 
 var _player_manager: GameStatePlayerManager = GameStatePlayerManager.new()
 var _run_manager: GameStateRunManager = GameStateRunManager.new()
+var _locked_shop_offers: Array[Dictionary] = []
 
 func _ready() -> void:
 	start_new_run()
@@ -78,6 +79,7 @@ func start_new_run() -> void:
 	_player_manager.clear_hand_type_upgrades()
 	_player_manager.clear_shop_items()
 	_player_manager.reset_general_modifiers()
+	clear_locked_shop_offers()
 	initialize_player_hand(BASE_DICE_PER_HAND, BASE_DIE_FACE_COUNT)
 	currency_changed.emit(currency)
 	general_modifiers_changed.emit(get_general_modifiers())
@@ -232,3 +234,12 @@ func _emit_round_state() -> void:
 
 func get_run_stats() -> Dictionary:
 	return _run_manager.get_run_stats()
+
+func set_locked_shop_offers(offers: Array[Dictionary]) -> void:
+	_locked_shop_offers = offers.duplicate(true)
+
+func get_locked_shop_offers() -> Array[Dictionary]:
+	return _locked_shop_offers.duplicate(true)
+
+func clear_locked_shop_offers() -> void:
+	_locked_shop_offers.clear()

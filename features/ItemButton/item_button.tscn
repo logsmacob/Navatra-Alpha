@@ -25,7 +25,7 @@ region = Rect2(0, 16, 16, 16)
 font = ExtResource("3_l2xpd")
 font_size = 32
 
-[node name="TrinketButton" type="Button" unique_id=678501366 node_paths=PackedStringArray("title_label", "discription_label", "price_label", "rarity_label", "texture_rect")]
+[node name="TrinketButton" type="Button" unique_id=678501366 node_paths=PackedStringArray("title_label", "discription_label", "price_label", "rarity_label", "texture_rect", "lock_button")]
 custom_minimum_size = Vector2(300, 400)
 offset_right = 300.0
 offset_bottom = 400.0
@@ -41,6 +41,7 @@ discription_label = NodePath("MarginContainer/VBoxContainer/Discription")
 price_label = NodePath("MarginContainer/VBoxContainer/HBoxContainer/Price")
 rarity_label = NodePath("MarginContainer/VBoxContainer/Header/VBoxContainer/Rarity")
 texture_rect = NodePath("MarginContainer/VBoxContainer/Header/TextureRect")
+lock_button = NodePath("Lock")
 
 [node name="Hover animation" parent="." unique_id=251388993 instance=ExtResource("4_l82o7")]
 
