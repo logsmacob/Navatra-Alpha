@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="TrinketData" format=3 uid="uid://cotvh1h8me25u"]
+
+[ext_resource type="Script" uid="uid://1aoacss5301g" path="res://core/resources/trinket_data.gd" id="1_yl8uw"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_u777g"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_u777g")
+region = Rect2(16, 80, 16, 16)
+
+[resource]
+script = ExtResource("1_yl8uw")
+texture = SubResource("AtlasTexture_icon")
+id = "potato"
+item_name = "Potato"
+cost = 3
+rarity = 1
+base_marbles_per_round = 1
+shop_rerolls = 1
+shop_playable_hands = 1
+min_round = 2

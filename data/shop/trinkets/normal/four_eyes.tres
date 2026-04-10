@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="TrinketData" format=3 uid="uid://cg1y0x1h7lc87"]
+
+[ext_resource type="Script" uid="uid://1aoacss5301g" path="res://core/resources/trinket_data.gd" id="1_mgkpu"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_eslbv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_eslbv")
+region = Rect2(48, 80, 16, 16)
+
+[resource]
+script = ExtResource("1_mgkpu")
+texture = SubResource("AtlasTexture_icon")
+id = "four_eyes"
+item_name = "Four Eyes"
+cost = 3
+rarity = 1
+luck = 8
+base_marbles_per_round = 1
+base_4_value = 6
+mult_4_value = 1

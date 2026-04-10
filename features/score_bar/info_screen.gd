@@ -120,3 +120,7 @@ func _format_general_modifier_line(key: String, label: String, value: int) -> St
 	if key.begins_with("mult_") and key.ends_with("_value"):
 		return "%s %s Mult" % [label, signed_value]
 	return "%s %s" % [label, signed_value]
+
+func _on_blur_2_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		hide()

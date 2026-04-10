@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="ChanceTrinketData" format=3 uid="uid://dx4dqxupo01tj"]
+
+[ext_resource type="Script" uid="uid://5q71o1b2d1kb" path="res://core/resources/trinkets/chance_trinket_data.gd" id="1_xlmqt"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_ctt8g"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r3ar0"]
+atlas = ExtResource("2_ctt8g")
+region = Rect2(64, 80, 16, 16)
+
+[resource]
+script = ExtResource("1_xlmqt")
+mult = 1
+marbles = 10
+temp_rerolls_for_round = 1
+activation_chance_percent = 15.0
+use_hand_type_condition = false
+use_face_condition = true
+required_face_value = 3
+texture = SubResource("AtlasTexture_r3ar0")
+id = "magic_wand"
+item_name = "Magic Wand"
+cost = 3
+rarity = 1
+luck = 10
+metadata/_custom_type_script = "uid://5q71o1b2d1kb"

@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="TrinketData" format=3 uid="uid://fdpdtnb6qfau"]
+
+[ext_resource type="Script" uid="uid://1aoacss5301g" path="res://core/resources/trinket_data.gd" id="1_ibr5m"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_au460"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_au460")
+region = Rect2(64, 64, 16, 16)
+
+[resource]
+script = ExtResource("1_ibr5m")
+texture = SubResource("AtlasTexture_icon")
+id = "heavy"
+item_name = "Heavy"
+cost = 4
+rarity = 2
+base_1_value = -1
+base_2_value = -1
+base_3_value = -1
+base_4_value = -1
+base_5_value = -1
+base_6_value = -1
+mult_1_value = 1
+mult_2_value = 1
+mult_3_value = 1
+mult_4_value = 1
+mult_5_value = 1
+mult_6_value = 1
+min_round = 7

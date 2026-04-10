@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="TrinketData" format=3 uid="uid://djureovdh84d2"]
+
+[ext_resource type="Script" uid="uid://1aoacss5301g" path="res://core/resources/trinket_data.gd" id="1_h03os"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_v5e44"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_icon"]
+atlas = ExtResource("2_v5e44")
+region = Rect2(0, 80, 16, 16)
+
+[resource]
+script = ExtResource("1_h03os")
+texture = SubResource("AtlasTexture_icon")
+id = "one_eye"
+item_name = "One Eye"
+cost = 8
+rarity = 3
+base_marbles_per_round = 1
+shop_rerolls = 1
+shop_playable_hands = 1
+base_1_value = 10
+mult_1_value = 10
+min_round = 9

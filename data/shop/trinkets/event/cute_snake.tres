@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ChanceTrinketData" format=3 uid="uid://cbnh4l376glfh"]
+
+[ext_resource type="Script" uid="uid://5q71o1b2d1kb" path="res://core/resources/trinkets/chance_trinket_data.gd" id="1_iygwu"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_sakst"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r3ar0"]
+atlas = ExtResource("2_sakst")
+region = Rect2(80, 64, 16, 16)
+
+[resource]
+script = ExtResource("1_iygwu")
+base = 1
+mult = 1
+marbles = 3
+required_hand_type = 1
+use_face_condition = true
+texture = SubResource("AtlasTexture_r3ar0")
+id = "cute_snake"
+item_name = "Cute Snake"
+cost = 2
+max_quantity = 2
+metadata/_custom_type_script = "uid://5q71o1b2d1kb"

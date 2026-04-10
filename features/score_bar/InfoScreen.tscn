@@ -105,3 +105,5 @@ test test test
 testtesttest"
 fit_content = true
 scroll_active = false
+
+[connection signal="gui_input" from="Blur2" to="." method="_on_blur_2_gui_input"]

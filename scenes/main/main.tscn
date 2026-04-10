@@ -185,10 +185,13 @@ visible = false
 layout_mode = 1
 
 [node name="InfoScreen" parent="." unique_id=1513268175 instance=ExtResource("11_ouso4")]
+process_mode = 3
 visible = false
 layout_mode = 1
 
 [node name="Button" type="TextureButton" parent="." unique_id=1560545682]
+process_mode = 3
+z_index = 5
 texture_filter = 1
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 0

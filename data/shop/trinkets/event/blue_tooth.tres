@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="ChanceTrinketData" format=3 uid="uid://bp1s0yerq5yss"]
+
+[ext_resource type="Script" uid="uid://5q71o1b2d1kb" path="res://core/resources/trinkets/chance_trinket_data.gd" id="1_15hb4"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_ekvrg"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r3ar0"]
+atlas = ExtResource("2_ekvrg")
+region = Rect2(32, 80, 16, 16)
+
+[resource]
+script = ExtResource("1_15hb4")
+base = 10
+marbles = 2
+use_hand_type_condition = false
+use_face_condition = true
+required_face_value = 2
+texture = SubResource("AtlasTexture_r3ar0")
+id = "blue_tooth"
+item_name = "Blue Tooth"
+cost = 8
+rarity = 3
+luck = 10
+base_marbles_per_round = 3
+base_1_value = 10
+base_2_value = 10
+base_3_value = 10
+base_4_value = 10
+base_5_value = 10
+base_6_value = 10
+max_quantity = 2
+metadata/_custom_type_script = "uid://5q71o1b2d1kb"

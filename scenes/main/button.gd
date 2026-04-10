@@ -5,6 +5,6 @@ extends TextureButton
 func _on_pressed() -> void:
 	_node.visible = !_node.visible
 	if _node.visible:
-		z_index = 1
+		z_index += 1
 	else:
-		z_index = 0
+		z_index -= 1

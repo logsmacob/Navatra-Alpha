@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="ChanceTrinketData" format=3 uid="uid://cvfvu3px61myc"]
+
+[ext_resource type="Script" uid="uid://5q71o1b2d1kb" path="res://core/resources/trinkets/chance_trinket_data.gd" id="1_6ijas"]
+[ext_resource type="Texture2D" uid="uid://071vllrujpst" path="res://assets/sprites/dice icons.png" id="2_slirw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r3ar0"]
+atlas = ExtResource("2_slirw")
+region = Rect2(48, 64, 16, 16)
+
+[resource]
+script = ExtResource("1_6ijas")
+marbles = 3
+activation_chance_percent = 50.0
+use_hand_type_condition = false
+use_face_condition = true
+required_face_value = 3
+texture = SubResource("AtlasTexture_r3ar0")
+id = "rabbits_foot"
+item_name = "Rabbits Foot"
+cost = 2
+max_quantity = 2
+metadata/_custom_type_script = "uid://5q71o1b2d1kb"
